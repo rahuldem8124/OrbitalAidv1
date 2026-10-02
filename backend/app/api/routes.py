@@ -25,6 +25,16 @@ from app.analytics.analytics import risk_tier_distribution, altitude_distributio
 router = APIRouter()
 
 
+def ts(dt) -> str | None:
+    if dt is None:
+        return None
+    if hasattr(dt, 'tzinfo') and dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+
+
+
 # ---------- serialization helpers ----------
 
 def serialize_object(obj: SpaceObject) -> dict:
@@ -62,7 +72,7 @@ def serialize_conjunction(event: ConjunctionEvent) -> dict:
         "object_b": serialize_object(event.object_b) if event.object_b else None,
         "object_a_name": event.object_a.object_name if event.object_a else None,
         "object_b_name": event.object_b.object_name if event.object_b else None,
-        "tca": event.tca.isoformat() if event.tca else None,
+        "tca": ts(event.tca) if event.tca else None,
         "miss_distance_km": event.miss_distance_km,
         "relative_velocity_kmps": event.relative_velocity_kmps,
         "status": event.status,
@@ -73,7 +83,7 @@ def serialize_conjunction(event: ConjunctionEvent) -> dict:
             "pc": latest_assessment.pc,
             "risk_tier": latest_assessment.risk_tier,
             "method": latest_assessment.method,
-            "computed_at": latest_assessment.computed_at.isoformat() if latest_assessment.computed_at else None
+            "computed_at": ts(latest_assessment.computed_at) if latest_assessment.computed_at else None
         } if latest_assessment else None,
         "maneuver": {
             "id": latest_maneuver.id,
@@ -93,9 +103,9 @@ def serialize_maneuver(m: Maneuver) -> dict:
         "predicted_new_miss_distance_km": m.predicted_new_miss_distance_km,
         "fuel_cost_kg": m.fuel_cost_kg,
         "status": m.status,
-        "proposed_at": m.proposed_at.isoformat(),
+        "proposed_at": ts(m.proposed_at),
         "decided_by": m.decided_by,
-        "decided_at": m.decided_at.isoformat() if m.decided_at else None,
+        "decided_at": ts(m.decided_at),
         "notes": m.notes,
     }
 
@@ -107,11 +117,11 @@ def serialize_alert(a: Alert) -> dict:
         "severity": a.severity,
         "message": a.message,
         "channels_sent": a.channels_sent,
-        "created_at": a.created_at.isoformat(),
+        "created_at": ts(a.created_at),
         "acknowledged_by": a.acknowledged_by,
-        "acknowledged_at": a.acknowledged_at.isoformat() if a.acknowledged_at else None,
+        "acknowledged_at": ts(a.acknowledged_at),
         "resolved_by": getattr(a, 'resolved_by', None),
-        "resolved_at": a.resolved_at.isoformat() if getattr(a, 'resolved_at', None) else None,
+        "resolved_at": ts(a.resolved_at),
     }
 
 
@@ -548,7 +558,7 @@ def get_conjunction_timeline(event_id: str):
                 "id": log.id,
                 "action": log.action,
                 "actor": log.actor,
-                "timestamp": log.timestamp.isoformat() if log.timestamp else None,
+                "timestamp": ts(log.timestamp),
                 "details": log.details
             } for log in logs
         ]
@@ -649,9 +659,9 @@ def system_health():
             "risk_assessments": risk_assessments,
             "alerts_active": alerts_active,
             "maneuvers_pending": maneuvers_pending,
-            "last_screening": latest_event.detected_at.isoformat() if latest_event else None,
-            "last_risk_assessment": latest_risk.computed_at.isoformat() if latest_risk else None,
-            "data_freshness": datetime.now(timezone.utc).isoformat()
+            "last_screening": ts(latest_event.detected_at) if latest_event else None,
+            "last_risk_assessment": ts(latest_risk.computed_at) if latest_risk else None,
+            "data_freshness": ts(datetime.now(timezone.utc))
         }
     finally:
         session.close()
@@ -670,7 +680,7 @@ class SystemSettingsUpdate(BaseModel):
     alert_high_enabled: bool | None = None
     alert_watch_enabled: bool | None = None
 
-@router.get("/settings")
+@router.get("/system/settings")
 def get_settings():
     session = SessionLocal()
     try:
@@ -698,7 +708,7 @@ def get_settings():
     finally:
         session.close()
 
-@router.patch("/settings")
+@router.patch("/system/settings")
 def update_settings(update: SystemSettingsUpdate):
     session = SessionLocal()
     try:

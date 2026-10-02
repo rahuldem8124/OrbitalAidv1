@@ -67,14 +67,16 @@ export default function AnalyticsPage() {
     try {
       setLoading(true);
       setError(null);
+      
+      // Use allSettled so a single endpoint failure doesn't wipe the whole page
       const [
-        stats,
-        conjunctionStats,
-        maneuverStats,
-        riskDist,
-        altitudeDist,
-        responseTimes
-      ] = await Promise.all([
+        statsRes,
+        conjunctionStatsRes,
+        maneuverStatsRes,
+        riskDistRes,
+        altitudeDistRes,
+        responseTimesRes
+      ] = await Promise.allSettled([
         fetchStats(),
         fetchConjunctionAnalytics(),
         fetchManeuverAnalytics(),
@@ -83,14 +85,21 @@ export default function AnalyticsPage() {
         fetchResponseTimes(),
       ]);
 
-      setData({
-        stats,
-        conjunctionStats,
-        maneuverStats,
-        riskDist,
-        altitudeDist,
-        responseTimes
-      });
+      const resolved = <T,>(r: PromiseSettledResult<T>): T | null =>
+        r.status === 'fulfilled' ? r.value : null;
+
+      const stats = resolved(statsRes);
+      const conjunctionStats = resolved(conjunctionStatsRes);
+      const maneuverStats = resolved(maneuverStatsRes);
+      const riskDist = resolved(riskDistRes);
+      const altitudeDist = resolved(altitudeDistRes);
+      const responseTimes = resolved(responseTimesRes);
+
+      if (!stats && !conjunctionStats && !maneuverStats) {
+        setError("Analytics data unavailable — backend may be offline.");
+      }
+
+      setData({ stats, conjunctionStats, maneuverStats, riskDist, altitudeDist, responseTimes });
     } catch (err) {
       console.error(err);
       setError("Could not load analytics — make sure the backend is running.");
@@ -113,11 +122,12 @@ export default function AnalyticsPage() {
     );
   }
 
-  if (error || !data.stats) {
+  // If ALL primary data failed, show error with retry
+  if (error && !data.stats && !data.conjunctionStats && !data.maneuverStats) {
     return (
       <div className="flex flex-col gap-6">
         <h1 className="text-white text-2xl font-semibold tracking-tight">ORBITAL SAFETY ANALYTICS CENTER</h1>
-        <ErrorState message={error || "Unknown error"} onRetry={loadData} />
+        <ErrorState message={error} onRetry={loadData} />
       </div>
     );
   }
@@ -169,15 +179,15 @@ export default function AnalyticsPage() {
 
       {/* Section 1: Overview Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <MetricCard label="Total Objects Tracked" value={stats.total_objects.toLocaleString()} />
-        <MetricCard label="Active Satellites" value={stats.satellites.toLocaleString()} />
-        <MetricCard label="Debris Count" value={stats.debris.toLocaleString()} />
-        <MetricCard label="Total Conjunctions" value={conjunctionStats?.total_conjunctions.toLocaleString() || 0} />
+        <MetricCard label="Total Objects Tracked" value={stats?.total_objects?.toLocaleString() ?? "—"} />
+        <MetricCard label="Active Satellites" value={stats?.satellites?.toLocaleString() ?? "—"} />
+        <MetricCard label="Debris Count" value={stats?.debris?.toLocaleString() ?? "—"} />
+        <MetricCard label="Total Conjunctions" value={conjunctionStats?.total_conjunctions?.toLocaleString() ?? "—"} />
         
-        <MetricCard label="Critical Events" value={conjunctionStats?.by_risk_tier?.critical || 0} variant={conjunctionStats?.by_risk_tier?.critical ? 'critical' : 'default'} />
-        <MetricCard label="Active Alerts" value={stats.unacknowledged_alerts} variant={stats.unacknowledged_alerts > 0 ? 'warning' : 'default'} />
-        <MetricCard label="Pending Maneuvers" value={stats.pending_maneuvers} />
-        <MetricCard label="Conjunctions Mitigated" value={conjunctionStats?.conjunctions_mitigated || 0} variant="success" />
+        <MetricCard label="Critical Events" value={conjunctionStats?.by_risk_tier?.critical ?? 0} variant={conjunctionStats?.by_risk_tier?.critical ? 'critical' : 'default'} />
+        <MetricCard label="Active Alerts" value={stats?.unacknowledged_alerts ?? "—"} variant={(stats?.unacknowledged_alerts ?? 0) > 0 ? 'warning' : 'default'} />
+        <MetricCard label="Pending Maneuvers" value={stats?.pending_maneuvers ?? "—"} />
+        <MetricCard label="Conjunctions Mitigated" value={conjunctionStats?.conjunctions_mitigated ?? 0} variant="success" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

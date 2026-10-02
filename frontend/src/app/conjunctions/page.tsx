@@ -15,6 +15,7 @@ import {
   ConjunctionAnalytics,
   EventLog
 } from '@/lib/types';
+import { formatUTCCompact, getTCAStatus, formatDistance, formatVelocity, formatPc } from '@/lib/time';
 import DataTable from '@/components/shared/DataTable';
 import FilterBar from '@/components/shared/FilterBar';
 import RiskBadge from '@/components/shared/RiskBadge';
@@ -96,20 +97,7 @@ export default function ConjunctionsPage() {
     loadData();
   }, [loadData]);
   
-  const getCountdown = (tcaStr: string) => {
-    const tca = new Date(tcaStr).getTime();
-    const now = Date.now();
-    const diff = tca - now;
-    
-    if (diff < 0) return "PASSED";
-    
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    
-    if (days > 0) return `${days}d ${hours}h`;
-    return `${hours}h ${mins}m`;
-  };
+
 
   const handleRowClick = async (item: ConjunctionWithDetails) => {
     setSelectedConjunction(item);
@@ -197,35 +185,45 @@ export default function ConjunctionsPage() {
       render: (item: ConjunctionWithDetails) => {
         const md = item.miss_distance_km;
         let color = 'text-[#e2e8f0]';
-        if (md != null) {
+        if (md != null && md > 0) {
           if (md < 1) color = 'text-[#ef4444]';
           else if (md < 2) color = 'text-[#f97316]';
           else if (md < 5) color = 'text-[#eab308]';
         }
-        return <span className={`font-mono ${color}`}>{md != null ? md.toFixed(3) + ' km' : '—'}</span>;
+        return <span className={`font-mono ${color}`}>{formatDistance(md)}</span>;
       }
     },
     {
       key: 'relative_velocity_kmps',
       label: 'Rel. Velocity',
       render: (item: ConjunctionWithDetails) => (
-        <span className="font-mono text-[#e2e8f0]">{item.relative_velocity_kmps != null ? item.relative_velocity_kmps.toFixed(2) + ' km/s' : '—'}</span>
+        <span className="font-mono text-[#e2e8f0]">{formatVelocity(item.relative_velocity_kmps)}</span>
       )
     },
     {
       key: 'tca',
-      label: 'TCA',
+      label: 'TCA (UTC)',
       sortable: true,
       render: (item: ConjunctionWithDetails) => (
-        <span className="font-mono text-xs text-[#e2e8f0]">{new Date(item.tca).toLocaleString()}</span>
+        <span className="font-mono text-xs text-[#e2e8f0] whitespace-nowrap">{formatUTCCompact(item.tca)}</span>
       )
     },
     {
       key: 'time_to_tca',
       label: 'Time to TCA',
       render: (item: ConjunctionWithDetails) => {
-        const countdown = getCountdown(item.tca);
-        return <span className={`font-mono font-medium ${countdown === 'PASSED' ? 'text-[#64748b]' : 'text-[#e2e8f0]'}`}>{countdown}</span>;
+        const status = getTCAStatus(item.tca);
+        if (status.type === 'unknown') return <span className="text-[#64748b]">—</span>;
+        if (status.type === 'passed') return (
+          <span className="font-mono text-xs text-[#64748b]">
+            TCA PASSED<br /><span className="text-[10px]">{status.suffix}</span>
+          </span>
+        );
+        return (
+          <span className={`font-mono text-xs font-medium ${status.isUrgent ? 'text-[#ef4444]' : 'text-[#2dd4bf]'}`}>
+            {status.label}
+          </span>
+        );
       }
     },
     {
@@ -239,7 +237,7 @@ export default function ConjunctionsPage() {
       label: 'Pc',
       sortable: true,
       render: (item: ConjunctionWithDetails) => (
-        <span className="font-mono text-[#e2e8f0]">{item.pc != null ? item.pc.toExponential(2) : '—'}</span>
+        <span className="font-mono text-xs text-[#e2e8f0]">{formatPc(item.pc)}</span>
       )
     },
     {
@@ -417,16 +415,21 @@ export default function ConjunctionsPage() {
                 </div>
                 <div className="bg-[#111827] border border-[#1e293b] p-4 rounded-lg flex flex-col justify-center">
                   <div className="flex justify-between items-center border-b border-[#1e293b] pb-2 mb-2">
-                    <span className="text-xs text-[#94a3b8]">TCA</span>
-                    <span className="text-xs font-mono text-[#e2e8f0]">{new Date(selectedConjunction.tca).toLocaleString()}</span>
+                    <span className="text-xs text-[#94a3b8]">TCA (UTC)</span>
+                    <span className="text-xs font-mono text-[#e2e8f0]">{formatUTCCompact(selectedConjunction.tca)}</span>
                   </div>
                   <div className="flex justify-between items-center border-b border-[#1e293b] pb-2 mb-2">
-                    <span className="text-xs text-[#94a3b8]">Countdown</span>
-                    <span className="text-xs font-mono font-medium text-[#f97316]">{getCountdown(selectedConjunction.tca)}</span>
+                    <span className="text-xs text-[#94a3b8]">Time to TCA</span>
+                    {(() => {
+                      const s = getTCAStatus(selectedConjunction.tca);
+                      if (s.type === 'passed') return <span className="text-xs font-mono text-[#64748b]">TCA PASSED · {s.suffix}</span>;
+                      if (s.type === 'upcoming') return <span className={`text-xs font-mono font-medium ${s.isUrgent ? 'text-[#ef4444]' : 'text-[#f97316]'}`}>{s.label}</span>;
+                      return <span className="text-xs text-[#64748b]">—</span>;
+                    })()}
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-xs text-[#94a3b8]">Rel. Velocity</span>
-                    <span className="text-xs font-mono text-[#e2e8f0]">{selectedConjunction.relative_velocity_kmps?.toFixed(2) || '—'} km/s</span>
+                    <span className="text-xs font-mono text-[#e2e8f0]">{formatVelocity(selectedConjunction.relative_velocity_kmps)}</span>
                   </div>
                 </div>
               </div>

@@ -120,9 +120,9 @@ export default async function Home() {
     console.error("Dashboard fetch error:", err);
     return (
       <div className="h-full flex items-center justify-center pt-20">
-        <ErrorState 
-          title="Mission Control Offline" 
-          message="Could not connect to the OrbitalAid backend. Ensure the server is running at http://localhost:8000."
+        <ErrorState
+          title="Mission Control Offline"
+          message="Could not connect to the OrbitalAid backend. Ensure the API server is running and the NEXT_PUBLIC_API_URL environment variable is configured correctly."
         />
       </div>
     );

@@ -1,38 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ConjunctionWithDetails } from "@/lib/types";
 import RiskBadge from "@/components/shared/RiskBadge";
 import EmptyState from "@/components/shared/EmptyState";
+import { formatUTCCompact, formatDistance, getTCAStatus } from "@/lib/time";
 
 interface Props {
   conjunctions: ConjunctionWithDetails[];
 }
 
-function Countdown({ tca }: { tca: string }) {
-  const [timeLeft, setTimeLeft] = useState("");
-
-  useEffect(() => {
-    const updateCountdown = () => {
-      const diff = new Date(tca).getTime() - new Date().getTime();
-      if (diff <= 0) {
-        setTimeLeft("TCA PASSED");
-        return;
-      }
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const secs = Math.floor((diff % (1000 * 60)) / 1000);
-      setTimeLeft(`T-${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`);
-    };
-    
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-    return () => clearInterval(interval);
-  }, [tca]);
-
-  return <span className="font-mono text-xs">{timeLeft}</span>;
-}
 
 export default function LiveConjunctionWatch({ conjunctions }: Props) {
   if (!conjunctions || conjunctions.length === 0) {
@@ -82,14 +59,29 @@ export default function LiveConjunctionWatch({ conjunctions }: Props) {
                 <div>
                   <span className="text-[#64748b] block mb-1">Miss Distance</span>
                   <span className="font-mono text-[#e2e8f0]">
-                    {conj.miss_distance_km ? conj.miss_distance_km.toFixed(3) : '---'} km
+                    {formatDistance(conj.miss_distance_km)}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[#64748b] block mb-1">TCA Countdown</span>
-                  <span className="text-[#eab308]">
-                    <Countdown tca={conj.tca} />
+                  <span className="text-[#64748b] block mb-1">TCA (UTC)</span>
+                  <span className="font-mono text-[#e2e8f0] text-[10px]">
+                    {formatUTCCompact(conj.tca)}
                   </span>
+                </div>
+                <div className="col-span-2">
+                  <span className="text-[#64748b] block mb-1">Time to TCA</span>
+                  {(() => {
+                    const s = getTCAStatus(conj.tca);
+                    if (s.type === 'passed') return (
+                      <span className="font-mono text-xs text-[#64748b]">TCA PASSED · {s.suffix}</span>
+                    );
+                    if (s.type === 'upcoming') return (
+                      <span className={`font-mono text-xs font-medium ${s.isUrgent ? 'text-[#ef4444]' : 'text-[#eab308]'}`}>
+                        {s.label}
+                      </span>
+                    );
+                    return <span className="text-[#64748b]">—</span>;
+                  })()}
                 </div>
               </div>
               {conj.preventive_action && (
