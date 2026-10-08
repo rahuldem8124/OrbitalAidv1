@@ -44,7 +44,7 @@ export default function MissionBriefingModal({ isOpen, onClose }: MissionBriefin
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#030407]/90 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000]/90 backdrop-blur-md">
       <div className="absolute inset-0 scanline opacity-30 pointer-events-none"></div>
       
       {/* Background Circular Framing */}
@@ -59,13 +59,13 @@ export default function MissionBriefingModal({ isOpen, onClose }: MissionBriefin
       <HUDContainer title="MISSION BRIEFING // ANALYSIS" className="w-[800px] h-[500px] flex gap-4 p-4 relative z-10">
         <button 
           onClick={onClose}
-          className="absolute -top-3 right-4 px-2 bg-[#030407] text-[10px] font-mono font-bold text-[var(--tier-critical)] tracking-widest uppercase hover:text-white transition-colors border-x border-[var(--space-border-bright)]/30"
+          className="absolute -top-3 right-4 px-2 bg-[#000000] text-[10px] font-mono font-bold text-[var(--accent-cyan)] tracking-widest uppercase hover:text-white transition-colors border-x border-[var(--space-border-bright)]/30"
         >
           [ CLOSE ]
         </button>
 
         {/* Left Side: Decoding Process Terminal */}
-        <div className="flex-1 border border-[var(--space-border)]/50 bg-[#030407]/60 flex flex-col relative overflow-hidden">
+        <div className="flex-1 border border-[var(--space-border)]/50 bg-[#000000]/60 flex flex-col relative overflow-hidden">
           <div className="absolute inset-0 scanline opacity-20 pointer-events-none"></div>
           <div className="px-3 py-1.5 border-b border-[var(--space-border)]/50 bg-[var(--accent-cyan)]/10">
             <span className="text-[9px] font-mono font-bold text-[var(--accent-cyan)] tracking-widest uppercase">
@@ -92,7 +92,7 @@ export default function MissionBriefingModal({ isOpen, onClose }: MissionBriefin
 
         {/* Right Side: Telemetry Blocks */}
         <div className="w-[300px] flex flex-col gap-3">
-          <div className="border border-[var(--space-border)]/50 bg-[#030407]/60 flex flex-col">
+          <div className="border border-[var(--space-border)]/50 bg-[#000000]/60 flex flex-col">
             <div className="px-3 py-1.5 border-b border-[var(--space-border)]/50 bg-[var(--accent-amber)]/10">
               <span className="text-[9px] font-mono font-bold text-[var(--accent-amber)] tracking-widest uppercase">
                 IP DATA / TELEMETRY
@@ -107,14 +107,14 @@ export default function MissionBriefingModal({ isOpen, onClose }: MissionBriefin
                 <span className="text-[var(--text-muted)]">ENCRYPTION</span>
                 <span className="text-[var(--accent-cyan)]">AES-256-GCM</span>
               </div>
-              <div className="flex justify-between pt-1 text-[#030407] bg-[var(--tier-critical)] font-bold px-1 -mx-1">
+              <div className="flex justify-between pt-1 text-[#000000] bg-[var(--tier-critical)] font-bold px-1 -mx-1">
                 <span>SIGNAL INTEGRITY</span>
                 <span>COMPROMISED</span>
               </div>
             </div>
           </div>
 
-          <div className="border border-[var(--space-border)]/50 bg-[#030407]/60 flex flex-col flex-1">
+          <div className="border border-[var(--space-border)]/50 bg-[#000000]/60 flex flex-col flex-1">
             <div className="px-3 py-1.5 border-b border-[var(--space-border)]/50 bg-[var(--text-muted)]/10">
               <span className="text-[9px] font-mono font-bold text-[var(--text-muted)] tracking-widest uppercase">
                 TARGET VECTORS

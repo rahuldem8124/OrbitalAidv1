@@ -47,7 +47,7 @@ export default function RadarPlot({
   const endPt = polarToCartesian(azimuthEnd, elevationEnd);
 
   return (
-    <div className="relative inline-flex items-center justify-center bg-[#030407]/40 border border-[var(--space-border-bright)]/30 rounded-sm p-2">
+    <div className="relative inline-flex items-center justify-center bg-[#000000]/40 border border-[var(--space-border-bright)]/30 rounded-sm p-2">
       {/* Corner brackets */}
       <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[var(--text-muted)] opacity-50"></div>
       <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[var(--text-muted)] opacity-50"></div>

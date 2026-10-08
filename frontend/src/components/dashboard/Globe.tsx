@@ -135,8 +135,8 @@ export default function Globe({ positions }: GlobeProps) {
   const sunDirection = new THREE.Vector3(1, 0.5, 0.5).normalize();
 
   return (
-    <div className="w-full h-full bg-[#020308] rounded-md overflow-hidden">
-      <Canvas camera={{ position: [0, 2, 6], fov: 45 }}>
+    <div className="w-full h-full bg-[var(--space-panel)] rounded-md overflow-hidden">
+      <Canvas camera={{ position: [0, 0.5, 3.5], fov: 45 }}>
         <ambientLight intensity={0.15} />
         <directionalLight
           position={[sunDirection.x * 10, sunDirection.y * 10, sunDirection.z * 10]}
@@ -149,7 +149,7 @@ export default function Globe({ positions }: GlobeProps) {
         <SpaceObjects positions={positions} />
         <OrbitControls
           enablePan={false}
-          minDistance={4}
+          minDistance={2.5}
           maxDistance={20}
           autoRotate
           autoRotateSpeed={0.5}

@@ -33,7 +33,7 @@ export default async function Home() {
     const criticalRisks = analytics.by_risk_tier?.critical || 0;
 
     return (
-      <div className="flex flex-col h-full w-full bg-[#020305] grid-overlay p-4 gap-4">
+      <div className="flex flex-col h-full w-full bg-[#000000] grid-overlay p-4 gap-4">
         
         {/* Top Telemetry Strip */}
         <div className="grid grid-cols-2 md:grid-cols-6 gap-3 flex-shrink-0">
@@ -114,7 +114,7 @@ export default async function Home() {
   } catch (err) {
     console.error("Dashboard fetch error:", err);
     return (
-      <div className="h-full flex items-center justify-center bg-[#020305] grid-overlay">
+      <div className="h-full flex items-center justify-center bg-[#000000] grid-overlay">
         <ErrorState
           title="SYS_FAIL // C2 OFFLINE"
           message="NO SIGNAL FROM TELEMETRY CORE. CHECK SENSOR UPLINK."

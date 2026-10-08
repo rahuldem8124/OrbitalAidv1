@@ -81,7 +81,7 @@ export default function TopBar() {
     <>
       <div className="flex flex-col shrink-0 z-40 bg-[var(--space-canvas)] relative border-b border-[var(--space-border)]">
         {/* Top Dense Timezone Strip */}
-        <div className="h-6 flex items-center justify-between px-4 border-b border-[var(--space-border-bright)]/30 bg-[#030407]">
+        <div className="h-6 flex items-center justify-between px-4 border-b border-[var(--space-border-bright)]/30 bg-[#000000]">
           <div className="flex items-center gap-4 text-[9px] font-mono text-[var(--text-dim)] tracking-widest">
             <span className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
@@ -131,7 +131,7 @@ export default function TopBar() {
                 <span>TRACKING</span>
                 <span className="text-[var(--accent-amber)]">ACTV</span>
               </div>
-              <div className="h-1 w-full bg-[#030407] border border-[var(--space-border-bright)] relative">
+              <div className="h-1 w-full bg-[#000000] border border-[var(--space-border-bright)] relative">
                 <div className="absolute top-0 left-0 h-full bg-[var(--accent-amber)] w-[85%]"></div>
               </div>
             </div>

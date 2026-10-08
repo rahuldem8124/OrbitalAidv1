@@ -80,19 +80,19 @@ export default function LiveConjunctionWatch({ conjunctions }: Props) {
 
               {/* Data Grid with Cell Inversion on critical */}
               <div className="grid grid-cols-3 gap-2">
-                <div className={`p-1.5 flex flex-col items-center justify-center text-center border border-[var(--space-border)]/50 ${isCritical ? 'bg-[var(--tier-critical)] text-[#030407]' : 'bg-[#030407]/40'}`}>
-                  <span className={`text-[8px] uppercase tracking-widest mb-1 ${isCritical ? 'text-[#030407]/70 font-bold' : 'text-[var(--text-dim)]'}`}>MISS DIST</span>
-                  <span className={`font-mono text-[11px] font-bold ${isCritical ? 'text-[#030407]' : 'text-[var(--text-primary)]'}`}>
+                <div className={`p-1.5 flex flex-col items-center justify-center text-center border border-[var(--space-border)]/50 ${isCritical ? 'bg-[var(--tier-critical)] text-[#000000]' : 'bg-[#000000]/40'}`}>
+                  <span className={`text-[8px] uppercase tracking-widest mb-1 ${isCritical ? 'text-[#000000]/70 font-bold' : 'text-[var(--text-dim)]'}`}>MISS DIST</span>
+                  <span className={`font-mono text-[11px] font-bold ${isCritical ? 'text-[#000000]' : 'text-[var(--text-primary)]'}`}>
                     {formatDistance(conj.miss_distance_km)}
                   </span>
                 </div>
                 
-                <div className="p-1.5 flex flex-col items-center justify-center text-center border border-[var(--space-border)]/50 bg-[#030407]/40">
+                <div className="p-1.5 flex flex-col items-center justify-center text-center border border-[var(--space-border)]/50 bg-[#000000]/40">
                   <span className="text-[8px] text-[var(--text-dim)] uppercase tracking-widest mb-1">TCA (UTC)</span>
                   <span className="font-mono text-[10px] text-[var(--text-secondary)]">{formatUTCCompact(conj.tca)}</span>
                 </div>
                 
-                <div className="p-1.5 flex flex-col items-center justify-center text-center border border-[var(--space-border)]/50 bg-[#030407]/40 relative overflow-hidden">
+                <div className="p-1.5 flex flex-col items-center justify-center text-center border border-[var(--space-border)]/50 bg-[#000000]/40 relative overflow-hidden">
                   <div className="absolute inset-0 scanline opacity-20"></div>
                   <span className="text-[8px] text-[var(--text-dim)] uppercase tracking-widest mb-1 relative z-10">COUNTDOWN</span>
                   <span className="relative z-10">

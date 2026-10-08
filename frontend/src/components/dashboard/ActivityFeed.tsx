@@ -53,7 +53,7 @@ export default function ActivityFeed({ alerts, maneuvers }: ActivityFeedProps) {
     <HUDContainer className="flex flex-col h-full" cornerCut={false}>
       {/* Header bar with toggle */}
       <div
-        className="flex items-center justify-between px-4 py-1.5 cursor-pointer select-none bg-[#030407] border-b border-[var(--space-border)]"
+        className="flex items-center justify-between px-4 py-1.5 cursor-pointer select-none bg-[#000000] border-b border-[var(--space-border)]"
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center gap-2">

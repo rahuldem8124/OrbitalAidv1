@@ -8,30 +8,32 @@
 }
 
 :root {
-  --background: #050608;
+  --background: #000000;
   --foreground: #E2E8F0;
 
   /* Aerospace C2 Palette */
-  --space-canvas: #050608;
-  --space-panel: #0A0D14;
-  --space-card: #0E121B;
-  --space-card-hover: #141926;
-  --space-border: #1A2130;
-  --space-border-bright: #2A344A;
+  --space-canvas: #000000;
+  --space-panel: #000000;
+  --space-card: #0A0A0A;
+  --space-card-hover: #141414;
+  --space-border: #1F1F1F;
+  --space-border-bright: #333333;
 
   /* Status & Risk Tiers */
   --tier-critical: #EF4444;
   --tier-high: #F97316;
   --tier-watch: #EAB308;
   --tier-nominal: #22C55E;
-  --accent-amber: #F59E0B;
-  --accent-cyan: #06B6D4;
+  
+  /* Bumblebee Yellow Accent */
+  --accent-amber: #FDE047; /* Bumblebee */
+  --accent-cyan: #FDE047;  /* Bumblebee */
 
   /* Text hierarchy */
-  --text-primary: #E2E8F0;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
-  --text-dim: #475569;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A3A3A3;
+  --text-muted: #737373;
+  --text-dim: #525252;
 }
 
 body {
