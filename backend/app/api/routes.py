@@ -832,3 +832,28 @@ def global_search(q: str):
         }
     finally:
         session.close()
+
+@router.post("/admin/run-screening")
+def admin_run_screening():
+    """Manually triggers the screening pipeline (useful if the Render DB is empty)."""
+    import subprocess
+    import sys
+    try:
+        # Run the screening pipeline asynchronously or wait for it.
+        # It might take a while, so let's just run it as a subprocess and return immediately.
+        # We will use limit 1000 to make it fast so it actually finishes quickly on Render's free tier.
+        subprocess.Popen([sys.executable, "-m", "app.screening.conjunction", "1000"])
+        return {"status": "Screening pipeline started in background with limit 1000. Data will populate in a few minutes."}
+    except Exception as e:
+        raise HTTPException(500, str(e))
+
+@router.post("/admin/run-ingest")
+def admin_run_ingest():
+    """Manually triggers the ingestion pipeline."""
+    import subprocess
+    import sys
+    try:
+        subprocess.Popen([sys.executable, "-m", "app.ingestion.pipeline"])
+        return {"status": "Ingestion pipeline started in background."}
+    except Exception as e:
+        raise HTTPException(500, str(e))
