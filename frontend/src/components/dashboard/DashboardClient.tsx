@@ -113,8 +113,8 @@ export default function DashboardClient({
         {/* BOTTOM CENTER: SUBTLE HUD SENSOR BAR */}
         <div className="hidden xl:flex absolute bottom-4 left-1/2 -translate-x-1/2 z-10 items-center gap-3 bg-[#050505]/80 backdrop-blur-md border border-white/10 px-4 py-1.5 rounded-sm shadow-xl text-[9px] font-mono text-zinc-400">
           <div className="flex items-center gap-1.5 text-amber-400">
-            <Radio className="w-3 h-3 animate-pulse" />
-            <span className="font-bold">ORBITAL SURVEILLANCE RADAR</span>
+            <img src="/logo.png" alt="OrbitalAid" className="w-3.5 h-3.5 object-contain" />
+            <span className="font-bold">ORBITALAID SURVEILLANCE RADAR</span>
           </div>
           <span className="text-zinc-600">|</span>
           <span>SGP4 BATCH PROPAGATOR ACTIVE</span>

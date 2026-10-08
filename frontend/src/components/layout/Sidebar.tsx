@@ -112,13 +112,30 @@ function SidebarInner() {
     >
       <div className="h-14 flex items-center justify-between px-4 border-b border-[var(--space-border)] shrink-0 bg-[var(--space-panel)]">
         {!collapsed && (
-          <span className="text-sm font-mono font-bold text-white tracking-widest uppercase flex items-center gap-2">
-            <Activity className="text-amber-400 w-4 h-4" />
-            OrbitAid
-          </span>
+          <Link href="/" className="flex items-center gap-2.5 overflow-hidden group">
+            <img
+              src="/logo.png"
+              alt="OrbitalAid Logo"
+              className="w-8 h-8 object-contain rounded-xs shrink-0 border border-amber-400/30 group-hover:border-amber-400 transition-colors"
+            />
+            <div className="flex flex-col min-w-0">
+              <span className="text-xs font-mono font-bold text-white tracking-widest uppercase leading-tight truncate">
+                ORBITALAID
+              </span>
+              <span className="text-[8px] font-mono font-medium text-amber-400 tracking-wider uppercase leading-tight truncate">
+                AEROSPACE C2
+              </span>
+            </div>
+          </Link>
         )}
         {collapsed && (
-          <Activity className="text-amber-400 w-5 h-5 mx-auto" />
+          <Link href="/" className="mx-auto block" title="OrbitalAid Aerospace">
+            <img
+              src="/logo.png"
+              alt="OrbitalAid Logo"
+              className="w-8 h-8 object-contain rounded-xs border border-amber-400/30 hover:border-amber-400 transition-colors"
+            />
+          </Link>
         )}
         <button
           onClick={toggleCollapse}

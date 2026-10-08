@@ -129,11 +129,13 @@ export default function MissionBriefingModal({ isOpen, onClose }: MissionBriefin
                 <span className="text-[8px] text-[var(--text-dim)] uppercase">IMPACT PROB</span>
                 <span className="text-lg font-bold text-[var(--tier-critical)] tracking-tighter">2.4e-3</span>
               </div>
-              <div className="mt-4 pt-2 border-t border-[var(--space-border)]/30 flex justify-center">
-                <div className="w-16 h-16 rounded-full border-2 border-[var(--tier-critical)] flex items-center justify-center relative">
-                   <div className="w-8 h-8 rounded-full bg-[var(--tier-critical)]/20 animate-ping"></div>
-                   <div className="w-1 h-full bg-[var(--tier-critical)] absolute animate-[spin_4s_linear_infinite]"></div>
-                </div>
+              <div className="mt-3 pt-2 border-t border-[var(--space-border)]/30 flex flex-col items-center justify-center gap-1.5">
+                <img
+                  src="/logo.png"
+                  alt="OrbitalAid"
+                  className="w-14 h-14 object-contain rounded-xs border border-amber-400/40 p-0.5"
+                />
+                <span className="text-[8px] font-mono text-zinc-500 tracking-widest uppercase">ORBITALAID C2</span>
               </div>
             </div>
           </div>

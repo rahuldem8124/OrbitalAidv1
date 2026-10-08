@@ -109,8 +109,15 @@ export default function TopBar() {
           <div className="absolute inset-0 scanline opacity-15 pointer-events-none"></div>
           
           <div className="flex items-center gap-3 relative z-10">
-            <div className="w-2 h-2 border-t border-l border-amber-400"></div>
-            <h1 className="text-white font-mono font-bold tracking-widest text-sm">{getPageTitle()}</h1>
+            <img
+              src="/logo.png"
+              alt="OrbitalAid Logo"
+              className="w-7 h-7 object-contain rounded-xs border border-amber-400/40 shrink-0"
+            />
+            <div className="flex flex-col">
+              <h1 className="text-white font-mono font-bold tracking-widest text-xs leading-tight">{getPageTitle()}</h1>
+              <span className="text-[8px] font-mono text-zinc-500 tracking-wider">ORBITALAID // SSA-C2</span>
+            </div>
           </div>
 
           <div className="flex-1 flex justify-center max-w-xl mx-8 relative z-10">
