@@ -21,7 +21,7 @@ export default function KPIStrip({ stats }: KPIStripProps) {
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
       {kpis.map((kpi) => (
         <GlassPanel key={kpi.label} className="flex items-center gap-3">
-          <div className={`p-2 rounded-lg ${kpi.color} bg-white/5`}>
+          <div className={`p-2 rounded-md ${kpi.color} bg-white/5`}>
             <kpi.icon className="w-6 h-6" />
           </div>
           <div>

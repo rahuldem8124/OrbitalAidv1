@@ -124,7 +124,7 @@ export default function AlertDetailPanel({
           </p>
         </div>
 
-        <div className="p-3 rounded-lg bg-white/5 border border-white/5">
+        <div className="p-3 rounded-md bg-white/5 border border-white/5">
           <p className="text-white text-sm leading-relaxed">{alert.message}</p>
         </div>
 
@@ -199,14 +199,14 @@ export default function AlertDetailPanel({
         <div className="border-t border-white/10 pt-3 flex gap-2">
           {!alert.acknowledged_at && (
             ackResult ? (
-              <div className="flex-1 px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold text-center">
+              <div className="flex-1 px-3 py-1.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold text-center">
                 Acknowledged ✓
               </div>
             ) : (
               <button
                 disabled={ackLoading}
                 onClick={handleAcknowledge}
-                className="flex-1 px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 text-xs font-semibold disabled:opacity-50"
+                className="flex-1 px-3 py-1.5 rounded-md bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 text-xs font-semibold disabled:opacity-50"
               >
                 {ackLoading ? "Acknowledging…" : "Acknowledge"}
               </button>
@@ -217,7 +217,7 @@ export default function AlertDetailPanel({
               onClose();
               router.push("/maneuvers");
             }}
-            className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white text-xs font-semibold transition-colors"
+            className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white text-xs font-semibold transition-colors"
           >
             View Maneuvers
             <ExternalLink className="w-3.5 h-3.5" />

@@ -40,29 +40,29 @@ export default function SearchBar({ onSearch, results, loading = false }: Search
   return (
     <div ref={wrapperRef} className="relative">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748b]" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => query.length >= 2 && setIsOpen(true)}
-          placeholder="Search objects, events..."
-          className="w-64 bg-[#1a2332] border border-[#1e293b] rounded-lg pl-9 pr-8 py-1.5 text-sm text-[#e2e8f0] placeholder-[#64748b] focus:outline-none focus:border-[#2dd4bf]/50 focus:ring-1 focus:ring-[#2dd4bf]/20 transition-all"
+          placeholder="SEARCH TELEMETRY..."
+          className="w-72 bg-[var(--space-canvas)] border border-[var(--space-border)] rounded-sm pl-9 pr-8 py-1.5 text-xs font-mono text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--space-border-bright)] focus:ring-1 focus:ring-[var(--space-border-bright)] transition-all"
         />
         {loading && (
-          <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#2dd4bf] animate-spin" />
+          <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--accent-cyan)] animate-spin" />
         )}
       </div>
 
       {isOpen && results && !loading && (
-        <div className="absolute top-full mt-2 w-80 bg-[#111827] border border-[#1e293b] rounded-xl shadow-2xl overflow-hidden z-50">
+        <div className="absolute top-full mt-1 w-full bg-[var(--space-panel)] border border-[var(--space-border-bright)] rounded-sm shadow-2xl overflow-hidden z-50">
           <div className="max-h-96 overflow-y-auto py-2">
             
             {results.objects?.length > 0 && (
               <div className="px-3 py-1.5">
-                <div className="text-xs font-semibold text-[#94a3b8] mb-1.5 uppercase tracking-wider">Objects</div>
+                <div className="text-[9px] font-mono font-semibold text-[var(--text-muted)] mb-1 uppercase tracking-widest border-b border-[var(--space-border)] pb-1">Objects</div>
                 {results.objects.slice(0, 3).map(obj => (
-                  <div key={obj.id} className="px-2 py-1.5 hover:bg-[#1e293b] rounded-lg cursor-pointer transition-colors text-sm text-[#e2e8f0]">
+                  <div key={obj.id} className="px-2 py-1.5 hover:bg-[var(--space-card-hover)] rounded-sm cursor-pointer transition-colors text-[11px] font-mono text-[var(--text-primary)]">
                     {obj.object_name}
                   </div>
                 ))}
@@ -71,18 +71,18 @@ export default function SearchBar({ onSearch, results, loading = false }: Search
 
             {results.conjunctions?.length > 0 && (
               <div className="px-3 py-1.5">
-                <div className="text-xs font-semibold text-[#94a3b8] mb-1.5 uppercase tracking-wider">Events</div>
+                <div className="text-[9px] font-mono font-semibold text-[var(--text-muted)] mb-1 uppercase tracking-widest border-b border-[var(--space-border)] pb-1">Events</div>
                 {results.conjunctions.slice(0, 3).map(evt => (
-                  <div key={evt.id} className="px-2 py-1.5 hover:bg-[#1e293b] rounded-lg cursor-pointer transition-colors text-sm text-[#e2e8f0]">
-                    TCA: {new Date(evt.tca).toLocaleString()}
+                  <div key={evt.id} className="px-2 py-1.5 hover:bg-[var(--space-card-hover)] rounded-sm cursor-pointer transition-colors text-[11px] font-mono text-[var(--text-primary)]">
+                    TCA: {new Date(evt.tca).toISOString().substring(0, 19).replace('T', ' ')} UTC
                   </div>
                 ))}
               </div>
             )}
 
             {results.objects?.length === 0 && results.conjunctions?.length === 0 && (
-              <div className="px-4 py-6 text-center text-sm text-[#64748b]">
-                No results found for "{query}"
+              <div className="px-4 py-6 text-center font-mono text-[11px] text-[var(--text-muted)]">
+                NO RESULTS FOUND
               </div>
             )}
             

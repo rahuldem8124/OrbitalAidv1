@@ -13,39 +13,37 @@ interface MetricCardProps {
 }
 
 export default function MetricCard({ label, value, subValue, icon, trend, variant = 'default' }: MetricCardProps) {
-  let borderGlow = "border-[#1e293b]";
-  let iconColor = "text-[#94a3b8]";
+  const borderClass = {
+    default: 'border-[var(--space-border)]',
+    critical: 'border-[var(--tier-critical)]/40',
+    warning: 'border-[var(--tier-watch)]/40',
+    success: 'border-[var(--tier-nominal)]/40',
+  }[variant];
 
-  if (variant === 'critical') {
-    borderGlow = "border-[#ef4444]/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]";
-    iconColor = "text-[#ef4444]";
-  } else if (variant === 'warning') {
-    borderGlow = "border-[#eab308]/50 shadow-[0_0_15px_rgba(234,179,8,0.1)]";
-    iconColor = "text-[#eab308]";
-  } else if (variant === 'success') {
-    borderGlow = "border-[#22c55e]/50 shadow-[0_0_15px_rgba(34,197,94,0.1)]";
-    iconColor = "text-[#22c55e]";
-  }
+  const iconColor = {
+    default: 'text-[var(--text-muted)]',
+    critical: 'text-[var(--tier-critical)]',
+    warning: 'text-[var(--tier-watch)]',
+    success: 'text-[var(--tier-nominal)]',
+  }[variant];
 
   return (
-    <div className={`bg-[#111827] border ${borderGlow} rounded-xl p-5 flex flex-col gap-2 relative overflow-hidden group`}>
-      <div className="flex justify-between items-start">
-        <span className="text-[#94a3b8] text-sm font-medium">{label}</span>
-        {icon && <div className={`${iconColor} opacity-80 group-hover:opacity-100 transition-opacity`}>{icon}</div>}
+    <div className={`bg-[var(--space-card)] border ${borderClass} rounded-md px-4 py-3 flex flex-col gap-1.5`}>
+      <div className="flex justify-between items-center">
+        <span className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-widest">{label}</span>
+        {icon && <div className={`${iconColor} opacity-70`}>{icon}</div>}
       </div>
-      
-      <div className="flex items-baseline gap-3">
-        <span className="text-3xl font-bold text-[#e2e8f0] font-mono-data tracking-tight">{value}</span>
+      <div className="flex items-baseline gap-2">
+        <span className="text-xl font-bold text-[var(--text-primary)] font-mono-data tracking-tight">{value}</span>
         {trend && (
-          <span className={`flex items-center text-xs font-medium ${trend === 'up' ? 'text-[#ef4444]' : trend === 'down' ? 'text-[#22c55e]' : 'text-[#94a3b8]'}`}>
-            {trend === 'up' ? <ArrowUpIcon className="w-3 h-3 mr-1" /> : trend === 'down' ? <ArrowDownIcon className="w-3 h-3 mr-1" /> : <MinusIcon className="w-3 h-3 mr-1" />}
+          <span className={`flex items-center text-[10px] font-medium ${
+            trend === 'up' ? 'text-[var(--tier-critical)]' : trend === 'down' ? 'text-[var(--tier-nominal)]' : 'text-[var(--text-muted)]'
+          }`}>
+            {trend === 'up' ? <ArrowUpIcon className="w-3 h-3" /> : trend === 'down' ? <ArrowDownIcon className="w-3 h-3" /> : <MinusIcon className="w-3 h-3" />}
           </span>
         )}
       </div>
-      
-      {subValue && (
-        <span className="text-xs text-[#64748b]">{subValue}</span>
-      )}
+      {subValue && <span className="text-[10px] text-[var(--text-dim)]">{subValue}</span>}
     </div>
   );
 }

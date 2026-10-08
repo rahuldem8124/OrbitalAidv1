@@ -25,7 +25,7 @@ export default function AlertActions({ alertId }: { alertId: string }) {
     <button
       disabled={loading}
       onClick={handle}
-      className="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 text-xs font-semibold disabled:opacity-50"
+      className="px-3 py-1 rounded-md bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 text-xs font-semibold disabled:opacity-50"
     >
       Acknowledge
     </button>

@@ -39,17 +39,17 @@ export default function TopBar() {
         const s = h.status?.toLowerCase() ?? "";
         if (s === "operational" || s === "healthy") {
           setSystemStatus("online");
-          setSystemLabel("System Operational");
+          setSystemLabel("SYSTEM NOMINAL");
         } else if (s === "degraded") {
           setSystemStatus("degraded");
-          setSystemLabel("System Degraded");
+          setSystemLabel("SYSTEM DEGRADED");
         } else {
           setSystemStatus("degraded");
-          setSystemLabel("Status Unknown");
+          setSystemLabel("STATUS UNKNOWN");
         }
       } catch {
         setSystemStatus("offline");
-        setSystemLabel("Backend Offline");
+        setSystemLabel("BACKEND OFFLINE");
       }
     };
     check();
@@ -58,12 +58,12 @@ export default function TopBar() {
   }, []);
 
   const getPageTitle = () => {
-    if (pathname === "/") return "Mission Control";
+    if (pathname === "/") return "MISSION CONTROL";
     const segment = pathname.split("/")[1];
     if (!segment) return "";
     return segment
       .split("-")
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .map((w) => w.toUpperCase())
       .join(" ");
   };
 
@@ -74,9 +74,9 @@ export default function TopBar() {
   };
 
   return (
-    <div className="h-16 bg-[#111827]/95 backdrop-blur-sm border-b border-[#1e293b] flex items-center justify-between px-6 sticky top-0 z-40">
+    <div className="h-14 shrink-0 bg-[var(--space-panel)] border-b border-[var(--space-border)] flex items-center justify-between px-6 z-40">
       <div className="flex items-center gap-4">
-        <h1 className="text-[#e2e8f0] font-semibold text-lg">{getPageTitle()}</h1>
+        <h1 className="text-[var(--text-primary)] font-mono font-semibold tracking-widest text-sm">{getPageTitle()}</h1>
       </div>
 
       <div className="flex-1 flex justify-center max-w-xl mx-8">
@@ -88,19 +88,19 @@ export default function TopBar() {
           <SystemHealthIndicator status={systemStatus} label={systemLabel} />
         </div>
 
-        <div className="h-6 w-px bg-[#1e293b]" />
+        <div className="h-4 w-px bg-[var(--space-border-bright)]" />
 
-        <div className="text-[#94a3b8] text-xs font-mono tracking-tight text-right whitespace-nowrap min-w-[200px]">
+        <div className="text-[var(--text-muted)] text-[11px] font-mono tracking-wider text-right whitespace-nowrap min-w-[180px]">
           {utcStr}
         </div>
 
         <button
           onClick={() => router.push("/alerts")}
-          className="relative p-2 text-[#94a3b8] hover:text-[#e2e8f0] hover:bg-[#1a2332] rounded-lg transition-colors"
+          className="relative p-1.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--space-card-hover)] rounded-sm transition-colors"
           title="View active alerts"
         >
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#ef4444] rounded-full ring-2 ring-[#111827]" />
+          <Bell className="w-4 h-4" />
+          <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-[var(--tier-critical)] rounded-full ring-2 ring-[var(--space-panel)]" />
         </button>
       </div>
     </div>

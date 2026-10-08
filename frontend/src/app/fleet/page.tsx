@@ -98,13 +98,13 @@ export default function FleetPage() {
         <MetricCard label="Debris" value={stats?.debris || objects.filter(o => o.type === 'debris').length} variant="default" />
       </div>
 
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-[#1e293b] pb-4">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-[var(--space-border)] pb-4">
         <div className="flex items-center gap-4 w-full md:w-auto">
           <span className="text-sm text-gray-400 whitespace-nowrap">Filter by Type:</span>
           <select 
             value={typeFilter}
             onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-            className="bg-[#111827] border border-[#1e293b] text-sm rounded-lg px-3 py-1.5 text-white focus:outline-none focus:border-teal-500 w-full md:w-auto"
+            className="bg-[var(--space-panel)] border border-[var(--space-border)] text-sm rounded-md px-3 py-1.5 text-white focus:outline-none focus:border-teal-500 w-full md:w-auto"
           >
             <option value="all">All</option>
             <option value="satellite">Satellite</option>
@@ -119,7 +119,7 @@ export default function FleetPage() {
           </div>
           <input
             type="text"
-            className="bg-[#111827] border border-[#1e293b] text-sm rounded-lg block w-full pl-10 p-2 text-white focus:outline-none focus:border-teal-500 placeholder-gray-500"
+            className="bg-[var(--space-panel)] border border-[var(--space-border)] text-sm rounded-md block w-full pl-10 p-2 text-white focus:outline-none focus:border-teal-500 placeholder-gray-500"
             placeholder="Search Name or NORAD ID..."
             value={searchQuery}
             onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
@@ -140,7 +140,7 @@ export default function FleetPage() {
       />
 
       {selectedObject && (
-        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-[#0a0e17] border-l border-[#1e293b] shadow-2xl p-6 overflow-y-auto z-50 flex flex-col gap-6">
+        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-[var(--space-canvas)] border-l border-[var(--space-border)] shadow-2xl p-6 overflow-y-auto z-50 flex flex-col gap-6">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-2xl text-white font-bold mb-2">{selectedObject.object_name}</h2>
@@ -151,7 +151,7 @@ export default function FleetPage() {
             </button>
           </div>
 
-          <div className="bg-[#111827] rounded-lg p-5 border border-[#1e293b] flex flex-col gap-5">
+          <div className="bg-[var(--space-panel)] rounded-md p-5 border border-[var(--space-border)] flex flex-col gap-5">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <span className="text-xs text-gray-500 uppercase block mb-1">NORAD ID</span>
@@ -163,7 +163,7 @@ export default function FleetPage() {
               </div>
             </div>
             
-            <div className="border-t border-[#1e293b] pt-4">
+            <div className="border-t border-[var(--space-border)] pt-4">
               <span className="text-xs text-gray-500 uppercase block mb-1">Ownership</span>
               <div className="flex items-center gap-2">
                 {selectedObject.is_own_asset ? (
@@ -174,12 +174,12 @@ export default function FleetPage() {
               </div>
             </div>
 
-            <div className="border-t border-[#1e293b] pt-4">
+            <div className="border-t border-[var(--space-border)] pt-4">
               <span className="text-xs text-gray-500 uppercase block mb-1">Data Source</span>
               <p className="text-gray-300 text-sm">{selectedObject.source_file}</p>
             </div>
             
-            <div className="border-t border-[#1e293b] pt-4">
+            <div className="border-t border-[var(--space-border)] pt-4">
               <span className="text-xs text-gray-500 uppercase block mb-1">Internal Database ID</span>
               <p className="text-gray-500 font-mono text-xs">{selectedObject.id}</p>
             </div>
@@ -187,7 +187,7 @@ export default function FleetPage() {
           
           <div className="mt-auto pt-6">
             <button 
-              className="w-full text-center bg-[#1e293b] hover:bg-[#2d3748] text-white py-2 rounded-lg font-semibold text-sm transition-colors"
+              className="w-full text-center bg-[var(--space-card-hover)] hover:bg-[#2d3748] text-white py-2 rounded-md font-semibold text-sm transition-colors"
               onClick={() => alert("Detailed trajectory view coming soon.")}
             >
               VIEW TRAJECTORY

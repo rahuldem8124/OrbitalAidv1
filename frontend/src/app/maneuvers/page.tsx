@@ -160,12 +160,12 @@ export default function ManeuversPage() {
         <MetricCard label="Rejected" value={rejected} variant="critical" />
       </div>
 
-      <div className="flex items-center gap-4 border-b border-[#1e293b] pb-4">
+      <div className="flex items-center gap-4 border-b border-[var(--space-border)] pb-4">
         <span className="text-sm text-gray-400">Filter by Status:</span>
         <select 
           value={statusFilter}
           onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-          className="bg-[#111827] border border-[#1e293b] text-sm rounded-lg px-3 py-1.5 text-white focus:outline-none focus:border-teal-500"
+          className="bg-[var(--space-panel)] border border-[var(--space-border)] text-sm rounded-md px-3 py-1.5 text-white focus:outline-none focus:border-teal-500"
         >
           <option value="all">All</option>
           <option value="proposed">Proposed</option>
@@ -190,7 +190,7 @@ export default function ManeuversPage() {
       />
 
       {selectedManeuver && (
-        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-[#0a0e17] border-l border-[#1e293b] shadow-2xl p-6 overflow-y-auto z-50 flex flex-col gap-6">
+        <div className="fixed inset-y-0 right-0 w-full max-w-md bg-[var(--space-canvas)] border-l border-[var(--space-border)] shadow-2xl p-6 overflow-y-auto z-50 flex flex-col gap-6">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-xl text-white font-mono mb-2">ID: {selectedManeuver.id.slice(0, 8)}...</h2>
@@ -201,7 +201,7 @@ export default function ManeuversPage() {
             </button>
           </div>
 
-          <div className="bg-[#111827] rounded-lg p-4 border border-[#1e293b] flex flex-col gap-4">
+          <div className="bg-[var(--space-panel)] rounded-md p-4 border border-[var(--space-border)] flex flex-col gap-4">
             <div>
               <span className="text-xs text-gray-500 uppercase">Related Conjunction</span>
               <p className="text-cyan-400 font-mono text-sm">{selectedManeuver.conjunction_event_id}</p>
@@ -225,7 +225,7 @@ export default function ManeuversPage() {
               </div>
             </div>
             
-            <div className="border-t border-[#1e293b] pt-4 mt-2">
+            <div className="border-t border-[var(--space-border)] pt-4 mt-2">
               <span className="text-xs text-gray-500 uppercase">Timestamps</span>
               <p className="text-sm text-gray-300">Proposed: <span className="font-mono">{new Date(selectedManeuver.proposed_at).toLocaleString()}</span></p>
               {selectedManeuver.decided_at && (
@@ -243,7 +243,7 @@ export default function ManeuversPage() {
             {selectedManeuver.notes && (
               <div>
                 <span className="text-xs text-gray-500 uppercase">Notes</span>
-                <p className="text-sm text-gray-300 bg-[#0a0e17] p-2 rounded border border-[#1e293b] mt-1">{selectedManeuver.notes}</p>
+                <p className="text-sm text-gray-300 bg-[var(--space-canvas)] p-2 rounded border border-[var(--space-border)] mt-1">{selectedManeuver.notes}</p>
               </div>
             )}
           </div>
@@ -278,14 +278,14 @@ export default function ManeuversPage() {
                 <button 
                   onClick={() => handleApprove(selectedManeuver.id)} 
                   disabled={actionLoading}
-                  className="flex-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 py-2 rounded-lg font-semibold disabled:opacity-50"
+                  className="flex-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 py-2 rounded-md font-semibold disabled:opacity-50"
                 >
                   {actionLoading ? "Processing..." : "APPROVE"}
                 </button>
                 <button 
                   onClick={() => handleReject(selectedManeuver.id)} 
                   disabled={actionLoading}
-                  className="flex-1 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 py-2 rounded-lg font-semibold disabled:opacity-50"
+                  className="flex-1 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 py-2 rounded-md font-semibold disabled:opacity-50"
                 >
                   {actionLoading ? "Processing..." : "REJECT"}
                 </button>
@@ -293,7 +293,7 @@ export default function ManeuversPage() {
             )}
             <Link 
               href={`/conjunctions/${selectedManeuver.conjunction_event_id}`}
-              className="w-full text-center bg-[#1e293b] hover:bg-[#2d3748] text-white py-2 rounded-lg font-semibold text-sm transition-colors"
+              className="w-full text-center bg-[var(--space-card-hover)] hover:bg-[#2d3748] text-white py-2 rounded-md font-semibold text-sm transition-colors"
             >
               VIEW CONJUNCTION
             </Link>

@@ -1,34 +1,5 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-
-  --bg-space: #0a0e17;
-  --bg-surface: #111827;
-  --bg-surface-alt: #1a2332;
-  --bg-surface-hover: #1e293b;
-  --border-default: #1e293b;
-  --border-focus: rgba(45, 212, 191, 0.2);
-  
-  --text-primary: #e2e8f0;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  
-  --accent: #2dd4bf;
-  --accent-dim: rgba(45, 212, 191, 0.2);
-  
-  --risk-critical: #ef4444;
-  --risk-high: #f97316;
-  --risk-medium: #eab308;
-  --risk-low: #22c55e;
-  --risk-monitored: #6366f1;
-  
-  --status-active: #2dd4bf;
-  --status-pending: #eab308;
-  --status-resolved: #22c55e;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -36,44 +7,72 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #050608;
+  --foreground: #E2E8F0;
+
+  /* Aerospace C2 Palette */
+  --space-canvas: #050608;
+  --space-panel: #0A0D14;
+  --space-card: #0E121B;
+  --space-card-hover: #141926;
+  --space-border: #1A2130;
+  --space-border-bright: #2A344A;
+
+  /* Status & Risk Tiers */
+  --tier-critical: #EF4444;
+  --tier-high: #F97316;
+  --tier-watch: #EAB308;
+  --tier-nominal: #22C55E;
+  --accent-amber: #F59E0B;
+  --accent-cyan: #06B6D4;
+
+  /* Text hierarchy */
+  --text-primary: #E2E8F0;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --text-dim: #475569;
 }
 
 body {
-  background-color: var(--bg-space);
+  background-color: var(--space-canvas);
   color: var(--text-primary);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Monospace for telemetry data */
 .font-mono-data {
-  font-family: var(--font-mono), 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-family: var(--font-mono), 'JetBrains Mono', 'Fira Code', monospace;
   font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
 }
 
-/* Subtle grid overlay for mission control feel */
+/* Aerospace grid overlay */
 .grid-overlay {
-  background-image: 
-    linear-gradient(rgba(45, 212, 191, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(45, 212, 191, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-image:
+    linear-gradient(rgba(245, 158, 11, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 158, 11, 0.02) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
-/* Scanline effect (very subtle) */
-.scanline::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.03) 2px,
-    rgba(0, 0, 0, 0.03) 4px
-  );
-  pointer-events: none;
+/* Tactical scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--space-panel);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--space-border-bright);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3A4A6A;
+}
+
+/* Remove all rounded-2xl/3xl bubble styling globally */
+* {
+  --tw-ring-offset-color: var(--space-canvas);
 }

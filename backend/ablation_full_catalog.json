@@ -1,0 +1,25 @@
+{
+  "scope": "full_catalog",
+  "objects_total": 17724,
+  "objects_without_elements": 0,
+  "objects_used": 17724,
+  "parameters": {
+    "altitude_tolerance_km": 50,
+    "inclination_tolerance_deg": 5.0,
+    "raan_tolerance_deg": 3.0
+  },
+  "candidate_pairs": {
+    "A_altitude_only": 41723374,
+    "B_plus_inclination": 15003695,
+    "C_plus_raan_production": 364779
+  },
+  "reduction_vs_A_percent": {
+    "B": 64.04,
+    "C": 99.13
+  },
+  "timing_seconds": {
+    "load": 3.66,
+    "count": 1.94
+  },
+  "run_at_utc": "2026-10-08T03:39:06.207991+00:00"
+}

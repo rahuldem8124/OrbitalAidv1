@@ -7,20 +7,20 @@ interface SystemHealthIndicatorProps {
 
 export default function SystemHealthIndicator({ status, label }: SystemHealthIndicatorProps) {
   const config = {
-    online: { color: "bg-[#22c55e]", shadow: "shadow-[0_0_8px_rgba(34,197,94,0.5)]" },
-    degraded: { color: "bg-[#eab308]", shadow: "shadow-[0_0_8px_rgba(234,179,8,0.5)]" },
-    offline: { color: "bg-[#ef4444]", shadow: "shadow-[0_0_8px_rgba(239,68,68,0.5)]" },
+    online: { dot: 'bg-[var(--tier-nominal)]', ring: 'ring-[var(--tier-nominal)]/20', text: 'text-emerald-400' },
+    degraded: { dot: 'bg-[var(--tier-watch)]', ring: 'ring-[var(--tier-watch)]/20', text: 'text-amber-400' },
+    offline: { dot: 'bg-[var(--tier-critical)]', ring: 'ring-[var(--tier-critical)]/20', text: 'text-red-400' },
   }[status];
 
   return (
-    <div className="flex items-center gap-2" title={`System Status: ${status}`}>
-      <div className="relative flex items-center justify-center">
-        <div className={`w-2.5 h-2.5 rounded-full ${config.color} ${config.shadow} z-10`}></div>
+    <div className="flex items-center gap-2" title={`Status: ${status}`}>
+      <span className={`relative flex h-2 w-2`}>
         {status === 'online' && (
-          <div className="absolute w-4 h-4 rounded-full bg-[#22c55e]/30 animate-ping"></div>
+          <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${config.dot} opacity-40`}></span>
         )}
-      </div>
-      {label && <span className="text-xs font-medium text-[#94a3b8]">{label}</span>}
+        <span className={`relative inline-flex rounded-full h-2 w-2 ${config.dot}`}></span>
+      </span>
+      {label && <span className={`text-[10px] font-mono font-semibold uppercase tracking-wider ${config.text}`}>{label}</span>}
     </div>
   );
 }

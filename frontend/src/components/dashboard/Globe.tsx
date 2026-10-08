@@ -135,7 +135,7 @@ export default function Globe({ positions }: GlobeProps) {
   const sunDirection = new THREE.Vector3(1, 0.5, 0.5).normalize();
 
   return (
-    <div className="w-full h-full bg-[#020308] rounded-2xl overflow-hidden">
+    <div className="w-full h-full bg-[#020308] rounded-md overflow-hidden">
       <Canvas camera={{ position: [0, 2, 6], fov: 45 }}>
         <ambientLight intensity={0.15} />
         <directionalLight

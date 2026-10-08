@@ -16,15 +16,15 @@ interface FilterBarProps {
 
 export default function FilterBar({ filters, onReset }: FilterBarProps) {
   return (
-    <div className="flex flex-wrap items-center gap-3 p-3 bg-[#111827] border border-[#1e293b] rounded-xl">
+    <div className="flex flex-wrap items-center gap-3 p-3 bg-[var(--space-panel)] border border-[var(--space-border)] rounded-md">
       {filters.map((filter) => (
         <div key={filter.key} className="flex items-center gap-2">
-          <label className="text-xs text-[#94a3b8] font-medium">{filter.label}</label>
+          <label className="text-xs text-[var(--text-secondary)] font-medium">{filter.label}</label>
           {filter.type === 'select' && filter.options ? (
             <select
               value={filter.value}
               onChange={(e) => filter.onChange(e.target.value)}
-              className="bg-[#1a2332] border border-[#1e293b] text-sm text-[#e2e8f0] rounded-md px-2 py-1 focus:outline-none focus:border-[#2dd4bf]/50"
+              className="bg-[var(--space-card)] border border-[var(--space-border)] text-sm text-[var(--text-primary)] rounded-md px-2 py-1 focus:outline-none focus:border-[#2dd4bf]/50"
             >
               <option value="">All</option>
               {filter.options.map(opt => (
@@ -36,7 +36,7 @@ export default function FilterBar({ filters, onReset }: FilterBarProps) {
               type="date"
               value={filter.value}
               onChange={(e) => filter.onChange(e.target.value)}
-              className="bg-[#1a2332] border border-[#1e293b] text-sm text-[#e2e8f0] rounded-md px-2 py-1 focus:outline-none focus:border-[#2dd4bf]/50"
+              className="bg-[var(--space-card)] border border-[var(--space-border)] text-sm text-[var(--text-primary)] rounded-md px-2 py-1 focus:outline-none focus:border-[#2dd4bf]/50"
             />
           ) : (
             <input
@@ -44,7 +44,7 @@ export default function FilterBar({ filters, onReset }: FilterBarProps) {
               value={filter.value}
               onChange={(e) => filter.onChange(e.target.value)}
               placeholder={`Search ${filter.label}...`}
-              className="bg-[#1a2332] border border-[#1e293b] text-sm text-[#e2e8f0] rounded-md px-2 py-1 focus:outline-none focus:border-[#2dd4bf]/50 placeholder:text-[#64748b]"
+              className="bg-[var(--space-card)] border border-[var(--space-border)] text-sm text-[var(--text-primary)] rounded-md px-2 py-1 focus:outline-none focus:border-[#2dd4bf]/50 placeholder:text-[var(--text-muted)]"
             />
           )}
         </div>
@@ -52,7 +52,7 @@ export default function FilterBar({ filters, onReset }: FilterBarProps) {
       {onReset && filters.some(f => f.value !== "") && (
         <button
           onClick={onReset}
-          className="ml-auto flex items-center gap-1 text-xs text-[#64748b] hover:text-[#e2e8f0] transition-colors"
+          className="ml-auto flex items-center gap-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
         >
           <X className="w-3 h-3" /> Reset
         </button>

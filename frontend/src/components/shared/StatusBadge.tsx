@@ -2,36 +2,41 @@
 
 interface StatusBadgeProps {
   status: string;
-  variant?: 'default' | 'outline';
 }
 
-export default function StatusBadge({ status, variant = 'default' }: StatusBadgeProps) {
-  const normalizedStatus = status.toLowerCase();
-  
-  let colorClass = "text-gray-400 bg-gray-800 border-gray-700";
-  
-  if (["active", "approved", "resolved", "executed"].includes(normalizedStatus)) {
-    colorClass = "text-[#2dd4bf] bg-[#2dd4bf]/10 border-[#2dd4bf]/30";
-  } else if (["pending", "proposed", "under_review"].includes(normalizedStatus)) {
-    colorClass = "text-[#eab308] bg-[#eab308]/10 border-[#eab308]/30";
-  } else if (["rejected", "expired"].includes(normalizedStatus)) {
-    colorClass = "text-[#ef4444] bg-[#ef4444]/10 border-[#ef4444]/30";
-  } else if (["verified"].includes(normalizedStatus)) {
-    colorClass = "text-[#22c55e] bg-[#22c55e]/10 border-[#22c55e]/30";
-  }
+export default function StatusBadge({ status }: StatusBadgeProps) {
+  const s = status.toLowerCase();
 
-  const baseClass = "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium font-mono uppercase tracking-wider";
-  
-  if (variant === 'outline') {
-    return (
-      <span className={`${baseClass} border ${colorClass.replace(/bg-\[[^\]]+\]\/10/g, 'bg-transparent')} ${colorClass.match(/text-\[[^\]]+\]/)?.[0] || 'text-gray-400'}`}>
-        {status}
-      </span>
-    );
+  let dotColor = 'bg-[var(--text-dim)]';
+  let textColor = 'text-[var(--text-muted)]';
+  let bgColor = 'bg-[var(--space-card)]';
+  let borderColor = 'border-[var(--space-border-bright)]';
+
+  if (['active', 'approved', 'resolved', 'executed'].includes(s)) {
+    dotColor = 'bg-[var(--tier-nominal)]';
+    textColor = 'text-emerald-400';
+    bgColor = 'bg-emerald-950/30';
+    borderColor = 'border-emerald-800';
+  } else if (['pending', 'proposed', 'under_review'].includes(s)) {
+    dotColor = 'bg-[var(--accent-amber)]';
+    textColor = 'text-amber-400';
+    bgColor = 'bg-amber-950/30';
+    borderColor = 'border-amber-800';
+  } else if (['rejected', 'expired', 'failed'].includes(s)) {
+    dotColor = 'bg-[var(--tier-critical)]';
+    textColor = 'text-red-400';
+    bgColor = 'bg-red-950/30';
+    borderColor = 'border-red-800';
+  } else if (['verified'].includes(s)) {
+    dotColor = 'bg-[var(--accent-cyan)]';
+    textColor = 'text-cyan-400';
+    bgColor = 'bg-cyan-950/30';
+    borderColor = 'border-cyan-800';
   }
 
   return (
-    <span className={`${baseClass} border ${colorClass}`}>
+    <span className={`inline-flex items-center gap-1.5 rounded-sm border font-mono text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 ${bgColor} ${borderColor} ${textColor}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`}></span>
       {status}
     </span>
   );

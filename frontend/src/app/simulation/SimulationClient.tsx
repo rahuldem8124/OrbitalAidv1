@@ -131,7 +131,7 @@ export default function SimulationClient() {
       <div className="flex gap-2">
         <button
           onClick={() => setTab("new-object")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold transition-colors ${
             tab === "new-object"
               ? "bg-white/10 border border-white/20 text-white"
               : "bg-transparent border border-white/5 text-white/50 hover:text-white/70"
@@ -142,7 +142,7 @@ export default function SimulationClient() {
         </button>
         <button
           onClick={() => setTab("maneuver")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold transition-colors ${
             tab === "maneuver"
               ? "bg-white/10 border border-white/20 text-white"
               : "bg-transparent border border-white/5 text-white/50 hover:text-white/70"
@@ -165,7 +165,7 @@ export default function SimulationClient() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm font-mono focus:outline-none focus:border-cyan-500/50"
+                className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm font-mono focus:outline-none focus:border-cyan-500/50"
               />
             </div>
 
@@ -191,7 +191,7 @@ export default function SimulationClient() {
                         [field.key]: e.target.value,
                       }))
                     }
-                    className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm font-mono focus:outline-none focus:border-cyan-500/50"
+                    className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm font-mono focus:outline-none focus:border-cyan-500/50"
                   />
                 </div>
               ))}
@@ -200,7 +200,7 @@ export default function SimulationClient() {
             <button
               type="submit"
               disabled={newObjLoading}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 text-sm font-semibold disabled:opacity-50 transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 text-sm font-semibold disabled:opacity-50 transition-colors"
             >
               {newObjLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -212,7 +212,7 @@ export default function SimulationClient() {
           </form>
 
           {newObjError && (
-            <p className="mt-4 text-amber-400/80 text-sm p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+            <p className="mt-4 text-amber-400/80 text-sm p-3 rounded-md bg-amber-500/10 border border-amber-500/20">
               {newObjError}
             </p>
           )}
@@ -233,7 +233,7 @@ export default function SimulationClient() {
                   {newObjResult.results.map((r, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5"
+                      className="flex items-center justify-between p-3 rounded-md bg-white/5 border border-white/5"
                     >
                       <div className="flex items-center gap-3">
                         <div>
@@ -282,7 +282,7 @@ export default function SimulationClient() {
                   required
                   value={assetId}
                   onChange={(e) => setAssetId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500/50"
+                  className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500/50"
                 >
                   <option value="" className="bg-gray-900">Select asset…</option>
                   {objects.map((obj) => (
@@ -300,7 +300,7 @@ export default function SimulationClient() {
                   required
                   value={threatId}
                   onChange={(e) => setThreatId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500/50"
+                  className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500/50"
                 >
                   <option value="" className="bg-gray-900">Select threat…</option>
                   {objects.map((obj) => (
@@ -322,7 +322,7 @@ export default function SimulationClient() {
                 required
                 value={deltaV}
                 onChange={(e) => setDeltaV(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm font-mono focus:outline-none focus:border-cyan-500/50"
+                className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm font-mono focus:outline-none focus:border-cyan-500/50"
                 placeholder="e.g. 0.5"
               />
             </div>
@@ -330,7 +330,7 @@ export default function SimulationClient() {
             <button
               type="submit"
               disabled={maneuverLoading}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 text-sm font-semibold disabled:opacity-50 transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 text-sm font-semibold disabled:opacity-50 transition-colors"
             >
               {maneuverLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -342,7 +342,7 @@ export default function SimulationClient() {
           </form>
 
           {maneuverError && (
-            <p className="mt-4 text-amber-400/80 text-sm p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+            <p className="mt-4 text-amber-400/80 text-sm p-3 rounded-md bg-amber-500/10 border border-amber-500/20">
               {maneuverError}
             </p>
           )}
@@ -363,7 +363,7 @@ export default function SimulationClient() {
 
               <div className="grid grid-cols-[1fr_auto_1fr] gap-3 items-stretch">
                 {/* Current */}
-                <div className="p-4 rounded-lg bg-white/5 border border-white/5">
+                <div className="p-4 rounded-md bg-white/5 border border-white/5">
                   <p className="text-white/40 text-xs font-semibold uppercase mb-3">Current</p>
                   <div className="space-y-2">
                     <div>
@@ -394,7 +394,7 @@ export default function SimulationClient() {
 
                 {/* Predicted */}
                 <div
-                  className={`p-4 rounded-lg border ${
+                  className={`p-4 rounded-md border ${
                     getImprovement(
                       maneuverResult.current_risk_tier,
                       maneuverResult.predicted_new_risk_tier
@@ -430,7 +430,7 @@ export default function SimulationClient() {
               </div>
 
               {/* Disclaimer */}
-              <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+              <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/10 border border-amber-500/20">
                 <AlertTriangle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
                 <p className="text-amber-400/80 text-xs leading-relaxed">
                   Estimate uses a simplified linearized model, not a full orbit re-propagation.

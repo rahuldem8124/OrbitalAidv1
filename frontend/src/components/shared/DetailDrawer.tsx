@@ -24,21 +24,21 @@ export default function DetailDrawer({ open, onClose, title, children, width = "
 
   return (
     <>
-      <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity"
+      <div
+        className="fixed inset-0 bg-black/60 z-40"
         onClick={onClose}
       />
-      <div className={`fixed top-0 right-0 h-full bg-[#111827] border-l border-[#1e293b] shadow-2xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${width} ${open ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#1e293b]">
-          <h2 className="text-lg font-semibold text-[#e2e8f0]">{title}</h2>
-          <button 
+      <div className={`fixed top-0 right-0 h-full bg-[var(--space-panel)] border-l border-[var(--space-border)] z-50 flex flex-col ${width}`}>
+        <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--space-border)]">
+          <h2 className="text-sm font-mono font-semibold text-[var(--text-primary)] uppercase tracking-wider">{title}</h2>
+          <button
             onClick={onClose}
-            className="p-1 rounded hover:bg-[#1e293b] text-[#94a3b8] hover:text-[#e2e8f0] transition-colors"
+            className="p-1 rounded-sm hover:bg-[var(--space-card-hover)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-5">
           {children}
         </div>
       </div>

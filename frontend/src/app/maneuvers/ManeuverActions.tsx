@@ -30,14 +30,14 @@ export default function ManeuverActions({ maneuverId }: { maneuverId: string }) 
       <button
         disabled={loading}
         onClick={() => handle("approve")}
-        className="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 text-xs font-semibold disabled:opacity-50"
+        className="px-3 py-1 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 text-xs font-semibold disabled:opacity-50"
       >
         Approve
       </button>
       <button
         disabled={loading}
         onClick={() => handle("reject")}
-        className="px-3 py-1 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 text-xs font-semibold disabled:opacity-50"
+        className="px-3 py-1 rounded-md bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 text-xs font-semibold disabled:opacity-50"
       >
         Reject
       </button>

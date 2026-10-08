@@ -133,20 +133,20 @@ export default function ConjunctionDetailPanel({
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-lg bg-white/5 border border-white/5">
+              <div className="p-3 rounded-md bg-white/5 border border-white/5">
                 <p className="text-white/40 text-xs">Miss Distance</p>
                 <p className="text-cyan-400 font-mono font-semibold">
                   {conjunction.miss_distance_km.toFixed(1)} km
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-white/5 border border-white/5">
+              <div className="p-3 rounded-md bg-white/5 border border-white/5">
                 <p className="text-white/40 text-xs">TCA</p>
                 <p className="text-white font-mono font-semibold text-sm">
                   {new Date(conjunction.tca).toLocaleString()}
                 </p>
               </div>
               {conjunction.relative_velocity_kmps != null && (
-                <div className="p-3 rounded-lg bg-white/5 border border-white/5">
+                <div className="p-3 rounded-md bg-white/5 border border-white/5">
                   <p className="text-white/40 text-xs">Relative Velocity</p>
                   <p className="text-purple-400 font-mono font-semibold">
                     {conjunction.relative_velocity_kmps.toFixed(2)} km/s
@@ -154,7 +154,7 @@ export default function ConjunctionDetailPanel({
                 </div>
               )}
               {conjunction.pc != null && (
-                <div className="p-3 rounded-lg bg-white/5 border border-white/5">
+                <div className="p-3 rounded-md bg-white/5 border border-white/5">
                   <p className="text-white/40 text-xs">Collision Probability</p>
                   <p className="text-rose-400 font-mono font-semibold">
                     {(conjunction.pc * 100).toFixed(4)}%
@@ -186,7 +186,7 @@ export default function ConjunctionDetailPanel({
                   </div>
                   {actionResult ? (
                     <div
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold text-center ${
+                      className={`px-3 py-1.5 rounded-md text-xs font-semibold text-center ${
                         actionResult === "approved"
                           ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                           : "bg-red-500/20 text-red-400 border border-red-500/30"
@@ -199,14 +199,14 @@ export default function ConjunctionDetailPanel({
                       <button
                         disabled={actionLoading}
                         onClick={() => handleAction("approve", proposedManeuver.id)}
-                        className="flex-1 px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 text-xs font-semibold disabled:opacity-50"
+                        className="flex-1 px-3 py-1.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 text-xs font-semibold disabled:opacity-50"
                       >
                         Approve
                       </button>
                       <button
                         disabled={actionLoading}
                         onClick={() => handleAction("reject", proposedManeuver.id)}
-                        className="flex-1 px-3 py-1.5 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 text-xs font-semibold disabled:opacity-50"
+                        className="flex-1 px-3 py-1.5 rounded-md bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 text-xs font-semibold disabled:opacity-50"
                       >
                         Reject
                       </button>
@@ -216,7 +216,7 @@ export default function ConjunctionDetailPanel({
               ) : (
                 <button
                   disabled
-                  className="w-full px-3 py-1.5 rounded-lg bg-white/5 text-white/30 border border-white/5 text-xs font-semibold cursor-not-allowed"
+                  className="w-full px-3 py-1.5 rounded-md bg-white/5 text-white/30 border border-white/5 text-xs font-semibold cursor-not-allowed"
                 >
                   No maneuver proposed
                 </button>
@@ -227,7 +227,7 @@ export default function ConjunctionDetailPanel({
               <button
                 onClick={handleExplain}
                 disabled={explainLoading}
-                className="w-full flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 text-xs font-semibold disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 px-3 py-1.5 rounded-md bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 text-xs font-semibold disabled:opacity-50"
               >
                 {explainLoading ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -237,12 +237,12 @@ export default function ConjunctionDetailPanel({
                 {explainLoading ? "Analyzing…" : "Explain this risk"}
               </button>
               {explanation && (
-                <p className="mt-2 text-white/70 text-xs leading-relaxed p-3 rounded-lg bg-white/5 border border-white/5">
+                <p className="mt-2 text-white/70 text-xs leading-relaxed p-3 rounded-md bg-white/5 border border-white/5">
                   {explanation}
                 </p>
               )}
               {explainError && (
-                <p className="mt-2 text-amber-400/80 text-xs p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                <p className="mt-2 text-amber-400/80 text-xs p-3 rounded-md bg-amber-500/10 border border-amber-500/20">
                   {explainError}
                 </p>
               )}

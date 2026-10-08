@@ -1,7 +1,9 @@
+"use client";
+
 import { Alert, Maneuver } from "@/lib/types";
-import GlassPanel from "@/components/ui/GlassPanel";
-import Link from "next/link";
-import { ArrowUpRight, Bell, ShieldAlert, Clock } from "lucide-react";
+import { timeAgo } from "@/lib/time";
+import { Bell, ShieldAlert, ChevronUp, ChevronDown } from "lucide-react";
+import { useState } from "react";
 
 interface ActivityFeedProps {
   alerts: Alert[];
@@ -9,119 +11,77 @@ interface ActivityFeedProps {
 }
 
 type ActivityItem =
-  | {
-      type: "alert";
-      data: Alert;
-    }
-  | {
-      type: "maneuver";
-      data: Maneuver;
-    };
+  | { type: "alert"; data: Alert }
+  | { type: "maneuver"; data: Maneuver };
 
-export default function ActivityFeed({
-  alerts,
-  maneuvers,
-}: ActivityFeedProps) {
+export default function ActivityFeed({ alerts, maneuvers }: ActivityFeedProps) {
+  const [expanded, setExpanded] = useState(false);
+
   const activities: ActivityItem[] = [
-    ...alerts.map(
-      (a): ActivityItem => ({
-        type: "alert",
-        data: a,
-      })
-    ),
-    ...maneuvers.map(
-      (m): ActivityItem => ({
-        type: "maneuver",
-        data: m,
-      })
-    ),
+    ...alerts.map((a): ActivityItem => ({ type: "alert", data: a })),
+    ...maneuvers.map((m): ActivityItem => ({ type: "maneuver", data: m })),
   ]
     .sort((a, b) => {
-      const dateA = new Date(
-        a.type === "alert" ? a.data.created_at : a.data.proposed_at
-      );
-      const dateB = new Date(
-        b.type === "alert" ? b.data.created_at : b.data.proposed_at
-      );
-
+      const dateA = new Date(a.type === "alert" ? a.data.created_at : a.data.proposed_at);
+      const dateB = new Date(b.type === "alert" ? b.data.created_at : b.data.proposed_at);
       return dateB.getTime() - dateA.getTime();
     })
-    .slice(0, 10);
+    .slice(0, expanded ? 20 : 6);
+
+  const severityDot = (severity: string) => {
+    switch (severity.toLowerCase()) {
+      case 'critical': return 'bg-[var(--tier-critical)]';
+      case 'high': return 'bg-[var(--tier-high)]';
+      case 'warning': case 'watch': return 'bg-[var(--tier-watch)]';
+      default: return 'bg-[var(--text-dim)]';
+    }
+  };
 
   return (
-    <GlassPanel className="flex flex-col h-full">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-white">
-          Activity Feed
-        </h3>
-
-        <div className="flex gap-2">
-          <Link
-            href="/alerts"
-            className="text-cyan-400 text-sm hover:text-cyan-300 flex items-center gap-1"
-          >
-            Alerts
-            <ArrowUpRight className="w-4 h-4" />
-          </Link>
-
-          <Link
-            href="/maneuvers"
-            className="text-cyan-400 text-sm hover:text-cyan-300 flex items-center gap-1"
-          >
-            Maneuvers
-            <ArrowUpRight className="w-4 h-4" />
-          </Link>
+    <div className="flex flex-col h-full bg-[var(--space-panel)]/90 backdrop-blur-md border-t border-[var(--space-border)]">
+      {/* Header bar with toggle */}
+      <div
+        className="flex items-center justify-between px-4 py-2 cursor-pointer select-none hover:bg-[var(--space-card-hover)]/50 transition-colors"
+        onClick={() => setExpanded(!expanded)}
+      >
+        <span className="text-[10px] font-mono font-semibold text-[var(--accent-amber)] uppercase tracking-widest">
+          TELEMETRY LOG
+        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono text-[var(--text-dim)]">
+            {alerts.length + maneuvers.length} events
+          </span>
+          {expanded
+            ? <ChevronDown className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+            : <ChevronUp className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+          }
         </div>
       </div>
 
-      <div className="space-y-3 overflow-y-auto flex-1">
-        {activities.map((item, idx) => (
-          <div
-            key={idx}
-            className="p-3 rounded-lg bg-white/5 border border-white/5"
-          >
-            <div className="flex items-center gap-2 mb-1">
-              {item.type === "alert" ? (
-                <Bell
-                  className={`w-4 h-4 ${
-                    item.data.severity === "critical"
-                      ? "text-red-500"
-                      : item.data.severity === "high"
-                      ? "text-orange-500"
-                      : "text-yellow-500"
-                  }`}
-                />
-              ) : (
-                <ShieldAlert className="w-4 h-4 text-purple-400" />
-              )}
+      {/* Console-style log entries */}
+      <div className={`overflow-y-auto px-4 pb-2 space-y-0.5 ${expanded ? 'max-h-[280px]' : 'max-h-[140px]'} transition-all duration-200`}>
+        {activities.map((item, idx) => {
+          const timestamp = item.type === "alert" ? item.data.created_at : item.data.proposed_at;
+          const severity = item.type === "alert" ? item.data.severity : item.data.status;
+          const Icon = item.type === "alert" ? Bell : ShieldAlert;
+          const message = item.type === "alert"
+            ? item.data.message
+            : `Maneuver ${item.data.status.toUpperCase()} — ${item.data.asset?.object_name || 'Unknown'}`;
 
-              <p className="text-white/70 text-xs uppercase font-bold">
-                {item.type === "alert"
-                  ? item.data.severity.toUpperCase()
-                  : item.data.status.toUpperCase()}
-              </p>
-            </div>
-
-            <p className="text-white text-sm mb-1">
-              {item.type === "alert"
-                ? item.data.message
-                : `Maneuver for ${item.data.asset.object_name}`}
-            </p>
-
-            <div className="flex items-center gap-1 text-xs text-white/40">
-              <Clock className="w-3 h-3" />
-
-              <span>
-                {new Date(
-                  item.type === "alert"
-                    ? item.data.created_at
-                    : item.data.proposed_at
-                ).toLocaleString()}
+          return (
+            <div key={idx} className="flex items-start gap-2 py-1 text-[11px] font-mono leading-tight group">
+              <span className="text-[var(--text-dim)] whitespace-nowrap shrink-0">
+                {timeAgo(timestamp)}
+              </span>
+              <span className={`w-1.5 h-1.5 rounded-full mt-1 shrink-0 ${severityDot(severity)}`}></span>
+              <Icon className="w-3 h-3 mt-0.5 shrink-0 text-[var(--text-muted)]" />
+              <span className="text-[var(--text-secondary)] truncate group-hover:text-[var(--text-primary)] transition-colors">
+                {message}
               </span>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
-    </GlassPanel>
+    </div>
   );
 }

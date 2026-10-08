@@ -30,7 +30,7 @@ export default function RiskList({ conjunctions }: RiskListProps) {
             <button
               key={conj.id}
               onClick={() => setSelected(conj.id)}
-              className="w-full text-left p-3 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+              className="w-full text-left p-3 rounded-md bg-white/5 border border-white/5 hover:bg-white/10 transition-colors cursor-pointer"
             >
               <div className="flex items-start justify-between mb-2">
                 <div>

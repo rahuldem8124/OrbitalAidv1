@@ -8,8 +8,8 @@ interface LoadingStateProps {
 export default function LoadingState({ variant = 'cards', rows = 3 }: LoadingStateProps) {
   if (variant === 'table') {
     return (
-      <div className="w-full border border-[#1e293b] rounded-xl overflow-hidden bg-[#111827]">
-        <div className="h-12 bg-[#1a2332] border-b border-[#1e293b]"></div>
+      <div className="w-full border border-[var(--space-border)] rounded-md overflow-hidden bg-[var(--space-panel)]">
+        <div className="h-12 bg-[var(--space-card)] border-b border-[var(--space-border)]"></div>
         <div className="divide-y divide-[#1e293b]">
           {Array.from({ length: rows }).map((_, i) => (
             <div key={i} className="flex px-4 py-4 gap-4">
@@ -45,7 +45,7 @@ export default function LoadingState({ variant = 'cards', rows = 3 }: LoadingSta
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="h-32 bg-[#111827] border border-[#1e293b] rounded-xl p-5 animate-pulse">
+        <div key={i} className="h-32 bg-[var(--space-panel)] border border-[var(--space-border)] rounded-md p-5 animate-pulse">
           <div className="h-4 bg-white/5 rounded w-1/2 mb-4"></div>
           <div className="h-8 bg-white/5 rounded w-1/3 mb-2"></div>
           <div className="h-3 bg-white/5 rounded w-1/4"></div>

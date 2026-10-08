@@ -15,7 +15,7 @@ export default function LiveClock() {
     return () => clearInterval(interval);
   }, []);
 
-  if (!time) return <span className="font-mono text-sm text-[#94a3b8]">--:--:-- UTC</span>;
+  if (!time) return <span className="font-mono text-sm text-[var(--text-muted)]">--:--:-- UTC</span>;
 
-  return <span className="font-mono text-sm text-[#e2e8f0]">{time}</span>;
+  return <span className="font-mono text-sm text-[var(--text-primary)]">{time}</span>;
 }

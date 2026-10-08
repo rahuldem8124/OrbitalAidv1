@@ -192,19 +192,19 @@ export default function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Section 2: Conjunction Trend */}
-        <div className="bg-[#111827] border border-[#1e293b] rounded-xl p-5 flex flex-col gap-4">
+        <div className="bg-[var(--space-panel)] border border-[var(--space-border)] rounded-md p-5 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h3 className="text-white text-sm font-semibold uppercase tracking-wider">Conjunction Trend</h3>
             <div className="flex gap-2">
               <button 
                 onClick={() => setTrendPeriod("7d")} 
-                className={`text-xs px-3 py-1 rounded ${trendPeriod === "7d" ? 'bg-[#2dd4bf]/20 text-[#2dd4bf]' : 'bg-[#1e293b] text-[#94a3b8] hover:text-white'}`}
+                className={`text-xs px-3 py-1 rounded ${trendPeriod === "7d" ? 'bg-[#2dd4bf]/20 text-[var(--accent-cyan)]' : 'bg-[var(--space-card-hover)] text-[var(--text-secondary)] hover:text-white'}`}
               >
                 7D
               </button>
               <button 
                 onClick={() => setTrendPeriod("30d")} 
-                className={`text-xs px-3 py-1 rounded ${trendPeriod === "30d" ? 'bg-[#2dd4bf]/20 text-[#2dd4bf]' : 'bg-[#1e293b] text-[#94a3b8] hover:text-white'}`}
+                className={`text-xs px-3 py-1 rounded ${trendPeriod === "30d" ? 'bg-[#2dd4bf]/20 text-[var(--accent-cyan)]' : 'bg-[var(--space-card-hover)] text-[var(--text-secondary)] hover:text-white'}`}
               >
                 30D
               </button>
@@ -243,7 +243,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Section 3: Risk Distribution */}
-        <div className="bg-[#111827] border border-[#1e293b] rounded-xl p-5 flex flex-col gap-4">
+        <div className="bg-[var(--space-panel)] border border-[var(--space-border)] rounded-md p-5 flex flex-col gap-4">
           <h3 className="text-white text-sm font-semibold uppercase tracking-wider">Risk Distribution</h3>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -268,10 +268,10 @@ export default function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Section 4: Maneuver Analytics */}
-        <div className="bg-[#111827] border border-[#1e293b] rounded-xl p-5 flex flex-col gap-4">
+        <div className="bg-[var(--space-panel)] border border-[var(--space-border)] rounded-md p-5 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h3 className="text-white text-sm font-semibold uppercase tracking-wider">Maneuver Activity</h3>
-            <span className="text-[#2dd4bf] text-sm font-mono">{maneuverStats?.approval_rate.toFixed(1) || 0}% Approval Rate</span>
+            <span className="text-[var(--accent-cyan)] text-sm font-mono">{maneuverStats?.approval_rate.toFixed(1) || 0}% Approval Rate</span>
           </div>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -290,7 +290,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Section 6: Conjunction Status Breakdown */}
-        <div className="bg-[#111827] border border-[#1e293b] rounded-xl p-5 flex flex-col gap-4">
+        <div className="bg-[var(--space-panel)] border border-[var(--space-border)] rounded-md p-5 flex flex-col gap-4">
           <h3 className="text-white text-sm font-semibold uppercase tracking-wider">Conjunction Status</h3>
           <div className="h-64 w-full flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
@@ -320,10 +320,10 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Section 5: Mitigation Analytics */}
-      <div className="bg-[#111827] border border-[#1e293b] rounded-xl p-5 flex flex-col gap-4">
+      <div className="bg-[var(--space-panel)] border border-[var(--space-border)] rounded-md p-5 flex flex-col gap-4">
         <h3 className="text-white text-sm font-semibold uppercase tracking-wider">Mitigation Summary</h3>
-        <p className="text-[#94a3b8] text-sm mb-2 font-mono uppercase">
-          <span className="text-[#2dd4bf] font-bold">{maneuverStats?.total_mitigated || 0}</span> CONJUNCTIONS MITIGATED &mdash; <span className="text-[#e2e8f0] font-bold">{maneuverStats?.approval_rate.toFixed(1) || 0}%</span> APPROVAL RATE
+        <p className="text-[var(--text-secondary)] text-sm mb-2 font-mono uppercase">
+          <span className="text-[var(--accent-cyan)] font-bold">{maneuverStats?.total_mitigated || 0}</span> CONJUNCTIONS MITIGATED &mdash; <span className="text-[var(--text-primary)] font-bold">{maneuverStats?.approval_rate.toFixed(1) || 0}%</span> APPROVAL RATE
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <MetricCard label="Total Mitigated" value={maneuverStats?.total_mitigated || 0} variant="success" />
@@ -335,10 +335,10 @@ export default function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Section 7: Altitude Distribution */}
-        <div className="bg-[#111827] border border-[#1e293b] rounded-xl p-5 flex flex-col gap-4">
+        <div className="bg-[var(--space-panel)] border border-[var(--space-border)] rounded-md p-5 flex flex-col gap-4">
           <div>
             <h3 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">Altitude Distribution</h3>
-            <p className="text-[#94a3b8] text-xs">
+            <p className="text-[var(--text-secondary)] text-xs">
               {altitudeDist?.total.toLocaleString()} objects tracked
               {altitudeDist?.skipped_no_elements ? ` • ${altitudeDist.skipped_no_elements} skipped` : ''}
             </p>
@@ -361,59 +361,59 @@ export default function AnalyticsPage() {
 
         {/* Section 8: Response Times */}
         <div className="flex flex-col gap-6">
-          <div className="bg-[#111827] border border-[#1e293b] rounded-xl p-5 flex flex-col gap-4 h-full">
+          <div className="bg-[var(--space-panel)] border border-[var(--space-border)] rounded-md p-5 flex flex-col gap-4 h-full">
             <div className="flex items-center gap-2">
-              <Clock className="w-5 h-5 text-[#2dd4bf]" />
+              <Clock className="w-5 h-5 text-[var(--accent-cyan)]" />
               <h3 className="text-white text-sm font-semibold uppercase tracking-wider">Alert Acknowledgement</h3>
             </div>
             {responseTimes?.alert_acknowledgement?.count ? (
               <div className="space-y-4 mt-2">
-                <div className="flex items-center justify-between border-b border-[#1e293b] pb-2">
-                  <span className="text-[#94a3b8] text-sm">Average</span>
-                  <span className="text-[#2dd4bf] font-mono text-lg font-bold">
+                <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
+                  <span className="text-[var(--text-secondary)] text-sm">Average</span>
+                  <span className="text-[var(--accent-cyan)] font-mono text-lg font-bold">
                     {formatDuration(responseTimes.alert_acknowledgement.avg_seconds)}
                   </span>
                 </div>
-                <div className="flex items-center justify-between border-b border-[#1e293b] pb-2">
-                  <span className="text-[#94a3b8] text-sm">Median</span>
-                  <span className="text-[#2dd4bf] font-mono text-lg font-bold">
+                <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
+                  <span className="text-[var(--text-secondary)] text-sm">Median</span>
+                  <span className="text-[var(--accent-cyan)] font-mono text-lg font-bold">
                     {formatDuration(responseTimes.alert_acknowledgement.median_seconds)}
                   </span>
                 </div>
-                <p className="text-[#64748b] text-xs">
+                <p className="text-[var(--text-muted)] text-xs">
                   Based on {responseTimes.alert_acknowledgement.count} acknowledged alerts
                 </p>
               </div>
             ) : (
-              <p className="text-[#64748b] text-sm flex-1 flex items-center justify-center">No alert data yet</p>
+              <p className="text-[var(--text-muted)] text-sm flex-1 flex items-center justify-center">No alert data yet</p>
             )}
           </div>
 
-          <div className="bg-[#111827] border border-[#1e293b] rounded-xl p-5 flex flex-col gap-4 h-full">
+          <div className="bg-[var(--space-panel)] border border-[var(--space-border)] rounded-md p-5 flex flex-col gap-4 h-full">
             <div className="flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-[#a855f7]" />
               <h3 className="text-white text-sm font-semibold uppercase tracking-wider">Maneuver Decision Time</h3>
             </div>
             {responseTimes?.maneuver_decision?.count ? (
               <div className="space-y-4 mt-2">
-                <div className="flex items-center justify-between border-b border-[#1e293b] pb-2">
-                  <span className="text-[#94a3b8] text-sm">Average</span>
+                <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
+                  <span className="text-[var(--text-secondary)] text-sm">Average</span>
                   <span className="text-[#a855f7] font-mono text-lg font-bold">
                     {formatDuration(responseTimes.maneuver_decision.avg_seconds)}
                   </span>
                 </div>
-                <div className="flex items-center justify-between border-b border-[#1e293b] pb-2">
-                  <span className="text-[#94a3b8] text-sm">Median</span>
+                <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
+                  <span className="text-[var(--text-secondary)] text-sm">Median</span>
                   <span className="text-[#a855f7] font-mono text-lg font-bold">
                     {formatDuration(responseTimes.maneuver_decision.median_seconds)}
                   </span>
                 </div>
-                <p className="text-[#64748b] text-xs">
+                <p className="text-[var(--text-muted)] text-xs">
                   Based on {responseTimes.maneuver_decision.count} decided maneuvers
                 </p>
               </div>
             ) : (
-              <p className="text-[#64748b] text-sm flex-1 flex items-center justify-center">No maneuver data yet</p>
+              <p className="text-[var(--text-muted)] text-sm flex-1 flex items-center justify-center">No maneuver data yet</p>
             )}
           </div>
         </div>

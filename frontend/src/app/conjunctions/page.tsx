@@ -163,8 +163,8 @@ export default function ConjunctionsPage() {
       label: 'Primary Object',
       render: (item: ConjunctionWithDetails) => (
         <div className="flex flex-col">
-          <span className="font-medium text-[#e2e8f0]">{item.object_a?.object_name || item.object_a_name || 'Unknown'}</span>
-          <span className="text-xs text-[#64748b] font-mono">{item.object_a?.norad_cat_id || 'N/A'}</span>
+          <span className="font-medium text-[var(--text-primary)]">{item.object_a?.object_name || item.object_a_name || 'Unknown'}</span>
+          <span className="text-xs text-[var(--text-muted)] font-mono">{item.object_a?.norad_cat_id || 'N/A'}</span>
         </div>
       )
     },
@@ -173,8 +173,8 @@ export default function ConjunctionsPage() {
       label: 'Secondary Object',
       render: (item: ConjunctionWithDetails) => (
         <div className="flex flex-col">
-          <span className="font-medium text-[#e2e8f0]">{item.object_b?.object_name || item.object_b_name || 'Unknown'}</span>
-          <span className="text-xs text-[#64748b] font-mono">{item.object_b?.norad_cat_id || 'N/A'}</span>
+          <span className="font-medium text-[var(--text-primary)]">{item.object_b?.object_name || item.object_b_name || 'Unknown'}</span>
+          <span className="text-xs text-[var(--text-muted)] font-mono">{item.object_b?.norad_cat_id || 'N/A'}</span>
         </div>
       )
     },
@@ -184,11 +184,11 @@ export default function ConjunctionsPage() {
       sortable: true,
       render: (item: ConjunctionWithDetails) => {
         const md = item.miss_distance_km;
-        let color = 'text-[#e2e8f0]';
+        let color = 'text-[var(--text-primary)]';
         if (md != null && md > 0) {
-          if (md < 1) color = 'text-[#ef4444]';
-          else if (md < 2) color = 'text-[#f97316]';
-          else if (md < 5) color = 'text-[#eab308]';
+          if (md < 1) color = 'text-[var(--tier-critical)]';
+          else if (md < 2) color = 'text-[var(--tier-high)]';
+          else if (md < 5) color = 'text-[var(--tier-watch)]';
         }
         return <span className={`font-mono ${color}`}>{formatDistance(md)}</span>;
       }
@@ -197,7 +197,7 @@ export default function ConjunctionsPage() {
       key: 'relative_velocity_kmps',
       label: 'Rel. Velocity',
       render: (item: ConjunctionWithDetails) => (
-        <span className="font-mono text-[#e2e8f0]">{formatVelocity(item.relative_velocity_kmps)}</span>
+        <span className="font-mono text-[var(--text-primary)]">{formatVelocity(item.relative_velocity_kmps)}</span>
       )
     },
     {
@@ -205,7 +205,7 @@ export default function ConjunctionsPage() {
       label: 'TCA (UTC)',
       sortable: true,
       render: (item: ConjunctionWithDetails) => (
-        <span className="font-mono text-xs text-[#e2e8f0] whitespace-nowrap">{formatUTCCompact(item.tca)}</span>
+        <span className="font-mono text-xs text-[var(--text-primary)] whitespace-nowrap">{formatUTCCompact(item.tca)}</span>
       )
     },
     {
@@ -213,14 +213,14 @@ export default function ConjunctionsPage() {
       label: 'Time to TCA',
       render: (item: ConjunctionWithDetails) => {
         const status = getTCAStatus(item.tca);
-        if (status.type === 'unknown') return <span className="text-[#64748b]">—</span>;
+        if (status.type === 'unknown') return <span className="text-[var(--text-muted)]">—</span>;
         if (status.type === 'passed') return (
-          <span className="font-mono text-xs text-[#64748b]">
+          <span className="font-mono text-xs text-[var(--text-muted)]">
             TCA PASSED<br /><span className="text-[10px]">{status.suffix}</span>
           </span>
         );
         return (
-          <span className={`font-mono text-xs font-medium ${status.isUrgent ? 'text-[#ef4444]' : 'text-[#2dd4bf]'}`}>
+          <span className={`font-mono text-xs font-medium ${status.isUrgent ? 'text-[var(--tier-critical)]' : 'text-[var(--accent-cyan)]'}`}>
             {status.label}
           </span>
         );
@@ -237,28 +237,28 @@ export default function ConjunctionsPage() {
       label: 'Pc',
       sortable: true,
       render: (item: ConjunctionWithDetails) => (
-        <span className="font-mono text-xs text-[#e2e8f0]">{formatPc(item.pc)}</span>
+        <span className="font-mono text-xs text-[var(--text-primary)]">{formatPc(item.pc)}</span>
       )
     },
     {
       key: 'maneuver',
       label: 'Maneuver',
       render: (item: ConjunctionWithDetails) => (
-        item.maneuver ? <StatusBadge status={item.maneuver.status} /> : <span className="text-[#64748b] text-sm">None</span>
+        item.maneuver ? <StatusBadge status={item.maneuver.status} /> : <span className="text-[var(--text-muted)] text-sm">None</span>
       )
     },
     {
       key: 'preventive_action',
       label: 'Preventive Action',
       render: (item: ConjunctionWithDetails) => (
-        <span className="text-xs truncate max-w-[150px] inline-block text-[#e2e8f0]" title={item.preventive_action || ''}>{item.preventive_action || '—'}</span>
+        <span className="text-xs truncate max-w-[150px] inline-block text-[var(--text-primary)]" title={item.preventive_action || ''}>{item.preventive_action || '—'}</span>
       )
     },
     {
       key: 'actions',
       label: 'Actions',
       render: () => (
-        <button className="text-xs bg-[#1e293b] hover:bg-[#2dd4bf]/20 text-[#2dd4bf] px-3 py-1.5 rounded transition-colors border border-[#2dd4bf]/30">
+        <button className="text-xs bg-[var(--space-card-hover)] hover:bg-[#2dd4bf]/20 text-[var(--accent-cyan)] px-3 py-1.5 rounded transition-colors border border-[#2dd4bf]/30">
           View
         </button>
       )
@@ -338,7 +338,7 @@ export default function ConjunctionsPage() {
       />
 
       {error && (
-        <div className="bg-[#ef4444]/10 border border-[#ef4444]/30 text-[#ef4444] p-4 rounded-xl flex justify-center">
+        <div className="bg-[var(--tier-critical)]/10 border border-[var(--tier-critical)]/30 text-[var(--tier-critical)] p-4 rounded-md flex justify-center">
           {error}
         </div>
       )}
@@ -371,24 +371,24 @@ export default function ConjunctionsPage() {
         {selectedConjunction && (
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-[#1e293b] pb-2">
-                <h3 className="text-[#2dd4bf] font-medium uppercase tracking-wider text-sm">Event Overview</h3>
-                <span className="font-mono text-xs text-[#94a3b8]">ID: {selectedConjunction.id}</span>
+              <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
+                <h3 className="text-[var(--accent-cyan)] font-medium uppercase tracking-wider text-sm">Event Overview</h3>
+                <span className="font-mono text-xs text-[var(--text-secondary)]">ID: {selectedConjunction.id}</span>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#1a2332] p-4 rounded-lg border border-[#1e293b]">
-                  <span className="text-xs text-[#64748b] block mb-1 uppercase">Primary Object</span>
-                  <div className="text-[#e2e8f0] font-medium">{selectedConjunction.object_a?.object_name || selectedConjunction.object_a_name || 'Unknown'}</div>
-                  <div className="text-[#94a3b8] text-sm font-mono mt-1">NORAD: {selectedConjunction.object_a?.norad_cat_id || 'N/A'}</div>
-                  <div className="text-[#94a3b8] text-xs capitalize mt-1 border border-[#1e293b] inline-block px-2 py-0.5 rounded bg-[#111827]">
+                <div className="bg-[var(--space-card)] p-4 rounded-md border border-[var(--space-border)]">
+                  <span className="text-xs text-[var(--text-muted)] block mb-1 uppercase">Primary Object</span>
+                  <div className="text-[var(--text-primary)] font-medium">{selectedConjunction.object_a?.object_name || selectedConjunction.object_a_name || 'Unknown'}</div>
+                  <div className="text-[var(--text-secondary)] text-sm font-mono mt-1">NORAD: {selectedConjunction.object_a?.norad_cat_id || 'N/A'}</div>
+                  <div className="text-[var(--text-secondary)] text-xs capitalize mt-1 border border-[var(--space-border)] inline-block px-2 py-0.5 rounded bg-[var(--space-panel)]">
                     {selectedConjunction.object_a?.type || 'Unknown'}
                   </div>
                 </div>
-                <div className="bg-[#1a2332] p-4 rounded-lg border border-[#1e293b]">
-                  <span className="text-xs text-[#64748b] block mb-1 uppercase">Secondary Object</span>
-                  <div className="text-[#e2e8f0] font-medium">{selectedConjunction.object_b?.object_name || selectedConjunction.object_b_name || 'Unknown'}</div>
-                  <div className="text-[#94a3b8] text-sm font-mono mt-1">NORAD: {selectedConjunction.object_b?.norad_cat_id || 'N/A'}</div>
-                  <div className="text-[#94a3b8] text-xs capitalize mt-1 border border-[#1e293b] inline-block px-2 py-0.5 rounded bg-[#111827]">
+                <div className="bg-[var(--space-card)] p-4 rounded-md border border-[var(--space-border)]">
+                  <span className="text-xs text-[var(--text-muted)] block mb-1 uppercase">Secondary Object</span>
+                  <div className="text-[var(--text-primary)] font-medium">{selectedConjunction.object_b?.object_name || selectedConjunction.object_b_name || 'Unknown'}</div>
+                  <div className="text-[var(--text-secondary)] text-sm font-mono mt-1">NORAD: {selectedConjunction.object_b?.norad_cat_id || 'N/A'}</div>
+                  <div className="text-[var(--text-secondary)] text-xs capitalize mt-1 border border-[var(--space-border)] inline-block px-2 py-0.5 rounded bg-[var(--space-panel)]">
                     {selectedConjunction.object_b?.type || 'Unknown'}
                   </div>
                 </div>
@@ -399,63 +399,63 @@ export default function ConjunctionsPage() {
             </div>
 
             <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-[#1e293b] pb-2">
-                <h3 className="text-[#2dd4bf] font-medium uppercase tracking-wider text-sm">Encounter Data</h3>
+              <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
+                <h3 className="text-[var(--accent-cyan)] font-medium uppercase tracking-wider text-sm">Encounter Data</h3>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#111827] border border-[#1e293b] p-4 rounded-lg flex flex-col items-center justify-center text-center">
-                  <span className="text-xs text-[#94a3b8] uppercase mb-1">Miss Distance</span>
+                <div className="bg-[var(--space-panel)] border border-[var(--space-border)] p-4 rounded-md flex flex-col items-center justify-center text-center">
+                  <span className="text-xs text-[var(--text-secondary)] uppercase mb-1">Miss Distance</span>
                   <span className={`text-3xl font-mono font-bold ${
-                    selectedConjunction.miss_distance_km < 1 ? 'text-[#ef4444]' : 
-                    selectedConjunction.miss_distance_km < 2 ? 'text-[#f97316]' : 
-                    selectedConjunction.miss_distance_km < 5 ? 'text-[#eab308]' : 'text-[#2dd4bf]'
+                    selectedConjunction.miss_distance_km < 1 ? 'text-[var(--tier-critical)]' : 
+                    selectedConjunction.miss_distance_km < 2 ? 'text-[var(--tier-high)]' : 
+                    selectedConjunction.miss_distance_km < 5 ? 'text-[var(--tier-watch)]' : 'text-[var(--accent-cyan)]'
                   }`}>
-                    {selectedConjunction.miss_distance_km != null ? selectedConjunction.miss_distance_km.toFixed(3) : '—'} <span className="text-lg text-[#64748b]">km</span>
+                    {selectedConjunction.miss_distance_km != null ? selectedConjunction.miss_distance_km.toFixed(3) : '—'} <span className="text-lg text-[var(--text-muted)]">km</span>
                   </span>
                 </div>
-                <div className="bg-[#111827] border border-[#1e293b] p-4 rounded-lg flex flex-col justify-center">
-                  <div className="flex justify-between items-center border-b border-[#1e293b] pb-2 mb-2">
-                    <span className="text-xs text-[#94a3b8]">TCA (UTC)</span>
-                    <span className="text-xs font-mono text-[#e2e8f0]">{formatUTCCompact(selectedConjunction.tca)}</span>
+                <div className="bg-[var(--space-panel)] border border-[var(--space-border)] p-4 rounded-md flex flex-col justify-center">
+                  <div className="flex justify-between items-center border-b border-[var(--space-border)] pb-2 mb-2">
+                    <span className="text-xs text-[var(--text-secondary)]">TCA (UTC)</span>
+                    <span className="text-xs font-mono text-[var(--text-primary)]">{formatUTCCompact(selectedConjunction.tca)}</span>
                   </div>
-                  <div className="flex justify-between items-center border-b border-[#1e293b] pb-2 mb-2">
-                    <span className="text-xs text-[#94a3b8]">Time to TCA</span>
+                  <div className="flex justify-between items-center border-b border-[var(--space-border)] pb-2 mb-2">
+                    <span className="text-xs text-[var(--text-secondary)]">Time to TCA</span>
                     {(() => {
                       const s = getTCAStatus(selectedConjunction.tca);
-                      if (s.type === 'passed') return <span className="text-xs font-mono text-[#64748b]">TCA PASSED · {s.suffix}</span>;
-                      if (s.type === 'upcoming') return <span className={`text-xs font-mono font-medium ${s.isUrgent ? 'text-[#ef4444]' : 'text-[#f97316]'}`}>{s.label}</span>;
-                      return <span className="text-xs text-[#64748b]">—</span>;
+                      if (s.type === 'passed') return <span className="text-xs font-mono text-[var(--text-muted)]">TCA PASSED · {s.suffix}</span>;
+                      if (s.type === 'upcoming') return <span className={`text-xs font-mono font-medium ${s.isUrgent ? 'text-[var(--tier-critical)]' : 'text-[var(--tier-high)]'}`}>{s.label}</span>;
+                      return <span className="text-xs text-[var(--text-muted)]">—</span>;
                     })()}
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-xs text-[#94a3b8]">Rel. Velocity</span>
-                    <span className="text-xs font-mono text-[#e2e8f0]">{formatVelocity(selectedConjunction.relative_velocity_kmps)}</span>
+                    <span className="text-xs text-[var(--text-secondary)]">Rel. Velocity</span>
+                    <span className="text-xs font-mono text-[var(--text-primary)]">{formatVelocity(selectedConjunction.relative_velocity_kmps)}</span>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-[#1e293b] pb-2">
-                <h3 className="text-[#2dd4bf] font-medium uppercase tracking-wider text-sm">Risk Assessment</h3>
+              <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
+                <h3 className="text-[var(--accent-cyan)] font-medium uppercase tracking-wider text-sm">Risk Assessment</h3>
               </div>
               {!selectedConjunction.risk_assessment && selectedConjunction.risk_tier === null ? (
-                <div className="bg-[#eab308]/10 border border-[#eab308]/30 p-4 rounded-lg text-center text-[#eab308] text-sm">
+                <div className="bg-[var(--tier-watch)]/10 border border-[var(--tier-watch)]/30 p-4 rounded-md text-center text-[var(--tier-watch)] text-sm">
                   ASSESSMENT UNAVAILABLE
                 </div>
               ) : (
-                <div className="flex items-center gap-6 bg-[#1a2332] p-4 rounded-lg border border-[#1e293b]">
+                <div className="flex items-center gap-6 bg-[var(--space-card)] p-4 rounded-md border border-[var(--space-border)]">
                   <div className="flex-shrink-0">
                     <RiskBadge tier={selectedConjunction.risk_tier} size="lg" />
                   </div>
                   <div className="flex flex-col flex-1 gap-1">
                     <div className="flex justify-between text-sm">
-                      <span className="text-[#94a3b8]">Collision Probability (Pc)</span>
-                      <span className="font-mono text-[#e2e8f0]">{selectedConjunction.pc ? selectedConjunction.pc.toExponential(4) : '—'}</span>
+                      <span className="text-[var(--text-secondary)]">Collision Probability (Pc)</span>
+                      <span className="font-mono text-[var(--text-primary)]">{selectedConjunction.pc ? selectedConjunction.pc.toExponential(4) : '—'}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-[#94a3b8]">Assessment Method</span>
-                      <span className="text-[#e2e8f0]">{selectedConjunction.risk_method || '—'}</span>
+                      <span className="text-[var(--text-secondary)]">Assessment Method</span>
+                      <span className="text-[var(--text-primary)]">{selectedConjunction.risk_method || '—'}</span>
                     </div>
                   </div>
                 </div>
@@ -463,39 +463,39 @@ export default function ConjunctionsPage() {
             </div>
 
             <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-[#1e293b] pb-2">
-                <h3 className="text-[#2dd4bf] font-medium uppercase tracking-wider text-sm">Preventive Action & Maneuver</h3>
+              <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
+                <h3 className="text-[var(--accent-cyan)] font-medium uppercase tracking-wider text-sm">Preventive Action & Maneuver</h3>
               </div>
-              <div className="bg-[#1a2332] p-4 rounded-lg border border-[#1e293b] flex flex-col gap-3">
+              <div className="bg-[var(--space-card)] p-4 rounded-md border border-[var(--space-border)] flex flex-col gap-3">
                 <div>
-                  <span className="text-xs text-[#94a3b8] uppercase block mb-1">Recommended Action</span>
-                  <div className="text-sm text-[#e2e8f0]">{selectedConjunction.preventive_action || 'None'}</div>
+                  <span className="text-xs text-[var(--text-secondary)] uppercase block mb-1">Recommended Action</span>
+                  <div className="text-sm text-[var(--text-primary)]">{selectedConjunction.preventive_action || 'None'}</div>
                 </div>
                 {selectedConjunction.maneuver ? (
-                  <div className="mt-2 border-t border-[#1e293b] pt-3">
+                  <div className="mt-2 border-t border-[var(--space-border)] pt-3">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-medium text-[#e2e8f0]">Proposed Maneuver</span>
+                      <span className="text-sm font-medium text-[var(--text-primary)]">Proposed Maneuver</span>
                       <StatusBadge status={selectedConjunction.maneuver.status} />
                     </div>
                     <div className="grid grid-cols-2 gap-y-2 text-sm mb-4">
-                      <div className="text-[#94a3b8]">Maneuver ID</div>
-                      <div className="font-mono text-xs text-[#e2e8f0]">{selectedConjunction.maneuver.id}</div>
-                      <div className="text-[#94a3b8]">Delta-V</div>
-                      <div className="font-mono text-[#e2e8f0]">{selectedConjunction.maneuver.delta_v_mps.toFixed(2)} m/s</div>
-                      <div className="text-[#94a3b8]">New Miss Dist.</div>
-                      <div className="font-mono text-[#e2e8f0]">{selectedConjunction.maneuver.predicted_new_miss_distance_km.toFixed(2)} km</div>
+                      <div className="text-[var(--text-secondary)]">Maneuver ID</div>
+                      <div className="font-mono text-xs text-[var(--text-primary)]">{selectedConjunction.maneuver.id}</div>
+                      <div className="text-[var(--text-secondary)]">Delta-V</div>
+                      <div className="font-mono text-[var(--text-primary)]">{selectedConjunction.maneuver.delta_v_mps.toFixed(2)} m/s</div>
+                      <div className="text-[var(--text-secondary)]">New Miss Dist.</div>
+                      <div className="font-mono text-[var(--text-primary)]">{selectedConjunction.maneuver.predicted_new_miss_distance_km.toFixed(2)} km</div>
                     </div>
                     {(selectedConjunction.maneuver.status === 'proposed' || selectedConjunction.maneuver.status === 'under_review') && (
                       <div className="flex gap-3 mt-4">
                         <button 
                           onClick={() => handleManeuverAction('approve')}
-                          className="flex-1 bg-[#22c55e]/10 hover:bg-[#22c55e]/20 text-[#22c55e] border border-[#22c55e]/50 py-2 rounded-md font-medium text-sm transition-colors"
+                          className="flex-1 bg-[var(--tier-nominal)]/10 hover:bg-[#22c55e]/20 text-[var(--tier-nominal)] border border-[#22c55e]/50 py-2 rounded-md font-medium text-sm transition-colors"
                         >
                           APPROVE
                         </button>
                         <button 
                           onClick={() => handleManeuverAction('reject')}
-                          className="flex-1 bg-[#ef4444]/10 hover:bg-[#ef4444]/20 text-[#ef4444] border border-[#ef4444]/50 py-2 rounded-md font-medium text-sm transition-colors"
+                          className="flex-1 bg-[var(--tier-critical)]/10 hover:bg-[#ef4444]/20 text-[var(--tier-critical)] border border-[#ef4444]/50 py-2 rounded-md font-medium text-sm transition-colors"
                         >
                           REJECT
                         </button>
@@ -503,18 +503,18 @@ export default function ConjunctionsPage() {
                     )}
                   </div>
                 ) : (
-                  <div className="mt-2 border-t border-[#1e293b] pt-3 text-center">
-                    <span className="text-sm text-[#64748b]">NO MANEUVER PROPOSED</span>
+                  <div className="mt-2 border-t border-[var(--space-border)] pt-3 text-center">
+                    <span className="text-sm text-[var(--text-muted)]">NO MANEUVER PROPOSED</span>
                   </div>
                 )}
               </div>
             </div>
 
             <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-[#1e293b] pb-2">
-                <h3 className="text-[#2dd4bf] font-medium uppercase tracking-wider text-sm">Event Timeline</h3>
+              <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
+                <h3 className="text-[var(--accent-cyan)] font-medium uppercase tracking-wider text-sm">Event Timeline</h3>
               </div>
-              <div className="bg-[#1a2332] p-4 rounded-lg border border-[#1e293b]">
+              <div className="bg-[var(--space-card)] p-4 rounded-md border border-[var(--space-border)]">
                 <Timeline events={timeline.map(e => ({ action: e.action, actor: e.actor, timestamp: e.timestamp, details: e.details ?? undefined }))} />
               </div>
             </div>

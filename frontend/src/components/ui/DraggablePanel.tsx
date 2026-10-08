@@ -70,7 +70,7 @@ export default function DraggablePanel({
       />
       <div
         ref={panelRef}
-        className={`fixed z-50 backdrop-blur-md bg-white/5 border border-white/10 rounded-xl shadow-2xl shadow-black/40 ${className}`}
+        className={`fixed z-50 backdrop-blur-md bg-white/5 border border-white/10 rounded-md shadow-2xl shadow-black/40 ${className}`}
         style={{
           left: pos.x,
           top: pos.y,

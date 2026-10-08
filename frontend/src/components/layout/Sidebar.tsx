@@ -92,20 +92,15 @@ function SidebarInner() {
     if (item.exact) {
       if (pathname !== itemPath) return false;
       if (!itemQueryStr) {
-        // Exact path match with NO query params — only active when no type param present
-        // e.g. /fleet (no ?type=) should NOT match /fleet?type=satellite
         const typeParam = searchParams.get('type');
-        // Fleet Registry (no query) is active only when there's no type filter
         return !typeParam;
       }
-      // Has query params — check all of them match
       const itemParams = new URLSearchParams(itemQueryStr);
       for (const [key, value] of itemParams.entries()) {
         if (searchParams.get(key) !== value) return false;
       }
       return true;
     } else {
-      // Prefix match — for non-exact routes like /conjunctions, /analytics, etc.
       if (itemPath === '/') return pathname === '/';
       return pathname === itemPath || pathname.startsWith(itemPath + '/');
     }
@@ -113,35 +108,35 @@ function SidebarInner() {
 
   return (
     <div
-      className={`fixed left-0 top-0 h-full bg-[#0a0e17] border-r border-[#1e293b] flex flex-col z-50 transition-all duration-300 ease-in-out ${collapsed ? 'w-16' : 'w-64'}`}
+      className={`fixed left-0 top-0 h-full bg-[var(--space-canvas)] border-r border-[var(--space-border)] flex flex-col z-50 transition-all duration-300 ease-in-out ${collapsed ? 'w-16' : 'w-64'}`}
     >
-      <div className="h-16 flex items-center justify-between px-4 border-b border-[#1e293b] shrink-0">
+      <div className="h-14 flex items-center justify-between px-4 border-b border-[var(--space-border)] shrink-0 bg-[var(--space-panel)]">
         {!collapsed && (
-          <span className="text-xl font-bold text-[#e2e8f0] tracking-tight flex items-center gap-2">
-            <Activity className="text-[#2dd4bf] w-5 h-5" />
+          <span className="text-sm font-mono font-bold text-[var(--text-primary)] tracking-widest uppercase flex items-center gap-2">
+            <Activity className="text-[var(--accent-amber)] w-4 h-4" />
             OrbitAid
           </span>
         )}
         {collapsed && (
-          <Activity className="text-[#2dd4bf] w-6 h-6 mx-auto" />
+          <Activity className="text-[var(--accent-amber)] w-5 h-5 mx-auto" />
         )}
         <button
           onClick={toggleCollapse}
-          className={`p-1.5 rounded-lg text-[#64748b] hover:text-[#e2e8f0] hover:bg-[#1e293b] transition-colors ${collapsed ? 'absolute -right-3 bg-[#111827] border border-[#1e293b]' : ''}`}
+          className={`p-1 rounded-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--space-card)] transition-colors ${collapsed ? 'absolute -right-3 bg-[var(--space-panel)] border border-[var(--space-border)]' : ''}`}
         >
-          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto py-4 scrollbar-thin scrollbar-thumb-[#1e293b] scrollbar-track-transparent">
+      <div className="flex-1 overflow-y-auto py-4 scrollbar-thin scrollbar-thumb-[var(--space-border-bright)] scrollbar-track-transparent">
         {sections.map((section, idx) => (
           <div key={idx} className="mb-6">
             {!collapsed && (
-              <div className="px-6 mb-2 text-[10px] font-bold text-[#64748b] tracking-wider uppercase">
+              <div className="px-6 mb-2 text-[9px] font-mono font-bold text-[var(--text-muted)] tracking-widest uppercase">
                 {section.title}
               </div>
             )}
-            <div className="flex flex-col gap-1 px-3">
+            <div className="flex flex-col gap-0.5 px-3">
               {section.items.map((item) => {
                 const active = isItemActive(item);
                 return (
@@ -149,13 +144,13 @@ function SidebarInner() {
                     key={item.href}
                     href={item.href}
                     title={collapsed ? item.label : undefined}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group ${
+                    className={`flex items-center gap-3 px-3 py-2 rounded-sm transition-all duration-200 group ${
                       active
-                        ? "bg-[#2dd4bf]/10 text-[#2dd4bf] font-medium"
-                        : "text-[#94a3b8] hover:text-[#e2e8f0] hover:bg-[#1a2332]"
+                        ? "bg-[var(--space-border)]/50 text-[var(--accent-cyan)] font-medium border-l-2 border-[var(--accent-cyan)]"
+                        : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--space-card-hover)] border-l-2 border-transparent"
                     }`}
                   >
-                    <item.icon className={`w-5 h-5 shrink-0 ${active ? 'text-[#2dd4bf]' : 'group-hover:text-[#e2e8f0]'}`} />
+                    <item.icon className={`w-4 h-4 shrink-0 ${active ? 'text-[var(--accent-cyan)]' : 'group-hover:text-[var(--text-primary)]'}`} />
                     {!collapsed && (
                       <span className="text-sm truncate">{item.label}</span>
                     )}
@@ -173,7 +168,7 @@ function SidebarInner() {
 export default function Sidebar() {
   return (
     <Suspense fallback={
-      <div className="fixed left-0 top-0 h-full w-64 bg-[#0a0e17] border-r border-[#1e293b] z-50" />
+      <div className="fixed left-0 top-0 h-full w-64 bg-[var(--space-canvas)] border-r border-[var(--space-border)] z-50" />
     }>
       <SidebarInner />
     </Suspense>

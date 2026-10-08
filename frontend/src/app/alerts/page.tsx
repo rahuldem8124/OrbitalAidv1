@@ -148,7 +148,7 @@ export default function AlertsPage() {
       render: (item: Alert) => (
         <Link 
           href={`/conjunctions/${item.conjunction_event_id}`}
-          className="text-[#2dd4bf] hover:underline font-mono text-xs"
+          className="text-[var(--accent-cyan)] hover:underline font-mono text-xs"
           onClick={(e) => e.stopPropagation()}
         >
           {item.conjunction_event_id.substring(0, 8)}...
@@ -159,7 +159,7 @@ export default function AlertsPage() {
       key: 'created_at',
       label: 'Created',
       render: (item: Alert) => (
-        <span className="text-xs text-[#94a3b8]">
+        <span className="text-xs text-[var(--text-secondary)]">
           {new Date(item.created_at).toLocaleString()}
         </span>
       )
@@ -175,7 +175,7 @@ export default function AlertsPage() {
       key: 'acknowledged_by',
       label: 'Acknowledged By',
       render: (item: Alert) => (
-        <span className="text-xs text-[#94a3b8]">
+        <span className="text-xs text-[var(--text-secondary)]">
           {item.acknowledged_by || "—"}
         </span>
       )
@@ -188,14 +188,14 @@ export default function AlertsPage() {
           {!item.acknowledged_by && (
             <button
               onClick={(e) => { e.stopPropagation(); handleAcknowledge(item); }}
-              className="px-2 py-1 bg-[#1e293b] hover:bg-[#334155] text-[10px] uppercase font-bold text-[#e2e8f0] rounded border border-[#334155] transition-colors"
+              className="px-2 py-1 bg-[var(--space-card-hover)] hover:bg-[#334155] text-[10px] uppercase font-bold text-[var(--text-primary)] rounded border border-[#334155] transition-colors"
             >
               Acknowledge
             </button>
           )}
           <button
             onClick={(e) => { e.stopPropagation(); setSelectedAlert(item); }}
-            className="px-2 py-1 text-[10px] uppercase font-bold text-[#2dd4bf] hover:text-[#5eead4] transition-colors"
+            className="px-2 py-1 text-[10px] uppercase font-bold text-[var(--accent-cyan)] hover:text-[#5eead4] transition-colors"
           >
             View
           </button>
@@ -207,7 +207,7 @@ export default function AlertsPage() {
   return (
     <div className="flex flex-col gap-6 p-2 min-h-screen">
       <div className="flex items-center justify-between">
-        <h1 className="text-[#e2e8f0] text-2xl font-semibold tracking-tight uppercase">Alert & Incident Center</h1>
+        <h1 className="text-[var(--text-primary)] text-2xl font-semibold tracking-tight uppercase">Alert & Incident Center</h1>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -248,8 +248,8 @@ export default function AlertsPage() {
           <div className="flex flex-col gap-6">
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-sm text-[#94a3b8] mb-1">Alert ID</p>
-                <p className="font-mono text-sm text-[#e2e8f0] bg-[#1a2332] p-2 rounded border border-[#1e293b]">
+                <p className="text-sm text-[var(--text-secondary)] mb-1">Alert ID</p>
+                <p className="font-mono text-sm text-[var(--text-primary)] bg-[var(--space-card)] p-2 rounded border border-[var(--space-border)]">
                   {selectedAlert.id}
                 </p>
               </div>
@@ -257,26 +257,26 @@ export default function AlertsPage() {
             </div>
 
             <div>
-              <p className="text-sm text-[#94a3b8] mb-1">Message</p>
-              <div className="p-3 rounded-lg bg-[#1a2332] border border-[#1e293b] text-[#e2e8f0] text-sm">
+              <p className="text-sm text-[var(--text-secondary)] mb-1">Message</p>
+              <div className="p-3 rounded-md bg-[var(--space-card)] border border-[var(--space-border)] text-[var(--text-primary)] text-sm">
                 {selectedAlert.message}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-[#94a3b8] mb-1">Created At</p>
-                <p className="text-sm text-[#e2e8f0]">{new Date(selectedAlert.created_at).toLocaleString()}</p>
+                <p className="text-sm text-[var(--text-secondary)] mb-1">Created At</p>
+                <p className="text-sm text-[var(--text-primary)]">{new Date(selectedAlert.created_at).toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-sm text-[#94a3b8] mb-1">Status</p>
+                <p className="text-sm text-[var(--text-secondary)] mb-1">Status</p>
                 <StatusBadge status={selectedAlert.acknowledged_by ? 'Acknowledged' : 'Active'} />
               </div>
               <div>
-                <p className="text-sm text-[#94a3b8] mb-1">Channels Sent</p>
+                <p className="text-sm text-[var(--text-secondary)] mb-1">Channels Sent</p>
                 <div className="flex gap-1 flex-wrap">
                   {(selectedAlert.channels_sent || 'web').split(',').map(c => (
-                    <span key={c} className="px-2 py-0.5 bg-[#1e293b] text-[#94a3b8] text-xs rounded uppercase">
+                    <span key={c} className="px-2 py-0.5 bg-[var(--space-card-hover)] text-[var(--text-secondary)] text-xs rounded uppercase">
                       {c.trim()}
                     </span>
                   ))}
@@ -284,9 +284,9 @@ export default function AlertsPage() {
               </div>
               {selectedAlert.acknowledged_by && (
                 <div>
-                  <p className="text-sm text-[#94a3b8] mb-1">Acknowledged By</p>
-                  <p className="text-sm text-[#e2e8f0]">{selectedAlert.acknowledged_by}</p>
-                  <p className="text-xs text-[#64748b]">
+                  <p className="text-sm text-[var(--text-secondary)] mb-1">Acknowledged By</p>
+                  <p className="text-sm text-[var(--text-primary)]">{selectedAlert.acknowledged_by}</p>
+                  <p className="text-xs text-[var(--text-muted)]">
                     {selectedAlert.acknowledged_at ? new Date(selectedAlert.acknowledged_at).toLocaleString() : ''}
                   </p>
                 </div>
@@ -294,36 +294,36 @@ export default function AlertsPage() {
             </div>
 
             <div>
-              <p className="text-sm text-[#94a3b8] mb-1">Related Event</p>
+              <p className="text-sm text-[var(--text-secondary)] mb-1">Related Event</p>
               <Link 
                 href={`/conjunctions/${selectedAlert.conjunction_event_id}`}
-                className="inline-flex items-center gap-2 p-3 w-full rounded-lg bg-[#1a2332] border border-[#1e293b] hover:border-[#2dd4bf]/50 transition-colors group"
+                className="inline-flex items-center gap-2 p-3 w-full rounded-md bg-[var(--space-card)] border border-[var(--space-border)] hover:border-[#2dd4bf]/50 transition-colors group"
               >
-                <span className="font-mono text-sm text-[#e2e8f0] group-hover:text-[#2dd4bf] transition-colors">
+                <span className="font-mono text-sm text-[var(--text-primary)] group-hover:text-[var(--accent-cyan)] transition-colors">
                   {selectedAlert.conjunction_event_id}
                 </span>
-                <span className="ml-auto text-xs text-[#2dd4bf]">View Conjunction →</span>
+                <span className="ml-auto text-xs text-[var(--accent-cyan)]">View Conjunction →</span>
               </Link>
             </div>
 
-            <div className="mt-4 flex flex-col gap-3 pt-6 border-t border-[#1e293b]">
+            <div className="mt-4 flex flex-col gap-3 pt-6 border-t border-[var(--space-border)]">
               {!selectedAlert.acknowledged_by && (
                 <button
                   onClick={() => handleAcknowledge(selectedAlert)}
-                  className="w-full py-2 bg-[#2dd4bf]/10 hover:bg-[#2dd4bf]/20 text-[#2dd4bf] border border-[#2dd4bf]/30 rounded-lg text-sm font-medium transition-colors"
+                  className="w-full py-2 bg-[#2dd4bf]/10 hover:bg-[#2dd4bf]/20 text-[var(--accent-cyan)] border border-[#2dd4bf]/30 rounded-md text-sm font-medium transition-colors"
                 >
                   ACKNOWLEDGE
                 </button>
               )}
               <button
                 onClick={() => handleResolve(selectedAlert)}
-                className="w-full py-2 bg-[#1a2332] hover:bg-[#1e293b] text-[#e2e8f0] border border-[#334155] rounded-lg text-sm font-medium transition-colors"
+                className="w-full py-2 bg-[var(--space-card)] hover:bg-[var(--space-card-hover)] text-[var(--text-primary)] border border-[#334155] rounded-md text-sm font-medium transition-colors"
               >
                 RESOLVE
               </button>
               <Link
                 href={`/conjunctions/${selectedAlert.conjunction_event_id}`}
-                className="w-full py-2 bg-[#1a2332] hover:bg-[#1e293b] text-[#e2e8f0] border border-[#334155] rounded-lg text-sm font-medium transition-colors text-center"
+                className="w-full py-2 bg-[var(--space-card)] hover:bg-[var(--space-card-hover)] text-[var(--text-primary)] border border-[#334155] rounded-md text-sm font-medium transition-colors text-center"
               >
                 VIEW CONJUNCTION
               </Link>
