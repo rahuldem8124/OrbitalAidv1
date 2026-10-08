@@ -6,7 +6,8 @@ import { CameraControls, Stars, Html, Line, Sphere } from "@react-three/drei";
 import * as THREE from "three";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import { ObjectPosition, ConjunctionWithDetails } from "@/lib/types";
-import { X } from "lucide-react";
+import { X, GripVertical } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface GlobeProps {
   positions: ObjectPosition[];
@@ -384,15 +385,33 @@ function ConjunctionDeepDive({ conj, onClose }: { conj: ConjunctionWithDetails; 
 
       {/* Floating Conjunction HUD Card */}
       <Html position={pos} center zIndexRange={[100, 0]}>
-        <div 
-          className="hud-panel bg-[#050505]/95 backdrop-blur-md border border-white/20 p-3 rounded shadow-2xl text-[10px] font-mono text-white relative min-w-[210px] animate-in zoom-in-95 duration-200 mt-16 pointer-events-auto select-none"
+        <motion.div 
+          key={conj.id}
+          drag
+          dragMomentum={false}
+          dragElastic={0}
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.2 }}
+          onPointerDown={(e) => e.stopPropagation()}
+          onPointerUp={(e) => e.stopPropagation()}
+          onPointerMove={(e) => e.stopPropagation()}
           onClick={(e) => e.stopPropagation()}
+          onWheel={(e) => e.stopPropagation()}
+          className="hud-panel bg-[#050505]/95 backdrop-blur-md border border-white/20 p-3 rounded shadow-2xl text-[10px] font-mono text-white relative min-w-[220px] mt-16 pointer-events-auto select-none touch-none"
         >
-          <div className={`text-[9px] tracking-widest font-bold mb-2 pb-1.5 border-b ${isCritical ? 'text-red-400 border-red-500/30' : 'text-amber-400 border-amber-500/30'} flex justify-between items-center gap-3`}>
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping"></span>
-              INTERCEPT VECTOR
-            </span>
+          {/* Draggable Header Handle */}
+          <div 
+            className={`text-[9px] tracking-widest font-bold mb-2 pb-1.5 border-b ${
+              isCritical ? 'text-red-400 border-red-500/30' : 'text-amber-400 border-amber-500/30'
+            } flex justify-between items-center gap-3 cursor-grab active:cursor-grabbing select-none`}
+            title="Drag to reposition panel"
+          >
+            <div className="flex items-center gap-1.5 min-w-0">
+              <GripVertical className="w-3.5 h-3.5 text-zinc-400 shrink-0 opacity-70 hover:opacity-100" />
+              <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping shrink-0"></span>
+              <span className="truncate">INTERCEPT VECTOR</span>
+            </div>
             <button
               type="button"
               onClick={(e) => {
@@ -403,7 +422,7 @@ function ConjunctionDeepDive({ conj, onClose }: { conj: ConjunctionWithDetails; 
               onPointerDown={(e) => {
                 e.stopPropagation();
               }}
-              className="text-zinc-400 hover:text-white transition-colors pointer-events-auto p-1 cursor-pointer bg-white/5 hover:bg-white/10 rounded-xs"
+              className="text-zinc-400 hover:text-white transition-colors pointer-events-auto p-1 cursor-pointer bg-white/5 hover:bg-white/10 rounded-xs shrink-0"
               title="Exit Encounter View"
             >
               <X className="w-3.5 h-3.5" />
@@ -420,7 +439,7 @@ function ConjunctionDeepDive({ conj, onClose }: { conj: ConjunctionWithDetails; 
             <span className="text-zinc-400">TCA:</span>
             <span className="font-mono text-zinc-300 text-[8.5px] truncate">{new Date(conj.tca).toUTCString().slice(17, 25)} UTC</span>
           </div>
-        </div>
+        </motion.div>
       </Html>
     </group>
   );
