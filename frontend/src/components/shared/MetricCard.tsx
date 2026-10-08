@@ -27,19 +27,21 @@ export default function MetricCard({ label, value, subValue, icon, trend, varian
   }[variant];
 
   return (
-    <div className={`relative bg-[#000000]/40 border ${borderClass} px-3 py-2 flex flex-col justify-between overflow-hidden group`}>
+    <div className={`relative bg-[var(--space-card)] border ${borderClass} px-3 py-2 flex flex-col justify-between overflow-hidden group`}>
       {/* Corner Brackets */}
-      <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-[var(--text-muted)] opacity-50"></div>
-      <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-[var(--text-muted)] opacity-50"></div>
-
+      <div className={`absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-[var(--text-muted)] opacity-50`}></div>
+      <div className={`absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-[var(--text-muted)] opacity-50`}></div>
+      <div className={`absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[var(--text-muted)] opacity-50`}></div>
+      <div className={`absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[var(--text-muted)] opacity-50`}></div>
+      
       {/* Scanline Background */}
-      <div className="absolute inset-0 scanline opacity-20 group-hover:opacity-40 transition-opacity"></div>
+      <div className="absolute inset-0 scanline opacity-20 group-hover:opacity-40 transition-opacity pointer-events-none"></div>
       
       <div className="flex justify-between items-start relative z-10 mb-2">
         <span className={`text-[9px] font-mono font-bold uppercase tracking-widest ${variant !== 'default' ? iconColor : 'text-[var(--text-muted)]'}`}>
           {label}
         </span>
-        {icon && <div className={`${iconColor} opacity-70`}>{icon}</div>}
+        {icon && <div className={`${iconColor} opacity-70 group-hover:animate-pulse`}>{icon}</div>}
       </div>
       <div className="flex items-baseline gap-2 relative z-10">
         <span className={`text-xl font-bold font-mono tracking-tighter ${variant === 'critical' ? 'text-[var(--tier-critical)]' : 'text-[var(--text-primary)]'}`}>
