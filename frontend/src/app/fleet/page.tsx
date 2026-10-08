@@ -53,7 +53,7 @@ export default function FleetPage() {
     {
       key: "norad_cat_id",
       label: "NORAD ID",
-      render: (o: SpaceObject) => <span className="font-mono text-cyan-400">{o.norad_cat_id}</span>
+      render: (o: SpaceObject) => <span className="font-mono text-amber-400">{o.norad_cat_id}</span>
     },
     {
       key: "object_name",
@@ -89,7 +89,7 @@ export default function FleetPage() {
 
   return (
     <div className="flex flex-col gap-6 relative min-h-screen">
-      <h1 className="text-teal-400 text-2xl font-semibold tracking-wide uppercase">Fleet & Object Registry</h1>
+      <h1 className="text-white text-2xl font-semibold tracking-wide uppercase font-mono">Fleet & Object Registry</h1>
       
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <MetricCard label="Total Objects" value={stats?.total_objects || total} />
@@ -104,7 +104,7 @@ export default function FleetPage() {
           <select 
             value={typeFilter}
             onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-            className="bg-[var(--space-panel)] border border-[var(--space-border)] text-sm rounded-md px-3 py-1.5 text-white focus:outline-none focus:border-teal-500 w-full md:w-auto"
+            className="bg-[var(--space-panel)] border border-[var(--space-border)] text-sm rounded-md px-3 py-1.5 text-white focus:outline-none focus:border-amber-400 w-full md:w-auto"
           >
             <option value="all">All</option>
             <option value="satellite">Satellite</option>
@@ -119,7 +119,7 @@ export default function FleetPage() {
           </div>
           <input
             type="text"
-            className="bg-[var(--space-panel)] border border-[var(--space-border)] text-sm rounded-md block w-full pl-10 p-2 text-white focus:outline-none focus:border-teal-500 placeholder-gray-500"
+            className="bg-[var(--space-panel)] border border-[var(--space-border)] text-sm rounded-md block w-full pl-10 p-2 text-white focus:outline-none focus:border-amber-400 placeholder-gray-500"
             placeholder="Search Name or NORAD ID..."
             value={searchQuery}
             onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
@@ -155,7 +155,7 @@ export default function FleetPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <span className="text-xs text-gray-500 uppercase block mb-1">NORAD ID</span>
-                <p className="text-cyan-400 font-mono text-lg">{selectedObject.norad_cat_id}</p>
+                <p className="text-amber-400 font-mono text-lg">{selectedObject.norad_cat_id}</p>
               </div>
               <div>
                 <span className="text-xs text-gray-500 uppercase block mb-1">Object ID</span>

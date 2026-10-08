@@ -144,7 +144,7 @@ export default function AlertDetailPanel({
           </p>
           {conjLoading ? (
             <div className="flex items-center justify-center py-4">
-              <Loader2 className="w-5 h-5 text-cyan-400 animate-spin" />
+              <Loader2 className="w-5 h-5 text-amber-400 animate-spin" />
             </div>
           ) : conjunction ? (
             <div className="space-y-2">
@@ -161,7 +161,7 @@ export default function AlertDetailPanel({
               <div className="grid grid-cols-2 gap-2">
                 <div className="p-2 rounded bg-white/5">
                   <p className="text-white/40 text-xs">Miss Distance</p>
-                  <p className="text-cyan-400 font-mono text-xs font-semibold">
+                  <p className="text-white font-mono text-xs font-semibold">
                     {conjunction.miss_distance_km.toFixed(1)} km
                   </p>
                 </div>
@@ -206,7 +206,7 @@ export default function AlertDetailPanel({
               <button
                 disabled={ackLoading}
                 onClick={handleAcknowledge}
-                className="flex-1 px-3 py-1.5 rounded-md bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 text-xs font-semibold disabled:opacity-50"
+                className="flex-1 px-3 py-1.5 rounded bg-amber-400 hover:bg-amber-300 text-black border border-amber-400 font-mono text-xs font-bold uppercase tracking-wider disabled:opacity-50 transition-colors"
               >
                 {ackLoading ? "Acknowledging…" : "Acknowledge"}
               </button>

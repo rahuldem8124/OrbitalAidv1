@@ -55,7 +55,7 @@ export default function RadarPlot({
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
         <defs>
           <radialGradient id="radar-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="var(--accent-cyan)" stopOpacity="0.1" />
+            <stop offset="0%" stopColor="var(--accent-amber)" stopOpacity="0.1" />
             <stop offset="100%" stopColor="transparent" stopOpacity="0" />
           </radialGradient>
         </defs>
@@ -74,7 +74,7 @@ export default function RadarPlot({
         ))}
         
         {/* Crosshair at center */}
-        <path d={`M ${center - 5} ${center} H ${center + 5} M ${center} ${center - 5} V ${center + 5}`} stroke="var(--accent-cyan)" strokeWidth="1" />
+        <path d={`M ${center - 5} ${center} H ${center + 5} M ${center} ${center - 5} V ${center + 5}`} stroke="var(--accent-amber)" strokeWidth="1" />
 
         {/* Trajectory Line */}
         <path
@@ -86,8 +86,8 @@ export default function RadarPlot({
         />
 
         {/* Primary Target (Center) */}
-        <circle cx={center} cy={center} r={3} fill="var(--accent-cyan)" />
-        <circle cx={center} cy={center} r={6} fill="none" stroke="var(--accent-cyan)" strokeWidth="1" opacity="0.5">
+        <circle cx={center} cy={center} r={3} fill="var(--accent-amber)" />
+        <circle cx={center} cy={center} r={6} fill="none" stroke="var(--accent-amber)" strokeWidth="1" opacity="0.5">
           <animate attributeName="r" values="3;10" dur="2s" repeatCount="indefinite" />
           <animate attributeName="opacity" values="1;0" dur="2s" repeatCount="indefinite" />
         </circle>
@@ -104,7 +104,7 @@ export default function RadarPlot({
       </svg>
       
       {/* HUD overlay labels */}
-      <div className="absolute top-1 left-1 text-[8px] font-mono text-[var(--accent-cyan)] tracking-widest uppercase">POLAR</div>
+      <div className="absolute top-1 left-1 text-[8px] font-mono text-[var(--accent-amber)] tracking-widest uppercase">POLAR</div>
       <div className="absolute bottom-1 right-1 text-[8px] font-mono text-[var(--tier-critical)] tracking-widest uppercase animate-pulse">TRK-LOCK</div>
     </div>
   );

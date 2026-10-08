@@ -113,12 +113,12 @@ function SidebarInner() {
       <div className="h-14 flex items-center justify-between px-4 border-b border-[var(--space-border)] shrink-0 bg-[var(--space-panel)]">
         {!collapsed && (
           <span className="text-sm font-mono font-bold text-white tracking-widest uppercase flex items-center gap-2">
-            <Activity className="text-cyan-400 w-4 h-4" />
+            <Activity className="text-amber-400 w-4 h-4" />
             OrbitAid
           </span>
         )}
         {collapsed && (
-          <Activity className="text-cyan-400 w-5 h-5 mx-auto" />
+          <Activity className="text-amber-400 w-5 h-5 mx-auto" />
         )}
         <button
           onClick={toggleCollapse}
@@ -146,11 +146,11 @@ function SidebarInner() {
                     title={collapsed ? item.label : undefined}
                     className={`flex items-center gap-3 px-3 py-2 rounded-sm transition-all duration-200 group ${
                       active
-                        ? "bg-[var(--space-border)]/50 text-[var(--accent-cyan)] font-medium border-l-2 border-[var(--accent-cyan)]"
-                        : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--space-card-hover)] border-l-2 border-transparent"
+                        ? "bg-amber-950/20 text-amber-400 font-medium border-l-2 border-amber-400"
+                        : "text-zinc-400 hover:text-white hover:bg-white/5 border-l-2 border-transparent"
                     }`}
                   >
-                    <item.icon className={`w-4 h-4 shrink-0 ${active ? 'text-[var(--accent-cyan)]' : 'group-hover:text-[var(--text-primary)]'}`} />
+                    <item.icon className={`w-4 h-4 shrink-0 ${active ? 'text-amber-400' : 'group-hover:text-white'}`} />
                     {!collapsed && (
                       <span className="text-sm truncate">{item.label}</span>
                     )}

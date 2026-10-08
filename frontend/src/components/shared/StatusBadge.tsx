@@ -28,10 +28,10 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
     bgColor = 'bg-red-950/30';
     borderColor = 'border-red-800';
   } else if (['verified'].includes(s)) {
-    dotColor = 'bg-[var(--accent-cyan)]';
-    textColor = 'text-cyan-400';
-    bgColor = 'bg-cyan-950/30';
-    borderColor = 'border-cyan-800';
+    dotColor = 'bg-amber-400';
+    textColor = 'text-amber-400';
+    bgColor = 'bg-amber-950/30';
+    borderColor = 'border-amber-800';
   }
 
   return (

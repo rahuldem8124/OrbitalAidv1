@@ -84,7 +84,7 @@ export default function TopBar() {
         <div className="h-6 flex items-center justify-between px-4 border-b border-white/5 bg-black/40">
           <div className="flex items-center gap-4 text-[9px] font-mono text-zinc-500 tracking-widest">
             <span className="flex items-center gap-1.5 text-zinc-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
               DEFCON 5
             </span>
             <span className="text-zinc-700">//</span>
@@ -99,7 +99,7 @@ export default function TopBar() {
               <span className="text-zinc-700">|</span>
               <span className="text-zinc-500">MOS: <span className="text-zinc-200">{times.MOS}</span></span>
               <span className="text-zinc-700">|</span>
-              <span className="text-cyan-400 font-bold">UTC: {times.UTC}</span>
+              <span className="text-amber-400 font-bold">UTC: {times.UTC}</span>
             </div>
           )}
         </div>
@@ -109,7 +109,7 @@ export default function TopBar() {
           <div className="absolute inset-0 scanline opacity-15 pointer-events-none"></div>
           
           <div className="flex items-center gap-3 relative z-10">
-            <div className="w-2 h-2 border-t border-l border-cyan-400"></div>
+            <div className="w-2 h-2 border-t border-l border-amber-400"></div>
             <h1 className="text-white font-mono font-bold tracking-widest text-sm">{getPageTitle()}</h1>
           </div>
 
@@ -120,7 +120,7 @@ export default function TopBar() {
           <div className="flex items-center gap-5 relative z-10">
             <button
               onClick={() => setIsBriefingOpen(true)}
-              className="px-3 py-1 bg-cyan-950/40 border border-cyan-500/40 text-cyan-300 text-[9px] font-mono font-bold tracking-widest uppercase hover:bg-cyan-900/50 hover:border-cyan-400 transition-all rounded-xs shadow-sm"
+              className="px-3 py-1 bg-amber-950/40 border border-amber-500/40 text-amber-300 text-[9px] font-mono font-bold tracking-widest uppercase hover:bg-amber-900/50 hover:border-amber-400 transition-all rounded-xs shadow-sm"
             >
               MISSION BRIEFING
             </button>
@@ -129,10 +129,10 @@ export default function TopBar() {
             <div className="hidden md:flex flex-col gap-1 w-28">
               <div className="flex justify-between text-[8px] font-mono tracking-widest text-zinc-400">
                 <span>TRACKING</span>
-                <span className="text-cyan-400 font-bold">ACTV</span>
+                <span className="text-amber-400 font-bold">ACTV</span>
               </div>
               <div className="h-1 w-full bg-black/60 border border-white/10 relative rounded-xs overflow-hidden">
-                <div className="absolute top-0 left-0 h-full bg-cyan-400 w-[85%]"></div>
+                <div className="absolute top-0 left-0 h-full bg-amber-400 w-[85%]"></div>
               </div>
             </div>
 

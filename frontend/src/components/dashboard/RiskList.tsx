@@ -20,7 +20,7 @@ export default function RiskList({ conjunctions }: RiskListProps) {
       <GlassPanel className="flex flex-col h-full">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Top Conjunction Risks</h3>
-          <Link href="/conjunctions" className="text-cyan-400 text-sm hover:text-cyan-300 flex items-center gap-1">
+          <Link href="/conjunctions" className="text-amber-400 text-sm hover:text-amber-300 flex items-center gap-1">
             View All
             <ArrowUpRight className="w-4 h-4" />
           </Link>
@@ -41,7 +41,7 @@ export default function RiskList({ conjunctions }: RiskListProps) {
               <div className="grid grid-cols-3 gap-2 text-xs">
                 <div>
                   <p className="text-white/40">Miss Distance</p>
-                  <p className="text-cyan-400 font-mono font-semibold">{conj.miss_distance_km.toFixed(1)} km</p>
+                  <p className="text-amber-400 font-mono font-semibold">{conj.miss_distance_km.toFixed(1)} km</p>
                 </div>
                 <div>
                   <p className="text-white/40">TCA</p>

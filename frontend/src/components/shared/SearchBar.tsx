@@ -50,7 +50,7 @@ export default function SearchBar({ onSearch, results, loading = false }: Search
           className="w-72 bg-[var(--space-canvas)] border border-[var(--space-border)] rounded-sm pl-9 pr-8 py-1.5 text-xs font-mono text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--space-border-bright)] focus:ring-1 focus:ring-[var(--space-border-bright)] transition-all"
         />
         {loading && (
-          <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--accent-cyan)] animate-spin" />
+          <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-amber-400 animate-spin" />
         )}
       </div>
 

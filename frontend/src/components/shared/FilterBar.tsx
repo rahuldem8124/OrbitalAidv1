@@ -24,7 +24,7 @@ export default function FilterBar({ filters, onReset }: FilterBarProps) {
             <select
               value={filter.value}
               onChange={(e) => filter.onChange(e.target.value)}
-              className="bg-[var(--space-card)] border border-[var(--space-border)] text-sm text-[var(--text-primary)] rounded-md px-2 py-1 focus:outline-none focus:border-[#2dd4bf]/50"
+              className="bg-[var(--space-card)] border border-[var(--space-border)] text-sm text-[var(--text-primary)] rounded-md px-2 py-1 focus:outline-none focus:border-amber-400/50"
             >
               <option value="">All</option>
               {filter.options.map(opt => (
@@ -36,7 +36,7 @@ export default function FilterBar({ filters, onReset }: FilterBarProps) {
               type="date"
               value={filter.value}
               onChange={(e) => filter.onChange(e.target.value)}
-              className="bg-[var(--space-card)] border border-[var(--space-border)] text-sm text-[var(--text-primary)] rounded-md px-2 py-1 focus:outline-none focus:border-[#2dd4bf]/50"
+              className="bg-[var(--space-card)] border border-[var(--space-border)] text-sm text-[var(--text-primary)] rounded-md px-2 py-1 focus:outline-none focus:border-amber-400/50"
             />
           ) : (
             <input
@@ -44,7 +44,7 @@ export default function FilterBar({ filters, onReset }: FilterBarProps) {
               value={filter.value}
               onChange={(e) => filter.onChange(e.target.value)}
               placeholder={`Search ${filter.label}...`}
-              className="bg-[var(--space-card)] border border-[var(--space-border)] text-sm text-[var(--text-primary)] rounded-md px-2 py-1 focus:outline-none focus:border-[#2dd4bf]/50 placeholder:text-[var(--text-muted)]"
+              className="bg-[var(--space-card)] border border-[var(--space-border)] text-sm text-[var(--text-primary)] rounded-md px-2 py-1 focus:outline-none focus:border-amber-400/50 placeholder:text-[var(--text-muted)]"
             />
           )}
         </div>

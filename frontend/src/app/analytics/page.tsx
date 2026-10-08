@@ -27,7 +27,7 @@ const TIER_COLORS: Record<string, string> = {
   unassessed: "#6b7280",
 };
 
-const ALTITUDE_COLOR = "#2dd4bf"; // Teal accent
+const ALTITUDE_COLOR = "#F59E0B"; // Tactical Amber accent
 
 function formatDuration(seconds: number | null): string {
   if (seconds == null) return "—";
@@ -163,7 +163,7 @@ export default function AnalyticsPage() {
     name: status.toUpperCase(),
     value: count,
   }));
-  const STATUS_COLORS = ['#2dd4bf', '#3b82f6', '#64748b'];
+  const STATUS_COLORS = ['#F59E0B', '#E2E8F0', '#64748b'];
 
   // Altitude mapping
   const altitudeData = Object.entries(altitudeDist?.bins || {}).map(
@@ -198,13 +198,13 @@ export default function AnalyticsPage() {
             <div className="flex gap-2">
               <button 
                 onClick={() => setTrendPeriod("7d")} 
-                className={`text-xs px-3 py-1 rounded ${trendPeriod === "7d" ? 'bg-[#2dd4bf]/20 text-[var(--accent-cyan)]' : 'bg-[var(--space-card-hover)] text-[var(--text-secondary)] hover:text-white'}`}
+                className={`text-xs px-3 py-1 rounded ${trendPeriod === "7d" ? 'bg-amber-400/20 text-amber-400 border border-amber-400/30' : 'bg-[var(--space-card-hover)] text-[var(--text-secondary)] hover:text-white'}`}
               >
                 7D
               </button>
               <button 
                 onClick={() => setTrendPeriod("30d")} 
-                className={`text-xs px-3 py-1 rounded ${trendPeriod === "30d" ? 'bg-[#2dd4bf]/20 text-[var(--accent-cyan)]' : 'bg-[var(--space-card-hover)] text-[var(--text-secondary)] hover:text-white'}`}
+                className={`text-xs px-3 py-1 rounded ${trendPeriod === "30d" ? 'bg-amber-400/20 text-amber-400 border border-amber-400/30' : 'bg-[var(--space-card-hover)] text-[var(--text-secondary)] hover:text-white'}`}
               >
                 30D
               </button>
@@ -223,8 +223,8 @@ export default function AnalyticsPage() {
                     <stop offset="95%" stopColor={TIER_COLORS.high} stopOpacity={0}/>
                   </linearGradient>
                   <linearGradient id="colorOther" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2dd4bf" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#2dd4bf" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#F59E0B" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
@@ -234,7 +234,7 @@ export default function AnalyticsPage() {
                   contentStyle={{ backgroundColor: "#111827", borderColor: "#1e293b", color: "#f8fafc" }}
                   itemStyle={{ color: "#e2e8f0" }}
                 />
-                <Area type="monotone" dataKey="other" stackId="1" stroke="#2dd4bf" fillOpacity={1} fill="url(#colorOther)" name="Other" />
+                <Area type="monotone" dataKey="other" stackId="1" stroke="#F59E0B" fillOpacity={1} fill="url(#colorOther)" name="Other" />
                 <Area type="monotone" dataKey="high" stackId="1" stroke={TIER_COLORS.high} fillOpacity={1} fill="url(#colorHigh)" name="High" />
                 <Area type="monotone" dataKey="critical" stackId="1" stroke={TIER_COLORS.critical} fillOpacity={1} fill="url(#colorCrit)" name="Critical" />
               </AreaChart>
@@ -271,7 +271,7 @@ export default function AnalyticsPage() {
         <div className="bg-[var(--space-panel)] border border-[var(--space-border)] rounded-md p-5 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h3 className="text-white text-sm font-semibold uppercase tracking-wider">Maneuver Activity</h3>
-            <span className="text-[var(--accent-cyan)] text-sm font-mono">{maneuverStats?.approval_rate.toFixed(1) || 0}% Approval Rate</span>
+            <span className="text-amber-400 text-sm font-mono">{maneuverStats?.approval_rate.toFixed(1) || 0}% Approval Rate</span>
           </div>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -283,7 +283,7 @@ export default function AnalyticsPage() {
                   contentStyle={{ backgroundColor: "#111827", borderColor: "#1e293b", color: "#f8fafc" }}
                   cursor={{ fill: 'rgba(255,255,255,0.05)' }}
                 />
-                <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="count" fill="#F59E0B" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -323,7 +323,7 @@ export default function AnalyticsPage() {
       <div className="bg-[var(--space-panel)] border border-[var(--space-border)] rounded-md p-5 flex flex-col gap-4">
         <h3 className="text-white text-sm font-semibold uppercase tracking-wider">Mitigation Summary</h3>
         <p className="text-[var(--text-secondary)] text-sm mb-2 font-mono uppercase">
-          <span className="text-[var(--accent-cyan)] font-bold">{maneuverStats?.total_mitigated || 0}</span> CONJUNCTIONS MITIGATED &mdash; <span className="text-[var(--text-primary)] font-bold">{maneuverStats?.approval_rate.toFixed(1) || 0}%</span> APPROVAL RATE
+          <span className="text-amber-400 font-bold">{maneuverStats?.total_mitigated || 0}</span> CONJUNCTIONS MITIGATED &mdash; <span className="text-[var(--text-primary)] font-bold">{maneuverStats?.approval_rate.toFixed(1) || 0}%</span> APPROVAL RATE
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <MetricCard label="Total Mitigated" value={maneuverStats?.total_mitigated || 0} variant="success" />
@@ -363,20 +363,20 @@ export default function AnalyticsPage() {
         <div className="flex flex-col gap-6">
           <div className="bg-[var(--space-panel)] border border-[var(--space-border)] rounded-md p-5 flex flex-col gap-4 h-full">
             <div className="flex items-center gap-2">
-              <Clock className="w-5 h-5 text-[var(--accent-cyan)]" />
+              <Clock className="w-5 h-5 text-amber-400" />
               <h3 className="text-white text-sm font-semibold uppercase tracking-wider">Alert Acknowledgement</h3>
             </div>
             {responseTimes?.alert_acknowledgement?.count ? (
               <div className="space-y-4 mt-2">
                 <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
                   <span className="text-[var(--text-secondary)] text-sm">Average</span>
-                  <span className="text-[var(--accent-cyan)] font-mono text-lg font-bold">
+                  <span className="text-amber-400 font-mono text-lg font-bold">
                     {formatDuration(responseTimes.alert_acknowledgement.avg_seconds)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
                   <span className="text-[var(--text-secondary)] text-sm">Median</span>
-                  <span className="text-[var(--accent-cyan)] font-mono text-lg font-bold">
+                  <span className="text-amber-400 font-mono text-lg font-bold">
                     {formatDuration(responseTimes.alert_acknowledgement.median_seconds)}
                   </span>
                 </div>

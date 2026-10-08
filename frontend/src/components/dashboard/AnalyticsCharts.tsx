@@ -22,7 +22,7 @@ const TIER_COLORS: Record<string, string> = {
   unassessed: "#6b7280",
 };
 
-const ALTITUDE_COLOR = "#06b6d4";
+const ALTITUDE_COLOR = "#F59E0B";
 
 interface AnalyticsChartsProps {
   riskDistribution: Record<string, number>;
@@ -159,7 +159,7 @@ export default function AnalyticsCharts({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <GlassPanel>
           <div className="flex items-center gap-2 mb-3">
-            <Clock className="w-4 h-4 text-cyan-400" />
+            <Clock className="w-4 h-4 text-amber-400" />
             <h3 className="text-white text-sm font-semibold">
               Alert Acknowledgement
             </h3>
@@ -168,13 +168,13 @@ export default function AnalyticsCharts({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-white/50 text-xs">Average</span>
-                <span className="text-cyan-400 font-mono text-sm font-semibold">
+                <span className="text-amber-400 font-mono text-sm font-semibold">
                   {formatDuration(responseTimes.alert_acknowledgement.avg_seconds)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-white/50 text-xs">Median</span>
-                <span className="text-cyan-400 font-mono text-sm font-semibold">
+                <span className="text-amber-400 font-mono text-sm font-semibold">
                   {formatDuration(responseTimes.alert_acknowledgement.median_seconds)}
                 </span>
               </div>

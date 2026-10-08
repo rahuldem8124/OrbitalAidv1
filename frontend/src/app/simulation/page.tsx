@@ -10,7 +10,7 @@ export default function SimulationPage() {
         <div className="flex flex-col gap-6">
           <h1 className="text-white text-2xl font-semibold">Simulation & What-If Analysis</h1>
           <GlassPanel className="flex items-center justify-center py-12">
-            <Loader2 className="w-6 h-6 text-cyan-400 animate-spin" />
+            <Loader2 className="w-6 h-6 text-amber-400 animate-spin" />
           </GlassPanel>
         </div>
       }

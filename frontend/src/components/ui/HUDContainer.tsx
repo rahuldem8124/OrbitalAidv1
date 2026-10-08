@@ -22,8 +22,8 @@ export default function HUDContainer({ children, className = "", title, cornerCu
       <div className="absolute inset-0 pointer-events-none scanline opacity-15"></div>
 
       {title && (
-        <div className="absolute -top-2.5 left-4 bg-[#05070A]/90 px-2 py-0.5 text-[9px] font-mono font-medium text-cyan-400 tracking-widest uppercase z-10 border border-white/10 rounded-sm shadow-sm flex items-center gap-1.5">
-          <span className="w-1 h-1 rounded-full bg-cyan-400/80"></span>
+        <div className="absolute -top-2.5 left-4 bg-[#050505]/95 px-2 py-0.5 text-[9px] font-mono font-medium text-amber-400 tracking-widest uppercase z-10 border border-white/10 rounded-sm shadow-sm flex items-center gap-1.5">
+          <span className="w-1 h-1 rounded-full bg-amber-400"></span>
           {title}
         </div>
       )}

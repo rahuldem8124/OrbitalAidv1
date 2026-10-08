@@ -25,7 +25,7 @@ export default function QuickStats({ analytics }: Props) {
           
           {/* Conjunctions Column */}
           <div>
-            <h3 className="text-[8.5px] text-cyan-400 font-mono font-bold mb-2 uppercase tracking-widest border-b border-white/10 pb-1 flex justify-between items-center">
+            <h3 className="text-[8.5px] text-amber-400 font-mono font-bold mb-2 uppercase tracking-widest border-b border-white/10 pb-1 flex justify-between items-center">
               <span>TARGET LOCKS</span>
               <span className="text-zinc-500">#CNT</span>
             </h3>
@@ -70,7 +70,7 @@ export default function QuickStats({ analytics }: Props) {
               </div>
               <div className="flex justify-between items-center text-[9.5px] font-mono">
                 <span className="text-zinc-400">MITIGATED</span>
-                <span className="text-cyan-400 font-bold">{analytics.conjunctions_mitigated || 0}</span>
+                <span className="text-amber-400 font-bold">{analytics.conjunctions_mitigated || 0}</span>
               </div>
             </div>
           </div>
@@ -80,7 +80,7 @@ export default function QuickStats({ analytics }: Props) {
         <div className="mt-3 pt-2 border-t border-white/5 flex items-center justify-between opacity-60">
            <div className="flex gap-1">
               {Array.from({length: 10}).map((_, i) => (
-                <div key={i} className="w-1 h-2 bg-cyan-400/80 rounded-xs" style={{ opacity: (i + 1) / 10 }}></div>
+                <div key={i} className="w-1 h-2 bg-amber-400/80 rounded-xs" style={{ opacity: (i + 1) / 10 }}></div>
               ))}
            </div>
            <span className="text-[7.5px] font-mono text-zinc-500 tracking-widest uppercase">DATALINK // 100% NOMINAL</span>

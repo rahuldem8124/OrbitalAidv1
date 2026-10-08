@@ -57,9 +57,9 @@ export default function ActivityFeed({ alerts, maneuvers }: ActivityFeedProps) {
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center gap-2">
-          <Terminal className="w-3.5 h-3.5 text-cyan-400" />
-          <span className="text-[9px] font-mono font-bold text-cyan-400 uppercase tracking-widest flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+          <Terminal className="w-3.5 h-3.5 text-amber-400" />
+          <span className="text-[9px] font-mono font-bold text-amber-400 uppercase tracking-widest flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
             LIVE TELEMETRY STREAM
           </span>
         </div>
@@ -86,7 +86,7 @@ export default function ActivityFeed({ alerts, maneuvers }: ActivityFeedProps) {
           const colorClasses = getLogColors(severity);
 
           return (
-            <div key={idx} className={`flex items-start gap-2.5 py-1 px-1.5 group border-l border-white/10 hover:border-cyan-400 hover:bg-white/[0.04] transition-all rounded-xs ${colorClasses}`}>
+            <div key={idx} className={`flex items-start gap-2.5 py-1 px-1.5 group border-l border-white/10 hover:border-amber-400 hover:bg-white/[0.04] transition-all rounded-xs ${colorClasses}`}>
               <span className="whitespace-nowrap shrink-0 text-zinc-500 text-[8.5px]">
                 {timeAgo(timestamp)}
               </span>
@@ -100,8 +100,8 @@ export default function ActivityFeed({ alerts, maneuvers }: ActivityFeedProps) {
           );
         })}
         {visibleItems === activities.length && (
-          <div className="flex items-center gap-2 py-1 px-1.5 text-cyan-400 text-[9px] font-mono opacity-80">
-            <span className="w-1.5 h-2.5 bg-cyan-400 animate-pulse"></span>
+          <div className="flex items-center gap-2 py-1 px-1.5 text-amber-400 text-[9px] font-mono opacity-80">
+            <span className="w-1.5 h-2.5 bg-amber-400 animate-pulse"></span>
             <span>UPLINK SYNCED // AWAITING SENSOR BURST</span>
           </div>
         )}

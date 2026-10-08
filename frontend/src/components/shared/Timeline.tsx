@@ -22,7 +22,7 @@ export default function Timeline({ events }: TimelineProps) {
     <div className="relative border-l-2 border-[var(--space-border)] ml-3 py-2 space-y-6">
       {events.map((event, idx) => (
         <div key={idx} className="relative pl-6 group">
-          <div className="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-[#2dd4bf] ring-4 ring-[#111827] group-hover:scale-125 transition-transform" />
+          <div className="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-amber-400 ring-4 ring-black group-hover:scale-125 transition-transform" />
           
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">

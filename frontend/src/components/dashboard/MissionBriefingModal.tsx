@@ -49,7 +49,7 @@ export default function MissionBriefingModal({ isOpen, onClose }: MissionBriefin
       
       {/* Background Circular Framing */}
       <div className="absolute w-[800px] h-[800px] rounded-full border border-[var(--space-border-bright)]/10 flex items-center justify-center pointer-events-none">
-        <div className="w-[600px] h-[600px] rounded-full border border-[var(--accent-cyan)]/5 flex items-center justify-center border-dashed">
+        <div className="w-[600px] h-[600px] rounded-full border border-[var(--accent-amber)]/5 flex items-center justify-center border-dashed">
           <div className="w-[400px] h-[400px] rounded-full border border-[var(--tier-critical)]/10 animate-[spin_60s_linear_infinite]"></div>
         </div>
         <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-[var(--space-border-bright)]/10"></div>
@@ -59,7 +59,7 @@ export default function MissionBriefingModal({ isOpen, onClose }: MissionBriefin
       <HUDContainer title="MISSION BRIEFING // ANALYSIS" className="w-[800px] h-[500px] flex gap-4 p-4 relative z-10">
         <button 
           onClick={onClose}
-          className="absolute -top-3 right-4 px-2 bg-[#000000] text-[10px] font-mono font-bold text-[var(--accent-cyan)] tracking-widest uppercase hover:text-white transition-colors border-x border-[var(--space-border-bright)]/30"
+          className="absolute -top-3 right-4 px-2 bg-[#000000] text-[10px] font-mono font-bold text-[var(--accent-amber)] tracking-widest uppercase hover:text-white transition-colors border-x border-[var(--space-border-bright)]/30"
         >
           [ CLOSE ]
         </button>
@@ -67,12 +67,12 @@ export default function MissionBriefingModal({ isOpen, onClose }: MissionBriefin
         {/* Left Side: Decoding Process Terminal */}
         <div className="flex-1 border border-[var(--space-border)]/50 bg-[#000000]/60 flex flex-col relative overflow-hidden">
           <div className="absolute inset-0 scanline opacity-20 pointer-events-none"></div>
-          <div className="px-3 py-1.5 border-b border-[var(--space-border)]/50 bg-[var(--accent-cyan)]/10">
-            <span className="text-[9px] font-mono font-bold text-[var(--accent-cyan)] tracking-widest uppercase">
+          <div className="px-3 py-1.5 border-b border-[var(--space-border)]/50 bg-[var(--accent-amber)]/10">
+            <span className="text-[9px] font-mono font-bold text-[var(--accent-amber)] tracking-widest uppercase">
               DECODING PROCESS
             </span>
           </div>
-          <div className="flex-1 p-4 font-mono text-[11px] text-[var(--accent-cyan)] overflow-y-auto space-y-2">
+          <div className="flex-1 p-4 font-mono text-[11px] text-[var(--accent-amber)] overflow-y-auto space-y-2">
             {stream.map((line, i) => (
               <div key={i} className="flex gap-2 opacity-90">
                 <span className="opacity-50">&gt;</span>
@@ -84,7 +84,7 @@ export default function MissionBriefingModal({ isOpen, onClose }: MissionBriefin
             {stream.length < 8 && (
               <div className="flex gap-2 opacity-90 animate-pulse">
                 <span className="opacity-50">&gt;</span>
-                <span className="w-2 h-3 bg-[var(--accent-cyan)]"></span>
+                <span className="w-2 h-3 bg-[var(--accent-amber)]"></span>
               </div>
             )}
           </div>
@@ -105,7 +105,7 @@ export default function MissionBriefingModal({ isOpen, onClose }: MissionBriefin
               </div>
               <div className="flex justify-between border-b border-[var(--space-border)]/30 pb-1 pt-1">
                 <span className="text-[var(--text-muted)]">ENCRYPTION</span>
-                <span className="text-[var(--accent-cyan)]">AES-256-GCM</span>
+                <span className="text-[var(--accent-amber)]">AES-256-GCM</span>
               </div>
               <div className="flex justify-between pt-1 text-[#000000] bg-[var(--tier-critical)] font-bold px-1 -mx-1">
                 <span>SIGNAL INTEGRITY</span>

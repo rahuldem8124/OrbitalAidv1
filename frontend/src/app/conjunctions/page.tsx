@@ -7,7 +7,8 @@ import {
   fetchConjunctionTimeline,
   approveManeuver,
   rejectManeuver,
-  fetchConjunctions
+  fetchConjunctions,
+  fetchObjectPositions
 } from '@/lib/api';
 import {
   ConjunctionWithDetails,
@@ -21,9 +22,9 @@ import FilterBar from '@/components/shared/FilterBar';
 import RiskBadge from '@/components/shared/RiskBadge';
 import StatusBadge from '@/components/shared/StatusBadge';
 import MetricCard from '@/components/shared/MetricCard';
-import DetailDrawer from '@/components/shared/DetailDrawer';
 import Timeline from '@/components/shared/Timeline';
-import { ShieldAlert, AlertTriangle, AlertCircle, CheckCircle, Clock, Rocket, AlertOctagon } from 'lucide-react';
+import Globe from '@/components/dashboard/Globe';
+import { ShieldAlert, AlertTriangle, AlertCircle, CheckCircle, Clock, Rocket, AlertOctagon, ArrowLeft, Target, X } from 'lucide-react';
 
 export default function ConjunctionsPage() {
   const [page, setPage] = useState(1);
@@ -35,6 +36,7 @@ export default function ConjunctionsPage() {
   const [data, setData] = useState<PaginatedResponse<ConjunctionWithDetails> | null>(null);
   const [analytics, setAnalytics] = useState<ConjunctionAnalytics | null>(null);
   const [timeline, setTimeline] = useState<EventLog[]>([]);
+  const [positions, setPositions] = useState<any[]>([]);
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -60,7 +62,7 @@ export default function ConjunctionsPage() {
       setLoading(true);
       setError(null);
       
-      const [analyticsData, conjunctionsData] = await Promise.all([
+      const [analyticsData, conjunctionsData, posData] = await Promise.all([
         fetchConjunctionAnalytics().catch(() => null),
         fetchConjunctionsPaginated({
           page,
@@ -71,7 +73,6 @@ export default function ConjunctionsPage() {
           sort_by: sortBy,
           sort_order: sortOrder,
         }).catch(async () => {
-          // Fallback if paginated endpoint is unavailable
           const res = await fetchConjunctions(filters.status || "active", filters.risk_tier || undefined);
           return {
             items: res.conjunctions as ConjunctionWithDetails[],
@@ -80,11 +81,13 @@ export default function ConjunctionsPage() {
             per_page: res.total,
             pages: 1
           };
-        })
+        }),
+        fetchObjectPositions(undefined, 300).catch(() => ({ positions: [] })),
       ]);
       
       if (analyticsData) setAnalytics(analyticsData);
       setData(conjunctionsData);
+      if (posData?.positions) setPositions(posData.positions);
     } catch (err) {
       console.error(err);
       setError("Failed to load conjunction data");
@@ -96,8 +99,17 @@ export default function ConjunctionsPage() {
   useEffect(() => {
     loadData();
   }, [loadData]);
-  
 
+  // Handle keyboard ESC to close simulation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedConjunction) {
+        closeSimulation();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedConjunction]);
 
   const handleRowClick = async (item: ConjunctionWithDetails) => {
     setSelectedConjunction(item);
@@ -118,7 +130,7 @@ export default function ConjunctionsPage() {
     }
   };
 
-  const closeDrawer = () => {
+  const closeSimulation = () => {
     setSelectedConjunction(null);
     setTimeline([]);
   };
@@ -154,7 +166,7 @@ export default function ConjunctionsPage() {
       width: '80px',
       render: (item: ConjunctionWithDetails) => (
         <div className="flex justify-center">
-          <div className={`w-2.5 h-2.5 rounded-full ${item.status === 'active' ? 'bg-[#2dd4bf]' : item.status === 'resolved' ? 'bg-[#22c55e]' : 'bg-[#64748b]'}`} title={item.status} />
+          <div className={`w-2.5 h-2.5 rounded-full ${item.status === 'active' ? 'bg-amber-400' : item.status === 'resolved' ? 'bg-emerald-400' : 'bg-zinc-600'}`} title={item.status} />
         </div>
       )
     },
@@ -186,8 +198,8 @@ export default function ConjunctionsPage() {
         const md = item.miss_distance_km;
         let color = 'text-[var(--text-primary)]';
         if (md != null && md > 0) {
-          if (md < 1) color = 'text-[var(--tier-critical)]';
-          else if (md < 2) color = 'text-[var(--tier-high)]';
+          if (md < 1) color = 'text-[var(--tier-critical)] font-bold';
+          else if (md < 2) color = 'text-[var(--tier-high)] font-bold';
           else if (md < 5) color = 'text-[var(--tier-watch)]';
         }
         return <span className={`font-mono ${color}`}>{formatDistance(md)}</span>;
@@ -220,7 +232,7 @@ export default function ConjunctionsPage() {
           </span>
         );
         return (
-          <span className={`font-mono text-xs font-medium ${status.isUrgent ? 'text-[var(--tier-critical)]' : 'text-[var(--accent-cyan)]'}`}>
+          <span className={`font-mono text-xs font-medium ${status.isUrgent ? 'text-[var(--tier-critical)]' : 'text-amber-400'}`}>
             {status.label}
           </span>
         );
@@ -258,8 +270,8 @@ export default function ConjunctionsPage() {
       key: 'actions',
       label: 'Actions',
       render: () => (
-        <button className="text-xs bg-[var(--space-card-hover)] hover:bg-[#2dd4bf]/20 text-[var(--accent-cyan)] px-3 py-1.5 rounded transition-colors border border-[#2dd4bf]/30">
-          View
+        <button className="text-xs bg-amber-950/20 hover:bg-amber-400/20 text-amber-400 px-3 py-1.5 rounded transition-colors border border-amber-400/30 font-mono font-medium">
+          SIMULATE
         </button>
       )
     }
@@ -315,7 +327,7 @@ export default function ConjunctionsPage() {
   return (
     <div className="flex flex-col gap-6 w-full mx-auto pb-10">
       <div className="flex items-center justify-between">
-        <h1 className="text-white text-2xl font-semibold tracking-tight uppercase">CONJUNCTION & RISK OPERATIONS CENTER</h1>
+        <h1 className="text-white text-2xl font-semibold tracking-tight uppercase font-mono">CONJUNCTION & RISK OPERATIONS CENTER</h1>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -362,165 +374,232 @@ export default function ConjunctionsPage() {
         rowKey={(item) => item.id}
       />
 
-      <DetailDrawer 
-        open={!!selectedConjunction} 
-        onClose={closeDrawer} 
-        title="CONJUNCTION DETAIL"
-        width="w-full max-w-2xl"
-      >
-        {selectedConjunction && (
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
-                <h3 className="text-[var(--accent-cyan)] font-medium uppercase tracking-wider text-sm">Event Overview</h3>
-                <span className="font-mono text-xs text-[var(--text-secondary)]">ID: {selectedConjunction.id}</span>
+      {/* ============================================================== */}
+      {/* 3D CONJUNCTION ENCOUNTER SIMULATION & DETAIL SIDE-PANEL        */}
+      {/* ============================================================== */}
+      {selectedConjunction && (
+        <div className="fixed inset-0 z-50 bg-[#000000] overflow-hidden select-none animate-in fade-in duration-200">
+          {/* Fullscreen React Three Fiber 3D Simulation Canvas */}
+          <div className="absolute inset-0 w-full h-full z-0">
+            <Globe
+              positions={positions}
+              selectedConjunction={selectedConjunction}
+              onCloseConjunction={closeSimulation}
+            />
+          </div>
+
+          {/* Top-Left Exit Button & Simulation HUD Status */}
+          <div className="absolute top-4 left-4 z-20 flex items-center gap-3">
+            <button
+              onClick={closeSimulation}
+              className="bg-[#050505]/95 hover:bg-[#151515] text-amber-400 border border-amber-400/30 px-3.5 py-2 rounded-sm font-mono text-[10px] font-bold tracking-widest uppercase transition-all shadow-2xl flex items-center gap-2 group cursor-pointer"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+              <span>RETURN TO OPS GRID [ESC]</span>
+            </button>
+            <div className="bg-[#050505]/90 border border-white/10 px-3 py-2 rounded-sm font-mono text-[9px] text-zinc-400 hidden sm:flex items-center gap-2 shadow-2xl">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
+              <span className="text-zinc-200 font-bold">LOCAL 3D ENCOUNTER SIMULATION</span>
+              <span className="text-zinc-600">|</span>
+              <span>DRAG TO ROTATE AROUND COLLISION POINT</span>
+            </div>
+          </div>
+
+          {/* Floating Right Conjunction Detail UI Panel */}
+          <div className="absolute right-4 top-4 bottom-4 w-[540px] max-w-[calc(100vw-2rem)] z-20 bg-[#050505]/95 backdrop-blur-md border border-white/10 rounded-md shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-right-4 duration-300">
+            {/* Panel Header */}
+            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
+              <div className="flex items-center gap-2">
+                <Target className="w-4 h-4 text-amber-400" />
+                <h2 className="font-mono text-xs font-bold text-white tracking-widest uppercase">
+                  CONJUNCTION DETAIL // ENCOUNTER ANALYSIS
+                </h2>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[var(--space-card)] p-4 rounded-md border border-[var(--space-border)]">
-                  <span className="text-xs text-[var(--text-muted)] block mb-1 uppercase">Primary Object</span>
-                  <div className="text-[var(--text-primary)] font-medium">{selectedConjunction.object_a?.object_name || selectedConjunction.object_a_name || 'Unknown'}</div>
-                  <div className="text-[var(--text-secondary)] text-sm font-mono mt-1">NORAD: {selectedConjunction.object_a?.norad_cat_id || 'N/A'}</div>
-                  <div className="text-[var(--text-secondary)] text-xs capitalize mt-1 border border-[var(--space-border)] inline-block px-2 py-0.5 rounded bg-[var(--space-panel)]">
-                    {selectedConjunction.object_a?.type || 'Unknown'}
-                  </div>
-                </div>
-                <div className="bg-[var(--space-card)] p-4 rounded-md border border-[var(--space-border)]">
-                  <span className="text-xs text-[var(--text-muted)] block mb-1 uppercase">Secondary Object</span>
-                  <div className="text-[var(--text-primary)] font-medium">{selectedConjunction.object_b?.object_name || selectedConjunction.object_b_name || 'Unknown'}</div>
-                  <div className="text-[var(--text-secondary)] text-sm font-mono mt-1">NORAD: {selectedConjunction.object_b?.norad_cat_id || 'N/A'}</div>
-                  <div className="text-[var(--text-secondary)] text-xs capitalize mt-1 border border-[var(--space-border)] inline-block px-2 py-0.5 rounded bg-[var(--space-panel)]">
-                    {selectedConjunction.object_b?.type || 'Unknown'}
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <StatusBadge status={selectedConjunction.status} />
-              </div>
+              <button
+                onClick={closeSimulation}
+                className="text-zinc-400 hover:text-white p-1 rounded-xs transition-colors cursor-pointer"
+                title="Close Simulation [ESC]"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
-                <h3 className="text-[var(--accent-cyan)] font-medium uppercase tracking-wider text-sm">Encounter Data</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[var(--space-panel)] border border-[var(--space-border)] p-4 rounded-md flex flex-col items-center justify-center text-center">
-                  <span className="text-xs text-[var(--text-secondary)] uppercase mb-1">Miss Distance</span>
-                  <span className={`text-3xl font-mono font-bold ${
-                    selectedConjunction.miss_distance_km < 1 ? 'text-[var(--tier-critical)]' : 
-                    selectedConjunction.miss_distance_km < 2 ? 'text-[var(--tier-high)]' : 
-                    selectedConjunction.miss_distance_km < 5 ? 'text-[var(--tier-watch)]' : 'text-[var(--accent-cyan)]'
-                  }`}>
-                    {selectedConjunction.miss_distance_km != null ? selectedConjunction.miss_distance_km.toFixed(3) : '—'} <span className="text-lg text-[var(--text-muted)]">km</span>
-                  </span>
+            {/* Scrollable Detail Data */}
+            <div className="flex-1 overflow-y-auto p-5 space-y-6">
+              
+              {/* Event Overview Section */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
+                  <h3 className="text-amber-400 font-mono font-bold uppercase tracking-wider text-xs flex items-center gap-1.5">
+                    <span className="w-1 h-1 rounded-full bg-amber-400"></span>
+                    Event Overview
+                  </h3>
+                  <span className="font-mono text-[10px] text-zinc-400">ID: {selectedConjunction.id}</span>
                 </div>
-                <div className="bg-[var(--space-panel)] border border-[var(--space-border)] p-4 rounded-md flex flex-col justify-center">
-                  <div className="flex justify-between items-center border-b border-[var(--space-border)] pb-2 mb-2">
-                    <span className="text-xs text-[var(--text-secondary)]">TCA (UTC)</span>
-                    <span className="text-xs font-mono text-[var(--text-primary)]">{formatUTCCompact(selectedConjunction.tca)}</span>
-                  </div>
-                  <div className="flex justify-between items-center border-b border-[var(--space-border)] pb-2 mb-2">
-                    <span className="text-xs text-[var(--text-secondary)]">Time to TCA</span>
-                    {(() => {
-                      const s = getTCAStatus(selectedConjunction.tca);
-                      if (s.type === 'passed') return <span className="text-xs font-mono text-[var(--text-muted)]">TCA PASSED · {s.suffix}</span>;
-                      if (s.type === 'upcoming') return <span className={`text-xs font-mono font-medium ${s.isUrgent ? 'text-[var(--tier-critical)]' : 'text-[var(--tier-high)]'}`}>{s.label}</span>;
-                      return <span className="text-xs text-[var(--text-muted)]">—</span>;
-                    })()}
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-[var(--text-secondary)]">Rel. Velocity</span>
-                    <span className="text-xs font-mono text-[var(--text-primary)]">{formatVelocity(selectedConjunction.relative_velocity_kmps)}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
-                <h3 className="text-[var(--accent-cyan)] font-medium uppercase tracking-wider text-sm">Risk Assessment</h3>
-              </div>
-              {!selectedConjunction.risk_assessment && selectedConjunction.risk_tier === null ? (
-                <div className="bg-[var(--tier-watch)]/10 border border-[var(--tier-watch)]/30 p-4 rounded-md text-center text-[var(--tier-watch)] text-sm">
-                  ASSESSMENT UNAVAILABLE
-                </div>
-              ) : (
-                <div className="flex items-center gap-6 bg-[var(--space-card)] p-4 rounded-md border border-[var(--space-border)]">
-                  <div className="flex-shrink-0">
-                    <RiskBadge tier={selectedConjunction.risk_tier} size="lg" />
-                  </div>
-                  <div className="flex flex-col flex-1 gap-1">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-[var(--text-secondary)]">Collision Probability (Pc)</span>
-                      <span className="font-mono text-[var(--text-primary)]">{selectedConjunction.pc ? selectedConjunction.pc.toExponential(4) : '—'}</span>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-[#111111]/80 p-3.5 rounded-sm border border-white/10">
+                    <span className="text-[10px] font-mono text-zinc-400 block mb-1 uppercase tracking-wider">Primary Object (White Path)</span>
+                    <div className="text-white font-bold text-sm">{selectedConjunction.object_a?.object_name || selectedConjunction.object_a_name || 'Unknown'}</div>
+                    <div className="text-zinc-400 text-xs font-mono mt-1">NORAD: {selectedConjunction.object_a?.norad_cat_id || 'N/A'}</div>
+                    <div className="text-zinc-300 text-[10px] uppercase font-mono mt-1.5 border border-white/10 inline-block px-1.5 py-0.5 rounded bg-black/60">
+                      {selectedConjunction.object_a?.type || 'Unknown'}
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-[var(--text-secondary)]">Assessment Method</span>
-                      <span className="text-[var(--text-primary)]">{selectedConjunction.risk_method || '—'}</span>
+                  </div>
+                  <div className="bg-[#111111]/80 p-3.5 rounded-sm border border-white/10">
+                    <span className="text-[10px] font-mono text-zinc-400 block mb-1 uppercase tracking-wider">Secondary Object (Red Path)</span>
+                    <div className="text-white font-bold text-sm">{selectedConjunction.object_b?.object_name || selectedConjunction.object_b_name || 'Unknown'}</div>
+                    <div className="text-zinc-400 text-xs font-mono mt-1">NORAD: {selectedConjunction.object_b?.norad_cat_id || 'N/A'}</div>
+                    <div className="text-zinc-300 text-[10px] uppercase font-mono mt-1.5 border border-white/10 inline-block px-1.5 py-0.5 rounded bg-black/60">
+                      {selectedConjunction.object_b?.type || 'Unknown'}
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
-                <h3 className="text-[var(--accent-cyan)] font-medium uppercase tracking-wider text-sm">Preventive Action & Maneuver</h3>
-              </div>
-              <div className="bg-[var(--space-card)] p-4 rounded-md border border-[var(--space-border)] flex flex-col gap-3">
                 <div>
-                  <span className="text-xs text-[var(--text-secondary)] uppercase block mb-1">Recommended Action</span>
-                  <div className="text-sm text-[var(--text-primary)]">{selectedConjunction.preventive_action || 'None'}</div>
+                  <StatusBadge status={selectedConjunction.status} />
                 </div>
-                {selectedConjunction.maneuver ? (
-                  <div className="mt-2 border-t border-[var(--space-border)] pt-3">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-medium text-[var(--text-primary)]">Proposed Maneuver</span>
-                      <StatusBadge status={selectedConjunction.maneuver.status} />
+              </div>
+
+              {/* Encounter Data Section */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
+                  <h3 className="text-amber-400 font-mono font-bold uppercase tracking-wider text-xs flex items-center gap-1.5">
+                    <span className="w-1 h-1 rounded-full bg-amber-400"></span>
+                    Encounter Data
+                  </h3>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-[#111111]/80 border border-white/10 p-3.5 rounded-sm flex flex-col items-center justify-center text-center">
+                    <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider mb-1">Miss Distance</span>
+                    <span className={`text-2xl font-mono font-bold ${
+                      selectedConjunction.miss_distance_km < 1 ? 'text-[var(--tier-critical)]' : 
+                      selectedConjunction.miss_distance_km < 2 ? 'text-[var(--tier-high)]' : 
+                      selectedConjunction.miss_distance_km < 5 ? 'text-[var(--tier-watch)]' : 'text-amber-300'
+                    }`}>
+                      {selectedConjunction.miss_distance_km != null ? selectedConjunction.miss_distance_km.toFixed(3) : '—'} <span className="text-sm text-zinc-500">km</span>
+                    </span>
+                  </div>
+                  <div className="bg-[#111111]/80 border border-white/10 p-3.5 rounded-sm flex flex-col justify-center text-xs">
+                    <div className="flex justify-between items-center border-b border-white/5 pb-1.5 mb-1.5">
+                      <span className="text-zinc-400">TCA (UTC)</span>
+                      <span className="font-mono text-zinc-200">{formatUTCCompact(selectedConjunction.tca)}</span>
                     </div>
-                    <div className="grid grid-cols-2 gap-y-2 text-sm mb-4">
-                      <div className="text-[var(--text-secondary)]">Maneuver ID</div>
-                      <div className="font-mono text-xs text-[var(--text-primary)]">{selectedConjunction.maneuver.id}</div>
-                      <div className="text-[var(--text-secondary)]">Delta-V</div>
-                      <div className="font-mono text-[var(--text-primary)]">{selectedConjunction.maneuver.delta_v_mps.toFixed(2)} m/s</div>
-                      <div className="text-[var(--text-secondary)]">New Miss Dist.</div>
-                      <div className="font-mono text-[var(--text-primary)]">{selectedConjunction.maneuver.predicted_new_miss_distance_km.toFixed(2)} km</div>
+                    <div className="flex justify-between items-center border-b border-white/5 pb-1.5 mb-1.5">
+                      <span className="text-zinc-400">Countdown</span>
+                      {(() => {
+                        const s = getTCAStatus(selectedConjunction.tca);
+                        if (s.type === 'passed') return <span className="font-mono text-zinc-500">TCA PASSED</span>;
+                        if (s.type === 'upcoming') return <span className={`font-mono font-bold ${s.isUrgent ? 'text-[var(--tier-critical)]' : 'text-amber-400'}`}>{s.label}</span>;
+                        return <span className="text-zinc-500">—</span>;
+                      })()}
                     </div>
-                    {(selectedConjunction.maneuver.status === 'proposed' || selectedConjunction.maneuver.status === 'under_review') && (
-                      <div className="flex gap-3 mt-4">
-                        <button 
-                          onClick={() => handleManeuverAction('approve')}
-                          className="flex-1 bg-[var(--tier-nominal)]/10 hover:bg-[#22c55e]/20 text-[var(--tier-nominal)] border border-[#22c55e]/50 py-2 rounded-md font-medium text-sm transition-colors"
-                        >
-                          APPROVE
-                        </button>
-                        <button 
-                          onClick={() => handleManeuverAction('reject')}
-                          className="flex-1 bg-[var(--tier-critical)]/10 hover:bg-[#ef4444]/20 text-[var(--tier-critical)] border border-[#ef4444]/50 py-2 rounded-md font-medium text-sm transition-colors"
-                        >
-                          REJECT
-                        </button>
-                      </div>
-                    )}
+                    <div className="flex justify-between items-center">
+                      <span className="text-zinc-400">Rel. Velocity</span>
+                      <span className="font-mono text-zinc-200">{formatVelocity(selectedConjunction.relative_velocity_kmps)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Risk Assessment Section */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
+                  <h3 className="text-amber-400 font-mono font-bold uppercase tracking-wider text-xs flex items-center gap-1.5">
+                    <span className="w-1 h-1 rounded-full bg-amber-400"></span>
+                    Risk Assessment
+                  </h3>
+                </div>
+                {!selectedConjunction.risk_assessment && selectedConjunction.risk_tier === null ? (
+                  <div className="bg-amber-950/20 border border-amber-800/40 p-3.5 rounded-sm text-center text-amber-300 text-xs font-mono">
+                    ASSESSMENT PENDING SENSOR CONVERGENCE
                   </div>
                 ) : (
-                  <div className="mt-2 border-t border-[var(--space-border)] pt-3 text-center">
-                    <span className="text-sm text-[var(--text-muted)]">NO MANEUVER PROPOSED</span>
+                  <div className="flex items-center gap-5 bg-[#111111]/80 p-3.5 rounded-sm border border-white/10">
+                    <div className="flex-shrink-0">
+                      <RiskBadge tier={selectedConjunction.risk_tier} size="lg" />
+                    </div>
+                    <div className="flex flex-col flex-1 gap-1 text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-zinc-400">Collision Probability (Pc)</span>
+                        <span className="font-mono text-white font-bold">{selectedConjunction.pc ? selectedConjunction.pc.toExponential(4) : '—'}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-zinc-400">Assessment Method</span>
+                        <span className="text-zinc-200 font-mono">{selectedConjunction.risk_method || 'Foster 1992 2D'}</span>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
-            </div>
 
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-[var(--space-border)] pb-2">
-                <h3 className="text-[var(--accent-cyan)] font-medium uppercase tracking-wider text-sm">Event Timeline</h3>
+              {/* Preventive Action & Maneuver Section */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
+                  <h3 className="text-amber-400 font-mono font-bold uppercase tracking-wider text-xs flex items-center gap-1.5">
+                    <span className="w-1 h-1 rounded-full bg-amber-400"></span>
+                    Preventive Action & Maneuver
+                  </h3>
+                </div>
+                <div className="bg-[#111111]/80 p-4 rounded-sm border border-white/10 flex flex-col gap-3">
+                  <div>
+                    <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block mb-1">Recommended Action</span>
+                    <div className="text-xs font-mono text-white font-bold">{selectedConjunction.preventive_action || 'Enhanced Monitoring'}</div>
+                  </div>
+                  {selectedConjunction.maneuver ? (
+                    <div className="mt-2 border-t border-white/10 pt-3">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs font-mono font-bold text-white uppercase">Proposed Evasion Burn</span>
+                        <StatusBadge status={selectedConjunction.maneuver.status} />
+                      </div>
+                      <div className="grid grid-cols-2 gap-y-2 text-xs mb-4 font-mono">
+                        <div className="text-zinc-400">Maneuver ID</div>
+                        <div className="text-zinc-200">{selectedConjunction.maneuver.id}</div>
+                        <div className="text-zinc-400">Delta-V</div>
+                        <div className="text-amber-300 font-bold">{selectedConjunction.maneuver.delta_v_mps.toFixed(3)} m/s</div>
+                        <div className="text-zinc-400">Predicted Miss Dist.</div>
+                        <div className="text-emerald-400 font-bold">{selectedConjunction.maneuver.predicted_new_miss_distance_km.toFixed(2)} km</div>
+                      </div>
+                      {(selectedConjunction.maneuver.status === 'proposed' || selectedConjunction.maneuver.status === 'under_review') && (
+                        <div className="flex gap-3 mt-3">
+                          <button 
+                            onClick={() => handleManeuverAction('approve')}
+                            className="flex-1 bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-400 border border-emerald-500/50 py-2 rounded-sm font-mono font-bold text-xs transition-colors cursor-pointer"
+                          >
+                            APPROVE EVASION
+                          </button>
+                          <button 
+                            onClick={() => handleManeuverAction('reject')}
+                            className="flex-1 bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-500/50 py-2 rounded-sm font-mono font-bold text-xs transition-colors cursor-pointer"
+                          >
+                            REJECT EVASION
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="mt-2 border-t border-white/10 pt-3 text-center">
+                      <span className="text-xs font-mono text-zinc-500">NO MANEUVER PROPOSED FOR THIS VECTOR</span>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="bg-[var(--space-card)] p-4 rounded-md border border-[var(--space-border)]">
-                <Timeline events={timeline.map(e => ({ action: e.action, actor: e.actor, timestamp: e.timestamp, details: e.details ?? undefined }))} />
+
+              {/* Event Timeline Section */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
+                  <h3 className="text-amber-400 font-mono font-bold uppercase tracking-wider text-xs flex items-center gap-1.5">
+                    <span className="w-1 h-1 rounded-full bg-amber-400"></span>
+                    Event Timeline
+                  </h3>
+                </div>
+                <div className="bg-[#111111]/80 p-4 rounded-sm border border-white/10">
+                  <Timeline events={timeline.map(e => ({ action: e.action, actor: e.actor, timestamp: e.timestamp, details: e.details ?? undefined }))} />
+                </div>
               </div>
+
             </div>
           </div>
-        )}
-      </DetailDrawer>
+        </div>
+      )}
     </div>
   );
 }

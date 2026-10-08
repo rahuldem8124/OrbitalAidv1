@@ -165,7 +165,7 @@ export default function SimulationClient() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm font-mono focus:outline-none focus:border-cyan-500/50"
+                className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm font-mono focus:outline-none focus:border-amber-500/50"
               />
             </div>
 
@@ -191,7 +191,7 @@ export default function SimulationClient() {
                         [field.key]: e.target.value,
                       }))
                     }
-                    className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm font-mono focus:outline-none focus:border-cyan-500/50"
+                    className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm font-mono focus:outline-none focus:border-amber-500/50"
                   />
                 </div>
               ))}
@@ -200,14 +200,14 @@ export default function SimulationClient() {
             <button
               type="submit"
               disabled={newObjLoading}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 text-sm font-semibold disabled:opacity-50 transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded bg-amber-400 hover:bg-amber-300 text-black font-mono text-sm font-bold tracking-wider disabled:opacity-50 transition-colors shadow-[0_0_15px_rgba(245,158,11,0.2)]"
             >
               {newObjLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-4 h-4 animate-spin text-black" />
               ) : (
-                <Rocket className="w-4 h-4" />
+                <Rocket className="w-4 h-4 text-black" />
               )}
-              {newObjLoading ? "Running Simulation…" : "Run Simulation"}
+              {newObjLoading ? "RUNNING SIMULATION…" : "RUN SIMULATION"}
             </button>
           </form>
 
@@ -224,7 +224,7 @@ export default function SimulationClient() {
                   Checked <span className="text-white font-mono">{newObjResult.candidates_checked}</span> candidates
                 </span>
                 <span>
-                  Found <span className="text-cyan-400 font-mono">{newObjResult.conjunctions_found}</span> conjunctions
+                  Found <span className="text-amber-400 font-mono">{newObjResult.conjunctions_found}</span> conjunctions
                 </span>
               </div>
 
@@ -245,7 +245,7 @@ export default function SimulationClient() {
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="text-right">
-                          <p className="text-cyan-400 font-mono text-sm font-semibold">
+                          <p className="text-amber-400 font-mono text-sm font-semibold">
                             {r.miss_distance_km.toFixed(1)} km
                           </p>
                           {r.pc != null && (
@@ -282,7 +282,7 @@ export default function SimulationClient() {
                   required
                   value={assetId}
                   onChange={(e) => setAssetId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500/50"
+                  className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-amber-500/50"
                 >
                   <option value="" className="bg-gray-900">Select asset…</option>
                   {objects.map((obj) => (
@@ -300,7 +300,7 @@ export default function SimulationClient() {
                   required
                   value={threatId}
                   onChange={(e) => setThreatId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500/50"
+                  className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-amber-500/50"
                 >
                   <option value="" className="bg-gray-900">Select threat…</option>
                   {objects.map((obj) => (
@@ -322,7 +322,7 @@ export default function SimulationClient() {
                 required
                 value={deltaV}
                 onChange={(e) => setDeltaV(e.target.value)}
-                className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm font-mono focus:outline-none focus:border-cyan-500/50"
+                className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white text-sm font-mono focus:outline-none focus:border-amber-500/50"
                 placeholder="e.g. 0.5"
               />
             </div>
@@ -330,14 +330,14 @@ export default function SimulationClient() {
             <button
               type="submit"
               disabled={maneuverLoading}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 text-sm font-semibold disabled:opacity-50 transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded bg-amber-400 hover:bg-amber-300 text-black font-mono text-sm font-bold tracking-wider disabled:opacity-50 transition-colors shadow-[0_0_15px_rgba(245,158,11,0.2)]"
             >
               {maneuverLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-4 h-4 animate-spin text-black" />
               ) : (
-                <Orbit className="w-4 h-4" />
+                <Orbit className="w-4 h-4 text-black" />
               )}
-              {maneuverLoading ? "Running Simulation…" : "Run Simulation"}
+              {maneuverLoading ? "RUNNING SIMULATION…" : "RUN SIMULATION"}
             </button>
           </form>
 
@@ -357,7 +357,7 @@ export default function SimulationClient() {
                 </span>
                 <span>·</span>
                 <span>
-                  Δv: <span className="text-cyan-400 font-mono">{maneuverResult.applied_delta_v_mps.toFixed(3)} m/s</span>
+                  Δv: <span className="text-amber-400 font-mono">{maneuverResult.applied_delta_v_mps.toFixed(3)} m/s</span>
                 </span>
               </div>
 
@@ -368,7 +368,7 @@ export default function SimulationClient() {
                   <div className="space-y-2">
                     <div>
                       <p className="text-white/40 text-xs">Miss Distance</p>
-                      <p className="text-cyan-400 font-mono text-sm font-semibold">
+                      <p className="text-white font-mono text-sm font-semibold">
                         {maneuverResult.current_miss_distance_km.toFixed(1)} km
                       </p>
                     </div>
@@ -409,7 +409,7 @@ export default function SimulationClient() {
                   <div className="space-y-2">
                     <div>
                       <p className="text-white/40 text-xs">Miss Distance</p>
-                      <p className="text-cyan-400 font-mono text-sm font-semibold">
+                      <p className="text-white font-mono text-sm font-semibold">
                         {maneuverResult.predicted_new_miss_distance_km.toFixed(1)} km
                       </p>
                     </div>

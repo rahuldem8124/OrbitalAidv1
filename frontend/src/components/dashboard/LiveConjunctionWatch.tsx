@@ -39,7 +39,7 @@ export default function LiveConjunctionWatch({ conjunctions, onSelect, selectedI
         <div className="text-[9px] font-mono font-bold text-[var(--text-muted)] tracking-widest uppercase">
           LIVE INTERCEPT VECTOR
         </div>
-        <Link href="/conjunctions" className="text-[9px] font-mono text-[var(--accent-cyan)] hover:text-cyan-300 transition-colors flex items-center gap-1 uppercase tracking-widest">
+        <Link href="/conjunctions" className="text-[9px] font-mono text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1 uppercase tracking-widest">
           FULL GRID <ExternalLink className="w-3 h-3" />
         </Link>
       </div>
@@ -61,7 +61,7 @@ export default function LiveConjunctionWatch({ conjunctions, onSelect, selectedI
                 isCritical 
                   ? 'border-red-500/40 bg-red-950/20 hover:border-red-500/60' 
                   : isSelected 
-                    ? 'border-cyan-400/80 bg-cyan-950/30 shadow-[0_0_15px_rgba(6,182,212,0.15)] ring-1 ring-cyan-400/40' 
+                    ? 'border-amber-400/80 bg-amber-950/30 shadow-[0_0_15px_rgba(245,158,11,0.15)] ring-1 ring-amber-400/40' 
                     : 'border-white/10 bg-white/[0.02] hover:bg-white/[0.06] hover:border-white/20'
               }`}
             >
@@ -73,7 +73,7 @@ export default function LiveConjunctionWatch({ conjunctions, onSelect, selectedI
               <div className="flex justify-between items-start mb-2 border-b border-white/5 pb-1.5">
                 <div className="flex items-center gap-2">
                   <div className="relative flex items-center justify-center">
-                    <Target className={`w-3.5 h-3.5 ${isCritical ? 'text-red-400' : isSelected ? 'text-cyan-400 animate-spin-slow' : 'text-zinc-400 group-hover:text-cyan-400 transition-colors'}`} />
+                    <Target className={`w-3.5 h-3.5 ${isCritical ? 'text-red-400' : isSelected ? 'text-amber-400 animate-spin-slow' : 'text-zinc-400 group-hover:text-amber-400 transition-colors'}`} />
                     {isCritical && <span className="absolute w-3.5 h-3.5 rounded-full bg-red-500/30 animate-ping"></span>}
                   </div>
                   <div className="font-mono text-[10px] text-zinc-100 font-semibold tracking-wider">
@@ -105,7 +105,7 @@ export default function LiveConjunctionWatch({ conjunctions, onSelect, selectedI
                     {status.type === 'passed' ? (
                       <span className="font-mono text-[9px] text-zinc-500 font-bold">PASSED</span>
                     ) : status.type === 'upcoming' ? (
-                      <span className={`font-mono text-[10px] font-bold ${status.isUrgent ? 'text-red-400' : 'text-cyan-400'}`}>
+                      <span className={`font-mono text-[10px] font-bold ${status.isUrgent ? 'text-red-400' : 'text-amber-400'}`}>
                         {status.label}
                       </span>
                     ) : (
@@ -117,8 +117,8 @@ export default function LiveConjunctionWatch({ conjunctions, onSelect, selectedI
               
               {/* Footer action label */}
               <div className="mt-1.5 flex justify-between items-center text-[7.5px] font-mono text-zinc-500 uppercase tracking-wider">
-                <span className="group-hover:text-cyan-400 transition-colors">CLICK TO LOCK TARGET</span>
-                {isSelected && <span className="text-cyan-400 font-bold animate-pulse">LOCKED IN 3D</span>}
+                <span className="group-hover:text-amber-400 transition-colors">CLICK TO LOCK TARGET</span>
+                {isSelected && <span className="text-amber-400 font-bold animate-pulse">LOCKED IN 3D</span>}
               </div>
             </button>
           );

@@ -11,13 +11,13 @@
   --background: #000000;
   --foreground: #E2E8F0;
 
-  /* Aerospace C2 Palette */
-  --space-canvas: #030508;
-  --space-panel: rgba(7, 10, 16, 0.7);
-  --space-card: rgba(10, 14, 23, 0.6);
-  --space-card-hover: rgba(18, 24, 38, 0.8);
-  --space-border: rgba(255, 255, 255, 0.08);
-  --space-border-bright: rgba(255, 255, 255, 0.16);
+  /* Aerospace C2 Palette - STRICT OBSIDIAN CARBON & TACTICAL AMBER */
+  --space-canvas: #000000;
+  --space-panel: rgba(10, 10, 10, 0.85);
+  --space-card: rgba(17, 17, 17, 0.75);
+  --space-card-hover: rgba(26, 26, 26, 0.9);
+  --space-border: rgba(255, 255, 255, 0.1);
+  --space-border-bright: rgba(255, 255, 255, 0.2);
 
   /* Status & Risk Tiers */
   --tier-critical: #EF4444;
@@ -25,9 +25,10 @@
   --tier-watch: #EAB308;
   --tier-nominal: #22C55E;
   
-  /* Tactical Accents */
-  --accent-cyan: #06B6D4;
+  /* Primary Accents (ZERO BLUE - TACTICAL AMBER / YELLOW ONLY) */
   --accent-amber: #F59E0B;
+  --accent-yellow: #EAB308;
+  --accent-cyan: #F59E0B; /* Redirect legacy cyan token to tactical amber */
 
   /* Text hierarchy */
   --text-primary: #FFFFFF;

@@ -148,7 +148,7 @@ export default function AlertsPage() {
       render: (item: Alert) => (
         <Link 
           href={`/conjunctions/${item.conjunction_event_id}`}
-          className="text-[var(--accent-cyan)] hover:underline font-mono text-xs"
+          className="text-amber-400 hover:text-amber-300 hover:underline font-mono text-xs"
           onClick={(e) => e.stopPropagation()}
         >
           {item.conjunction_event_id.substring(0, 8)}...
@@ -195,7 +195,7 @@ export default function AlertsPage() {
           )}
           <button
             onClick={(e) => { e.stopPropagation(); setSelectedAlert(item); }}
-            className="px-2 py-1 text-[10px] uppercase font-bold text-[var(--accent-cyan)] hover:text-[#5eead4] transition-colors"
+            className="px-2 py-1 text-[10px] uppercase font-bold text-amber-400 hover:text-amber-300 transition-colors"
           >
             View
           </button>
@@ -297,12 +297,12 @@ export default function AlertsPage() {
               <p className="text-sm text-[var(--text-secondary)] mb-1">Related Event</p>
               <Link 
                 href={`/conjunctions/${selectedAlert.conjunction_event_id}`}
-                className="inline-flex items-center gap-2 p-3 w-full rounded-md bg-[var(--space-card)] border border-[var(--space-border)] hover:border-[#2dd4bf]/50 transition-colors group"
+                className="inline-flex items-center gap-2 p-3 w-full rounded-md bg-[var(--space-card)] border border-[var(--space-border)] hover:border-amber-400/50 transition-colors group"
               >
-                <span className="font-mono text-sm text-[var(--text-primary)] group-hover:text-[var(--accent-cyan)] transition-colors">
+                <span className="font-mono text-sm text-[var(--text-primary)] group-hover:text-amber-400 transition-colors">
                   {selectedAlert.conjunction_event_id}
                 </span>
-                <span className="ml-auto text-xs text-[var(--accent-cyan)]">View Conjunction →</span>
+                <span className="ml-auto text-xs text-amber-400">View Conjunction →</span>
               </Link>
             </div>
 
@@ -310,7 +310,7 @@ export default function AlertsPage() {
               {!selectedAlert.acknowledged_by && (
                 <button
                   onClick={() => handleAcknowledge(selectedAlert)}
-                  className="w-full py-2 bg-[#2dd4bf]/10 hover:bg-[#2dd4bf]/20 text-[var(--accent-cyan)] border border-[#2dd4bf]/30 rounded-md text-sm font-medium transition-colors"
+                  className="w-full py-2 bg-amber-400 hover:bg-amber-300 text-black border border-amber-400 rounded-md text-sm font-bold tracking-wider transition-colors"
                 >
                   ACKNOWLEDGE
                 </button>

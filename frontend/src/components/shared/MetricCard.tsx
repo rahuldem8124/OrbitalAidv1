@@ -39,7 +39,7 @@ export default function MetricCard({ label, value, subValue, icon, trend, varian
         <span className="text-[9px] font-sans font-medium uppercase tracking-wider text-zinc-400">
           {label}
         </span>
-        {icon && <div className="text-zinc-500 group-hover:text-cyan-400 transition-colors">{icon}</div>}
+        {icon && <div className="text-zinc-500 group-hover:text-amber-400 transition-colors">{icon}</div>}
       </div>
       
       <div className="flex items-baseline justify-between gap-2 relative z-10">

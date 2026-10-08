@@ -112,7 +112,7 @@ export default function ConjunctionDetailPanel({
       <div className="p-4 space-y-4">
         {loading ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 text-cyan-400 animate-spin" />
+            <Loader2 className="w-6 h-6 text-amber-400 animate-spin" />
           </div>
         ) : conjunction ? (
           <>
@@ -135,7 +135,7 @@ export default function ConjunctionDetailPanel({
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3 rounded-md bg-white/5 border border-white/5">
                 <p className="text-white/40 text-xs">Miss Distance</p>
-                <p className="text-cyan-400 font-mono font-semibold">
+                <p className="text-white font-mono font-semibold">
                   {conjunction.miss_distance_km.toFixed(1)} km
                 </p>
               </div>
@@ -227,14 +227,14 @@ export default function ConjunctionDetailPanel({
               <button
                 onClick={handleExplain}
                 disabled={explainLoading}
-                className="w-full flex items-center justify-center gap-2 px-3 py-1.5 rounded-md bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 text-xs font-semibold disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 px-3 py-1.5 rounded bg-amber-400 hover:bg-amber-300 text-black border border-amber-400 font-mono text-xs font-bold uppercase tracking-wider disabled:opacity-50 transition-colors"
               >
                 {explainLoading ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-black" />
                 ) : (
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Sparkles className="w-3.5 h-3.5 text-black" />
                 )}
-                {explainLoading ? "Analyzing…" : "Explain this risk"}
+                {explainLoading ? "ANALYZING…" : "EXPLAIN THIS RISK"}
               </button>
               {explanation && (
                 <p className="mt-2 text-white/70 text-xs leading-relaxed p-3 rounded-md bg-white/5 border border-white/5">

@@ -9,7 +9,7 @@ interface KPIStripProps {
 
 export default function KPIStrip({ stats }: KPIStripProps) {
   const kpis = [
-    { label: "Satellites", value: stats.satellites, icon: Satellite, color: "text-cyan-400" },
+    { label: "Satellites", value: stats.satellites, icon: Satellite, color: "text-amber-400" },
     { label: "Stations", value: stats.stations, icon: Building, color: "text-purple-400" },
     { label: "Debris", value: stats.debris, icon: Trash2, color: "text-orange-400" },
     { label: "Active Conjunctions", value: stats.active_conjunctions, icon: AlertTriangle, color: "text-red-400" },

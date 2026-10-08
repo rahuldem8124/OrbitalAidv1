@@ -78,7 +78,7 @@ export default function SystemHealthPage() {
   if (loading && !health) {
     return (
       <div className="flex flex-col gap-6">
-        <h1 className="text-[var(--accent-cyan)] text-2xl font-semibold tracking-wide uppercase">System Health Dashboard</h1>
+        <h1 className="text-white text-2xl font-mono font-semibold tracking-wider uppercase">System Health Dashboard</h1>
         <div className="text-[var(--text-muted)] text-sm">Loading system telemetry...</div>
       </div>
     );
@@ -87,7 +87,7 @@ export default function SystemHealthPage() {
   return (
     <div className="flex flex-col gap-6 max-w-6xl pb-12">
       <div className="flex justify-between items-end border-b border-[var(--space-border)] pb-4 gap-4 flex-wrap">
-        <h1 className="text-[var(--accent-cyan)] text-2xl font-semibold tracking-wide uppercase">System Health Dashboard</h1>
+        <h1 className="text-white text-2xl font-mono font-semibold tracking-wider uppercase">System Health Dashboard</h1>
         <div className="flex items-center gap-3 text-sm text-[var(--text-muted)] font-mono">
           <RefreshCw className="w-3.5 h-3.5 animate-spin-slow opacity-50" />
           <span>Polled {timeAgo(lastPolled.toISOString())} · Auto-refresh 15s</span>

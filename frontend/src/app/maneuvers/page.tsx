@@ -88,7 +88,7 @@ export default function ManeuversPage() {
     {
       key: "conjunction",
       label: "Related Conjunction",
-      render: (m: Maneuver) => <span className="font-mono text-cyan-400">{m.conjunction_event_id.slice(0, 8)}...</span>
+      render: (m: Maneuver) => <span className="font-mono text-amber-400">{m.conjunction_event_id.slice(0, 8)}...</span>
     },
     {
       key: "asset",
@@ -126,7 +126,7 @@ export default function ManeuversPage() {
               <button onClick={(e) => { e.stopPropagation(); handleReject(m.id); }} className="text-red-400 hover:text-red-300 text-xs font-semibold px-2 py-1 bg-red-500/10 rounded">Reject</button>
             </>
           ) : (
-            <button onClick={() => setSelectedManeuver(m)} className="text-cyan-400 hover:text-cyan-300 text-xs font-semibold px-2 py-1 bg-cyan-500/10 rounded">View</button>
+            <button onClick={() => setSelectedManeuver(m)} className="text-amber-400 hover:text-amber-300 text-xs font-semibold px-2 py-1 bg-amber-500/10 rounded">View</button>
           )}
         </div>
       )
@@ -149,7 +149,7 @@ export default function ManeuversPage() {
   
   return (
     <div className="flex flex-col gap-6 relative min-h-screen">
-      <h1 className="text-teal-400 text-2xl font-semibold tracking-wide uppercase">Maneuver & Preventive Actions</h1>
+      <h1 className="text-white text-2xl font-semibold tracking-wide uppercase font-mono">Maneuver & Preventive Actions</h1>
       
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <MetricCard label="Total Maneuvers" value={totalManeuvers} />
@@ -165,7 +165,7 @@ export default function ManeuversPage() {
         <select 
           value={statusFilter}
           onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-          className="bg-[var(--space-panel)] border border-[var(--space-border)] text-sm rounded-md px-3 py-1.5 text-white focus:outline-none focus:border-teal-500"
+          className="bg-[var(--space-panel)] border border-[var(--space-border)] text-sm rounded-md px-3 py-1.5 text-white focus:outline-none focus:border-amber-400"
         >
           <option value="all">All</option>
           <option value="proposed">Proposed</option>
@@ -204,7 +204,7 @@ export default function ManeuversPage() {
           <div className="bg-[var(--space-panel)] rounded-md p-4 border border-[var(--space-border)] flex flex-col gap-4">
             <div>
               <span className="text-xs text-gray-500 uppercase">Related Conjunction</span>
-              <p className="text-cyan-400 font-mono text-sm">{selectedManeuver.conjunction_event_id}</p>
+              <p className="text-amber-400 font-mono text-sm">{selectedManeuver.conjunction_event_id}</p>
             </div>
             <div>
               <span className="text-xs text-gray-500 uppercase">Asset</span>
@@ -262,7 +262,7 @@ export default function ManeuversPage() {
                   const isPast = idx <= stateIdx;
                   const isCurrent = idx === stateIdx;
                   return (
-                    <div key={state} className={`flex items-center gap-2 ${isCurrent ? 'text-teal-400' : isPast ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <div key={state} className={`flex items-center gap-2 ${isCurrent ? 'text-amber-400' : isPast ? 'text-gray-300' : 'text-gray-600'}`}>
                       {isPast ? <CheckCircle className="w-4 h-4" /> : <div className="w-4 h-4 rounded-full border-2 border-current"></div>}
                       <span className={`text-sm font-mono uppercase ${isCurrent ? 'font-bold' : ''}`}>{state.replace('_', ' ')}</span>
                     </div>

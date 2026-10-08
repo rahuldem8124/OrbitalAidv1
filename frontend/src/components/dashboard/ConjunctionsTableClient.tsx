@@ -38,7 +38,7 @@ export default function ConjunctionsTableClient({
               >
                 <td className="py-3 pr-4 text-white">{c.object_a.object_name}</td>
                 <td className="py-3 pr-4 text-white">{c.object_b.object_name}</td>
-                <td className="py-3 pr-4 text-cyan-400 font-mono">
+                <td className="py-3 pr-4 text-amber-400 font-mono">
                   {c.miss_distance_km.toFixed(2)} km
                 </td>
                 <td className="py-3 pr-4 text-white/70 font-mono">

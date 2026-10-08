@@ -6,7 +6,7 @@ import { CameraControls, Stars, Html, Line, Sphere } from "@react-three/drei";
 import * as THREE from "three";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import { ObjectPosition, ConjunctionWithDetails } from "@/lib/types";
-import { X, Target } from "lucide-react";
+import { X } from "lucide-react";
 
 interface GlobeProps {
   positions: ObjectPosition[];
@@ -28,7 +28,7 @@ function getCirclePoints(radius: number, segments = 64): [number, number, number
   return points;
 }
 
-// Tactical coordinate rings (Equator, Tropics, Prime Meridian)
+// Tactical coordinate rings (Equator, Tropics) - Monochromatic & Tactical Amber
 function TacticalRings({ radius }: { radius: number }) {
   const equator = useMemo(() => getCirclePoints(radius), [radius]);
   const tropicNorth = useMemo(() => {
@@ -44,16 +44,16 @@ function TacticalRings({ radius }: { radius: number }) {
 
   return (
     <group>
-      {/* Equator */}
-      <Line points={equator} color="#06B6D4" lineWidth={1} transparent opacity={0.35} />
-      {/* Tropics */}
-      <Line points={tropicNorth} color="#0EA5E9" lineWidth={0.7} dashed dashSize={0.05} gapSize={0.03} transparent opacity={0.2} />
-      <Line points={tropicSouth} color="#0EA5E9" lineWidth={0.7} dashed dashSize={0.05} gapSize={0.03} transparent opacity={0.2} />
+      {/* Equator - Tactical Amber */}
+      <Line points={equator} color="#F59E0B" lineWidth={1} transparent opacity={0.4} />
+      {/* Tropics - Monochromatic Dim Gray */}
+      <Line points={tropicNorth} color="#71717A" lineWidth={0.7} dashed dashSize={0.05} gapSize={0.03} transparent opacity={0.25} />
+      <Line points={tropicSouth} color="#71717A" lineWidth={0.7} dashed dashSize={0.05} gapSize={0.03} transparent opacity={0.25} />
     </group>
   );
 }
 
-// Glowing Monochrome Topological Earth
+// Monochromatic / Tactical Amber Topological Earth (ZERO BLUE)
 function TacticalEarth() {
   const groupRef = useRef<THREE.Group>(null);
 
@@ -64,9 +64,9 @@ function TacticalEarth() {
     const col = new Float32Array(count * 3);
     const r = MODEL_EARTH_RADIUS * 1.002;
 
-    const colorLand = new THREE.Color("#38BDF8");      // Luminous Cyan / Topo highlight
-    const colorCoast = new THREE.Color("#0284C7");     // Deep tactical Cyan
-    const colorOcean = new THREE.Color("#050B18");     // Deep obsidian ocean
+    const colorLand = new THREE.Color("#E4E4E7");      // Crisp Monochromatic Light Gray/White
+    const colorCoast = new THREE.Color("#71717A");     // Dim Tactical Gray
+    const colorOcean = new THREE.Color("#0A0A0A");     // Pitch Black Ocean
     const tempCol = new THREE.Color();
 
     for (let i = 0; i < count; i++) {
@@ -109,7 +109,7 @@ function TacticalEarth() {
 
   useFrame((_, delta) => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.04;
+      groupRef.current.rotation.y += delta * 0.035;
     }
   });
 
@@ -118,10 +118,10 @@ function TacticalEarth() {
       {/* Deep Obsidian Core */}
       <mesh>
         <sphereGeometry args={[MODEL_EARTH_RADIUS, 64, 64]} />
-        <meshStandardMaterial color="#020408" roughness={0.85} metalness={0.15} />
+        <meshStandardMaterial color="#050505" roughness={0.9} metalness={0.1} />
       </mesh>
 
-      {/* Luminous Topological Point Cloud */}
+      {/* Monochromatic Topological Point Cloud */}
       <points>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[positions, 3]} />
@@ -130,22 +130,22 @@ function TacticalEarth() {
         <pointsMaterial size={0.016} vertexColors transparent opacity={0.85} sizeAttenuation />
       </points>
 
-      {/* Tactical Coordinate Grid Mesh */}
+      {/* Carbon Wireframe Grid */}
       <mesh scale={[1.001, 1.001, 1.001]}>
         <sphereGeometry args={[MODEL_EARTH_RADIUS, 36, 18]} />
-        <meshBasicMaterial color="#0284C7" wireframe transparent opacity={0.08} />
+        <meshBasicMaterial color="#262626" wireframe transparent opacity={0.15} />
       </mesh>
 
       {/* Tactical Coordinate Rings */}
       <TacticalRings radius={MODEL_EARTH_RADIUS * 1.004} />
 
-      {/* Outer Atmosphere Glow */}
-      <mesh scale={[1.07, 1.07, 1.07]}>
+      {/* Outer Atmosphere Glow - Monochromatic Warm Rim */}
+      <mesh scale={[1.06, 1.06, 1.06]}>
         <sphereGeometry args={[MODEL_EARTH_RADIUS, 48, 48]} />
         <meshBasicMaterial 
-          color="#0284C7" 
+          color="#52525B" 
           transparent 
-          opacity={0.07} 
+          opacity={0.05} 
           side={THREE.BackSide} 
           blending={THREE.AdditiveBlending} 
         />
@@ -173,7 +173,7 @@ function SpaceObjects({ positions, dim }: { positions: ObjectPosition[]; dim: bo
       if (hoveredId === i) {
         color.set("#F59E0B"); // Tactical Amber on hover
       } else {
-        color.set(obj.type === "station" ? "#38BDF8" : "#E2E8F0");
+        color.set(obj.type === "station" ? "#EAB308" : "#E4E4E7");
       }
       meshRef.current!.setColorAt(i, color);
     });
@@ -197,7 +197,7 @@ function SpaceObjects({ positions, dim }: { positions: ObjectPosition[]; dim: bo
         }}
       >
         <octahedronGeometry args={[0.022, 0]} />
-        <meshBasicMaterial transparent opacity={dim ? 0.1 : 0.85} />
+        <meshBasicMaterial transparent opacity={dim ? 0.08 : 0.85} />
       </instancedMesh>
 
       {/* Interactive Satellite Hover HUD Tooltip */}
@@ -224,7 +224,7 @@ function SpaceObjects({ positions, dim }: { positions: ObjectPosition[]; dim: bo
             </svg>
 
             {/* Floating HUD Tooltip */}
-            <div className="absolute -top-16 left-14 bg-[#05070A]/90 backdrop-blur-md border border-amber-400/80 p-2.5 rounded shadow-2xl text-[9px] font-mono whitespace-nowrap min-w-[190px]">
+            <div className="absolute -top-16 left-14 bg-[#050505]/95 backdrop-blur-md border border-amber-400/80 p-2.5 rounded shadow-2xl text-[9px] font-mono whitespace-nowrap min-w-[190px]">
               <div className="flex items-center justify-between gap-3 text-amber-400 font-bold border-b border-amber-400/30 pb-1 mb-1.5">
                 <span className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
@@ -236,8 +236,8 @@ function SpaceObjects({ positions, dim }: { positions: ObjectPosition[]; dim: bo
               <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-zinc-400 text-[8px]">
                 <span>TYPE: <span className="text-zinc-200 uppercase">{hoveredObj.type}</span></span>
                 <span>STATUS: <span className="text-emerald-400 font-medium">TRACKED</span></span>
-                <span>ALT: <span className="text-cyan-400">{(Math.hypot(...hoveredObj.position_km) - EARTH_RADIUS_KM).toFixed(1)} km</span></span>
-                <span>VEL: <span className="text-cyan-400">7.68 km/s</span></span>
+                <span>ALT: <span className="text-amber-300">{(Math.hypot(...hoveredObj.position_km) - EARTH_RADIUS_KM).toFixed(1)} km</span></span>
+                <span>VEL: <span className="text-amber-300">7.68 km/s</span></span>
               </div>
             </div>
           </div>
@@ -247,7 +247,7 @@ function SpaceObjects({ positions, dim }: { positions: ObjectPosition[]; dim: bo
   );
 }
 
-// Conjunction 3D Close-up Deep Dive
+// Conjunction 3D Close-up Local Simulation
 function ConjunctionDeepDive({ conj, onClose }: { conj: ConjunctionWithDetails; onClose: () => void }) {
   const pos = useMemo(() => {
     let h = 0;
@@ -278,47 +278,47 @@ function ConjunctionDeepDive({ conj, onClose }: { conj: ConjunctionWithDetails; 
 
   return (
     <group>
-      {/* Object A Path (Cyan) */}
+      {/* Primary Object Trajectory: Crisp White */}
       <mesh>
-        <tubeGeometry args={[t1Curve, 64, 0.003, 8, false]} />
-        <meshBasicMaterial color="#06B6D4" />
+        <tubeGeometry args={[t1Curve, 64, 0.0035, 8, false]} />
+        <meshBasicMaterial color="#FFFFFF" />
       </mesh>
       <mesh position={p1}>
-        <octahedronGeometry args={[0.025, 0]} />
-        <meshBasicMaterial color="#06B6D4" />
+        <octahedronGeometry args={[0.028, 0]} />
+        <meshBasicMaterial color="#FFFFFF" />
       </mesh>
 
-      {/* Object B Path (Threat Red/Orange) */}
+      {/* Secondary Object Trajectory: Incident Red / Tactical Orange */}
       <mesh>
-        <tubeGeometry args={[t2Curve, 64, 0.003, 8, false]} />
+        <tubeGeometry args={[t2Curve, 64, 0.0035, 8, false]} />
         <meshBasicMaterial color={threatColor} />
       </mesh>
       <mesh position={p2}>
-        <octahedronGeometry args={[0.025, 0]} />
+        <octahedronGeometry args={[0.028, 0]} />
         <meshBasicMaterial color={threatColor} />
       </mesh>
 
-      {/* Miss Distance Dashed Vector Line */}
-      <Line points={[p1, p2]} color="#ffffff" lineWidth={1.5} dashed dashSize={0.015} gapSize={0.01} />
+      {/* Pulsing Dashed Miss Distance Vector Line */}
+      <Line points={[p1, p2]} color="#F59E0B" lineWidth={2} dashed dashSize={0.015} gapSize={0.01} />
 
-      {/* Distance Callout Tag on Vector Line */}
+      {/* Pulsing Distance Callout Badge */}
       <Html position={midPoint} center zIndexRange={[100, 0]}>
-        <div className="bg-[#05070A]/90 border border-white/20 px-2 py-0.5 rounded shadow-lg text-[8px] font-mono text-zinc-100 font-bold whitespace-nowrap">
+        <div className="bg-[#000000]/95 border border-amber-400 px-2 py-0.5 rounded shadow-2xl text-[8.5px] font-mono text-amber-300 font-bold whitespace-nowrap animate-pulse">
           MISS: {conj.miss_distance_km.toFixed(3)} km
         </div>
       </Html>
 
-      {/* Risk Volume Covariance Matrix */}
+      {/* Risk Volume Covariance Ellipsoid */}
       <Sphere args={[0.14, 32, 32]} position={pos}>
-        <meshBasicMaterial color={threatColor} transparent opacity={0.12} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <meshBasicMaterial color={threatColor} transparent opacity={0.15} depthWrite={false} blending={THREE.AdditiveBlending} />
       </Sphere>
       <Sphere args={[0.14, 16, 16]} position={pos}>
-        <meshBasicMaterial color={threatColor} wireframe transparent opacity={0.2} />
+        <meshBasicMaterial color={threatColor} wireframe transparent opacity={0.25} />
       </Sphere>
 
-      {/* Floating Conjunction HUD */}
+      {/* Floating Conjunction HUD Card */}
       <Html position={pos} center zIndexRange={[100, 0]}>
-        <div className="hud-panel bg-[#05070A]/90 backdrop-blur-md border border-white/20 p-3 rounded shadow-2xl text-[10px] font-mono text-white relative min-w-[210px] animate-in zoom-in-95 duration-200 mt-16">
+        <div className="hud-panel bg-[#050505]/95 backdrop-blur-md border border-white/20 p-3 rounded shadow-2xl text-[10px] font-mono text-white relative min-w-[210px] animate-in zoom-in-95 duration-200 mt-16">
           <div className={`text-[9px] tracking-widest font-bold mb-2 pb-1.5 border-b ${isCritical ? 'text-red-400 border-red-500/30' : 'text-amber-400 border-amber-500/30'} flex justify-between items-center gap-3`}>
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping"></span>
@@ -330,12 +330,12 @@ function ConjunctionDeepDive({ conj, onClose }: { conj: ConjunctionWithDetails; 
           </div>
           <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 items-center text-[9px]">
             <span className="text-zinc-400">ASSET:</span>
-            <span className="text-cyan-400 font-bold truncate max-w-[130px]">{conj.object_a_name || conj.object_a?.object_name}</span>
+            <span className="text-white font-bold truncate max-w-[130px]">{conj.object_a_name || conj.object_a?.object_name}</span>
             <span className="text-zinc-400">THREAT:</span>
             <span className={`${isCritical ? 'text-red-400' : 'text-orange-400'} font-bold truncate max-w-[130px]`}>{conj.object_b_name || conj.object_b?.object_name}</span>
             <div className="col-span-2 my-1 border-t border-white/10"></div>
             <span className="text-zinc-400">MISS:</span>
-            <span className="font-bold font-mono text-white">{conj.miss_distance_km.toFixed(3)} km</span>
+            <span className="font-bold font-mono text-amber-300">{conj.miss_distance_km.toFixed(3)} km</span>
             <span className="text-zinc-400">TCA:</span>
             <span className="font-mono text-zinc-300 text-[8.5px] truncate">{new Date(conj.tca).toUTCString().slice(17, 25)} UTC</span>
           </div>
@@ -376,10 +376,10 @@ function CameraManager({ selectedConjunction }: { selectedConjunction: Conjuncti
 
 export default function Globe({ positions, selectedConjunction, onCloseConjunction }: GlobeProps) {
   return (
-    <div className="w-full h-full bg-[#030508] relative overflow-hidden">
+    <div className="w-full h-full bg-[#000000] relative overflow-hidden">
       <Canvas camera={{ position: [-0.25, 0.1, 5.2], fov: 45 }}>
-        <color attach="background" args={["#030508"]} />
-        <ambientLight intensity={0.4} />
+        <color attach="background" args={["#000000"]} />
+        <ambientLight intensity={0.5} />
 
         <Stars radius={120} depth={60} count={3500} factor={3.5} saturation={0} fade speed={0.4} />
 

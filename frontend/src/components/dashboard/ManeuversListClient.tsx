@@ -30,13 +30,13 @@ export default function ManeuversListClient({
                 <div className="flex gap-6 mt-1 text-xs text-white/50">
                   <span>
                     Δv:{" "}
-                    <span className="text-cyan-400 font-mono">
+                    <span className="text-amber-400 font-mono">
                       {m.delta_v_mps.toFixed(3)} m/s
                     </span>
                   </span>
                   <span>
                     New miss distance:{" "}
-                    <span className="text-cyan-400 font-mono">
+                    <span className="text-amber-400 font-mono">
                       {m.predicted_new_miss_distance_km} km
                     </span>
                   </span>
