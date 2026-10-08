@@ -33,6 +33,7 @@ export default function ConjunctionsPage() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   
   const [selectedConjunction, setSelectedConjunction] = useState<ConjunctionWithDetails | null>(null);
+  const [isSimulationOpen, setIsSimulationOpen] = useState(false);
   const [data, setData] = useState<PaginatedResponse<ConjunctionWithDetails> | null>(null);
   const [analytics, setAnalytics] = useState<ConjunctionAnalytics | null>(null);
   const [timeline, setTimeline] = useState<EventLog[]>([]);
@@ -100,19 +101,26 @@ export default function ConjunctionsPage() {
     loadData();
   }, [loadData]);
 
-  // Handle keyboard ESC to close simulation
+  // Handle keyboard ESC:
+  // If an encounter is focused, ESC clears the encounter (camera flies back to global view).
+  // If no encounter is focused, ESC exits full simulation mode back to the table.
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && selectedConjunction) {
-        closeSimulation();
+      if (e.key === 'Escape') {
+        if (selectedConjunction) {
+          handleExitEncounter();
+        } else if (isSimulationOpen) {
+          closeFullSimulation();
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedConjunction]);
+  }, [selectedConjunction, isSimulationOpen]);
 
   const handleRowClick = async (item: ConjunctionWithDetails) => {
     setSelectedConjunction(item);
+    setIsSimulationOpen(true);
     try {
       const tl = await fetchConjunctionTimeline(item.id);
       setTimeline(tl);
@@ -130,7 +138,15 @@ export default function ConjunctionsPage() {
     }
   };
 
-  const closeSimulation = () => {
+  // Directive 1: Dismiss the specific encounter focus.
+  // Triggers camera fly-back to global overview WITHOUT unmounting Canvas or parent component!
+  const handleExitEncounter = () => {
+    setSelectedConjunction(null);
+  };
+
+  // Explicit user exit from 3D Simulation view back to 2D table grid
+  const closeFullSimulation = () => {
+    setIsSimulationOpen(false);
     setSelectedConjunction(null);
     setTimeline([]);
   };
@@ -269,8 +285,11 @@ export default function ConjunctionsPage() {
     {
       key: 'actions',
       label: 'Actions',
-      render: () => (
-        <button className="text-xs bg-amber-950/20 hover:bg-amber-400/20 text-amber-400 px-3 py-1.5 rounded transition-colors border border-amber-400/30 font-mono font-medium">
+      render: (item: ConjunctionWithDetails) => (
+        <button 
+          onClick={(e) => { e.stopPropagation(); handleRowClick(item); }}
+          className="text-xs bg-amber-400 hover:bg-amber-300 text-black px-3 py-1.5 rounded transition-colors border border-amber-400 font-mono font-bold tracking-wider cursor-pointer"
+        >
           SIMULATE
         </button>
       )
@@ -377,36 +396,56 @@ export default function ConjunctionsPage() {
       {/* ============================================================== */}
       {/* 3D CONJUNCTION ENCOUNTER SIMULATION & DETAIL SIDE-PANEL        */}
       {/* ============================================================== */}
-      {selectedConjunction && (
+      {isSimulationOpen && (
         <div className="fixed inset-0 z-50 bg-[#000000] overflow-hidden select-none animate-in fade-in duration-200">
           {/* Fullscreen React Three Fiber 3D Simulation Canvas */}
           <div className="absolute inset-0 w-full h-full z-0">
             <Globe
               positions={positions}
               selectedConjunction={selectedConjunction}
-              onCloseConjunction={closeSimulation}
+              onCloseConjunction={handleExitEncounter}
             />
           </div>
 
-          {/* Top-Left Exit Button & Simulation HUD Status */}
-          <div className="absolute top-4 left-4 z-20 flex items-center gap-3">
+          {/* Top-Left Exit Button & Simulation HUD Status (pointer-events-none wrapper) */}
+          <div className="absolute top-4 left-4 z-20 flex items-center gap-3 pointer-events-none">
             <button
-              onClick={closeSimulation}
-              className="bg-[#050505]/95 hover:bg-[#151515] text-amber-400 border border-amber-400/30 px-3.5 py-2 rounded-sm font-mono text-[10px] font-bold tracking-widest uppercase transition-all shadow-2xl flex items-center gap-2 group cursor-pointer"
+              onClick={closeFullSimulation}
+              className="bg-[#050505]/95 hover:bg-[#151515] text-amber-400 border border-amber-400/30 px-3.5 py-2 rounded-sm font-mono text-[10px] font-bold tracking-widest uppercase transition-all shadow-2xl flex items-center gap-2 group cursor-pointer pointer-events-auto"
             >
               <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
               <span>RETURN TO OPS GRID [ESC]</span>
             </button>
-            <div className="bg-[#050505]/90 border border-white/10 px-3 py-2 rounded-sm font-mono text-[9px] text-zinc-400 hidden sm:flex items-center gap-2 shadow-2xl">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
-              <span className="text-zinc-200 font-bold">LOCAL 3D ENCOUNTER SIMULATION</span>
+            <div className="bg-[#050505]/90 border border-white/10 px-3 py-2 rounded-sm font-mono text-[9px] text-zinc-400 hidden sm:flex items-center gap-2 shadow-2xl pointer-events-none">
+              <span className={`w-1.5 h-1.5 rounded-full ${selectedConjunction ? 'bg-red-500 animate-ping' : 'bg-emerald-400'}`}></span>
+              <span className="text-zinc-200 font-bold">{selectedConjunction ? 'LOCAL 3D ENCOUNTER SIMULATION' : 'GLOBAL ORBITAL SURVEILLANCE GRID'}</span>
               <span className="text-zinc-600">|</span>
-              <span>DRAG TO ROTATE AROUND COLLISION POINT</span>
+              <span>{selectedConjunction ? 'DRAG TO ROTATE AROUND COLLISION POINT' : 'HOVER SATELLITES FOR TELEMETRY • DRAG TO ROTATE'}</span>
             </div>
           </div>
 
+          {/* Floating Right Status/Picker when encounter is closed (Directive 1) */}
+          {!selectedConjunction && (
+            <div className="absolute right-4 top-4 z-20 bg-[#050505]/90 backdrop-blur-md border border-white/10 p-4 rounded shadow-2xl max-w-sm pointer-events-auto">
+              <div className="flex items-center gap-2 text-amber-400 font-mono text-xs font-bold mb-2">
+                <Target className="w-4 h-4" />
+                <span>GLOBAL SURVEILLANCE VIEW</span>
+              </div>
+              <p className="text-zinc-400 text-[10px] font-mono mb-3 leading-relaxed">
+                Local encounter dismissed. Camera returned to global overview. Hover over any satellite to view live orbital telemetry.
+              </p>
+              <button
+                onClick={closeFullSimulation}
+                className="w-full py-2 bg-amber-400 hover:bg-amber-300 text-black font-mono font-bold text-xs uppercase tracking-wider rounded-xs transition-colors cursor-pointer"
+              >
+                RETURN TO OPS GRID
+              </button>
+            </div>
+          )}
+
           {/* Floating Right Conjunction Detail UI Panel */}
-          <div className="absolute right-4 top-4 bottom-4 w-[540px] max-w-[calc(100vw-2rem)] z-20 bg-[#050505]/95 backdrop-blur-md border border-white/10 rounded-md shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-right-4 duration-300">
+          {selectedConjunction && (
+          <div className="absolute right-4 top-4 bottom-4 w-[540px] max-w-[calc(100vw-2rem)] z-20 bg-[#050505]/95 backdrop-blur-md border border-white/10 rounded-md shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-right-4 duration-300 pointer-events-auto">
             {/* Panel Header */}
             <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
               <div className="flex items-center gap-2">
@@ -416,9 +455,9 @@ export default function ConjunctionsPage() {
                 </h2>
               </div>
               <button
-                onClick={closeSimulation}
+                onClick={handleExitEncounter}
                 className="text-zinc-400 hover:text-white p-1 rounded-xs transition-colors cursor-pointer"
-                title="Close Simulation [ESC]"
+                title="Exit Encounter Focus [ESC]"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -598,6 +637,7 @@ export default function ConjunctionsPage() {
 
             </div>
           </div>
+          )}
         </div>
       )}
     </div>

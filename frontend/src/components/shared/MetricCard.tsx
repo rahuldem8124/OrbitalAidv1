@@ -27,7 +27,7 @@ export default function MetricCard({ label, value, subValue, icon, trend, varian
   }[variant];
 
   return (
-    <div className={`relative bg-[#05070A]/60 backdrop-blur-md border ${borderClass} px-3 py-2 flex flex-col justify-between rounded shadow-lg transition-all group overflow-hidden`}>
+    <div className={`relative pointer-events-auto bg-[#05070A]/60 backdrop-blur-md border ${borderClass} px-3 py-2 flex flex-col justify-between rounded shadow-lg transition-all group overflow-hidden`}>
       {/* Subtle 1px Corner Accents */}
       <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white/20 pointer-events-none"></div>
       <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white/20 pointer-events-none"></div>

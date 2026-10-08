@@ -67,8 +67,8 @@ export default function DashboardClient({
       <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
         
         {/* TOP METRIC STRIP (Floating Glass HUD) */}
-        <div className="absolute top-3 left-4 right-4 z-20 pointer-events-auto">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
+        <div className="absolute top-3 left-4 right-4 z-20 pointer-events-none">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 pointer-events-none">
             <MetricCard
               label="Tracked Targets"
               value={stats.total_objects?.toLocaleString() ?? "0"}

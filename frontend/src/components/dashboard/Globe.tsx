@@ -57,6 +57,21 @@ function TacticalRings({ radius }: { radius: number }) {
 function TacticalEarth() {
   const groupRef = useRef<THREE.Group>(null);
 
+  const earthGeometry = useMemo(() => new THREE.SphereGeometry(MODEL_EARTH_RADIUS, 48, 48), []);
+  const earthMaterial = useMemo(() => new THREE.MeshStandardMaterial({ color: "#050505", roughness: 0.9, metalness: 0.1 }), []);
+
+  const wireframeGeometry = useMemo(() => new THREE.SphereGeometry(MODEL_EARTH_RADIUS, 36, 18), []);
+  const wireframeMaterial = useMemo(() => new THREE.MeshBasicMaterial({ color: "#262626", wireframe: true, transparent: true, opacity: 0.15 }), []);
+
+  const glowGeometry = useMemo(() => new THREE.SphereGeometry(MODEL_EARTH_RADIUS, 48, 48), []);
+  const glowMaterial = useMemo(() => new THREE.MeshBasicMaterial({
+    color: "#52525B",
+    transparent: true,
+    opacity: 0.05,
+    side: THREE.BackSide,
+    blending: THREE.AdditiveBlending,
+  }), []);
+
   // Generate topological point-cloud representing Earth landmasses
   const { positions, colors } = useMemo(() => {
     const count = 18000;
@@ -70,7 +85,6 @@ function TacticalEarth() {
     const tempCol = new THREE.Color();
 
     for (let i = 0; i < count; i++) {
-      // Fibonacci spiral distribution on sphere
       const phi = Math.acos(1 - 2 * (i + 0.5) / count);
       const theta = Math.PI * (1 + 5 ** 0.5) * i;
 
@@ -82,7 +96,6 @@ function TacticalEarth() {
       pos[i * 3 + 1] = y * r;
       pos[i * 3 + 2] = z * r;
 
-      // Spherical harmonic harmonics approximating Earth's major continental masses
       const lat = Math.asin(y);
       const lon = Math.atan2(z, x);
 
@@ -107,6 +120,21 @@ function TacticalEarth() {
     return { positions: pos, colors: col };
   }, []);
 
+  const pointCloudGeometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    return geo;
+  }, [positions, colors]);
+
+  const pointsMaterial = useMemo(() => new THREE.PointsMaterial({
+    size: 0.016,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.85,
+    sizeAttenuation: true,
+  }), []);
+
   useFrame((_, delta) => {
     if (groupRef.current) {
       groupRef.current.rotation.y += delta * 0.035;
@@ -115,99 +143,117 @@ function TacticalEarth() {
 
   return (
     <group ref={groupRef}>
-      {/* Deep Obsidian Core */}
-      <mesh>
-        <sphereGeometry args={[MODEL_EARTH_RADIUS, 64, 64]} />
-        <meshStandardMaterial color="#050505" roughness={0.9} metalness={0.1} />
-      </mesh>
-
-      {/* Monochromatic Topological Point Cloud */}
-      <points>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-          <bufferAttribute attach="attributes-color" args={[colors, 3]} />
-        </bufferGeometry>
-        <pointsMaterial size={0.016} vertexColors transparent opacity={0.85} sizeAttenuation />
-      </points>
-
-      {/* Carbon Wireframe Grid */}
-      <mesh scale={[1.001, 1.001, 1.001]}>
-        <sphereGeometry args={[MODEL_EARTH_RADIUS, 36, 18]} />
-        <meshBasicMaterial color="#262626" wireframe transparent opacity={0.15} />
-      </mesh>
-
-      {/* Tactical Coordinate Rings */}
+      <mesh geometry={earthGeometry} material={earthMaterial} />
+      <points geometry={pointCloudGeometry} material={pointsMaterial} />
+      <mesh geometry={wireframeGeometry} material={wireframeMaterial} scale={[1.001, 1.001, 1.001]} />
       <TacticalRings radius={MODEL_EARTH_RADIUS * 1.004} />
-
-      {/* Outer Atmosphere Glow - Monochromatic Warm Rim */}
-      <mesh scale={[1.06, 1.06, 1.06]}>
-        <sphereGeometry args={[MODEL_EARTH_RADIUS, 48, 48]} />
-        <meshBasicMaterial 
-          color="#52525B" 
-          transparent 
-          opacity={0.05} 
-          side={THREE.BackSide} 
-          blending={THREE.AdditiveBlending} 
-        />
-      </mesh>
+      <mesh geometry={glowGeometry} material={glowMaterial} scale={[1.06, 1.06, 1.06]} />
     </group>
   );
 }
 
-// Satellite Swarm with interactive raycasting & leader-line tooltip
+// Satellite Swarm with optimized InstancedMesh raycasting & memoized telemetry tooltip
 function SpaceObjects({ positions, dim }: { positions: ObjectPosition[]; dim: boolean }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
+  const [hoveredData, setHoveredData] = useState<{
+    satellite: ObjectPosition;
+    position: [number, number, number];
+  } | null>(null);
+  const hoveredIdRef = useRef<number | null>(null);
 
-  const dummy = useMemo(() => new THREE.Object3D(), []);
-  const color = useMemo(() => new THREE.Color(), []);
+  // Directive 3: Memoize geometry and material
+  const satelliteGeometry = useMemo(() => {
+    const geo = new THREE.TetrahedronGeometry(0.032, 0);
+    // Crucial for Three.js InstancedMesh raycasting:
+    // Expand bounding sphere & box to cover full orbital volume so raycast doesn't bail out at Earth origin!
+    geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 20);
+    geo.boundingBox = new THREE.Box3(new THREE.Vector3(-20, -20, -20), new THREE.Vector3(20, 20, 20));
+    return geo;
+  }, []);
 
+  const satelliteMaterial = useMemo(() => {
+    return new THREE.MeshStandardMaterial({
+      color: "#FFFFFF",
+      roughness: 0.35,
+      metalness: 0.15,
+      transparent: true,
+      opacity: dim ? 0.08 : 0.85,
+    });
+  }, [dim]);
+
+  // Initial population of matrices & colors - runs only when positions change
   useEffect(() => {
-    if (!meshRef.current) return;
-    positions.forEach((obj, i) => {
+    if (!meshRef.current || positions.length === 0) return;
+    const dummy = new THREE.Object3D();
+    const baseColor = new THREE.Color("#E4E4E7");
+    const stationColor = new THREE.Color("#EAB308");
+
+    for (let i = 0; i < positions.length; i++) {
+      const obj = positions[i];
       const [xKm, yKm, zKm] = obj.position_km;
       dummy.position.set(xKm * KM_TO_SCENE, zKm * KM_TO_SCENE, -yKm * KM_TO_SCENE);
       dummy.updateMatrix();
-      meshRef.current!.setMatrixAt(i, dummy.matrix);
-
-      if (hoveredId === i) {
-        color.set("#F59E0B"); // Tactical Amber on hover
-      } else {
-        color.set(obj.type === "station" ? "#EAB308" : "#E4E4E7");
-      }
-      meshRef.current!.setColorAt(i, color);
-    });
+      meshRef.current.setMatrixAt(i, dummy.matrix);
+      meshRef.current.setColorAt(i, obj.type === "station" ? stationColor : baseColor);
+    }
     meshRef.current.instanceMatrix.needsUpdate = true;
     if (meshRef.current.instanceColor) meshRef.current.instanceColor.needsUpdate = true;
-  }, [positions, hoveredId, dim, dummy, color]);
-
-  const hoveredObj = hoveredId !== null ? positions[hoveredId] : null;
+  }, [positions]);
 
   return (
     <group>
       <instancedMesh
         ref={meshRef}
-        args={[undefined, undefined, positions.length]}
+        args={[satelliteGeometry, satelliteMaterial, positions.length]}
         onPointerMove={(e) => {
           e.stopPropagation();
-          setHoveredId(e.instanceId ?? null);
+          if (dim) return;
+          const id = e.instanceId;
+          if (id !== undefined && id !== null && positions[id]) {
+            if (hoveredIdRef.current !== id) {
+              const amberColor = new THREE.Color("#F59E0B");
+              const baseColor = new THREE.Color("#E4E4E7");
+              const stationColor = new THREE.Color("#EAB308");
+
+              // Reset previous instance color
+              if (hoveredIdRef.current !== null && positions[hoveredIdRef.current] && meshRef.current) {
+                const prevObj = positions[hoveredIdRef.current];
+                meshRef.current.setColorAt(hoveredIdRef.current, prevObj.type === "station" ? stationColor : baseColor);
+              }
+              // Set current instance color
+              if (meshRef.current) {
+                meshRef.current.setColorAt(id, amberColor);
+                if (meshRef.current.instanceColor) meshRef.current.instanceColor.needsUpdate = true;
+              }
+
+              hoveredIdRef.current = id;
+              const obj = positions[id];
+              const [xKm, yKm, zKm] = obj.position_km;
+              setHoveredData({
+                satellite: obj,
+                position: [xKm * KM_TO_SCENE, zKm * KM_TO_SCENE, -yKm * KM_TO_SCENE],
+              });
+            }
+          }
         }}
-        onPointerOut={() => {
-          setHoveredId(null);
+        onPointerOut={(e) => {
+          e.stopPropagation();
+          if (hoveredIdRef.current !== null && positions[hoveredIdRef.current] && meshRef.current) {
+            const prevObj = positions[hoveredIdRef.current];
+            const baseColor = new THREE.Color("#E4E4E7");
+            const stationColor = new THREE.Color("#EAB308");
+            meshRef.current.setColorAt(hoveredIdRef.current, prevObj.type === "station" ? stationColor : baseColor);
+            if (meshRef.current.instanceColor) meshRef.current.instanceColor.needsUpdate = true;
+          }
+          hoveredIdRef.current = null;
+          setHoveredData(null);
         }}
-      >
-        <octahedronGeometry args={[0.022, 0]} />
-        <meshBasicMaterial transparent opacity={dim ? 0.08 : 0.85} />
-      </instancedMesh>
+      />
 
       {/* Interactive Satellite Hover HUD Tooltip */}
-      {hoveredObj && hoveredId !== null && !dim && (
+      {hoveredData && !dim && (
         <Html
-          position={[
-            hoveredObj.position_km[0] * KM_TO_SCENE,
-            hoveredObj.position_km[2] * KM_TO_SCENE,
-            -hoveredObj.position_km[1] * KM_TO_SCENE,
-          ]}
+          position={hoveredData.position}
           center
           zIndexRange={[100, 0]}
         >
@@ -230,13 +276,13 @@ function SpaceObjects({ positions, dim }: { positions: ObjectPosition[]; dim: bo
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
                   TARGET ACQUIRED
                 </span>
-                <span className="text-[8px] text-zinc-400 font-normal">#{hoveredObj.id.slice(0, 6).toUpperCase()}</span>
+                <span className="text-[8px] text-zinc-400 font-normal">#{hoveredData.satellite.id.slice(0, 6).toUpperCase()}</span>
               </div>
-              <div className="text-white font-bold text-[10px] mb-1 truncate">{hoveredObj.object_name}</div>
+              <div className="text-white font-bold text-[10px] mb-1 truncate">{hoveredData.satellite.object_name}</div>
               <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-zinc-400 text-[8px]">
-                <span>TYPE: <span className="text-zinc-200 uppercase">{hoveredObj.type}</span></span>
+                <span>TYPE: <span className="text-zinc-200 uppercase">{hoveredData.satellite.type}</span></span>
                 <span>STATUS: <span className="text-emerald-400 font-medium">TRACKED</span></span>
-                <span>ALT: <span className="text-amber-300">{(Math.hypot(...hoveredObj.position_km) - EARTH_RADIUS_KM).toFixed(1)} km</span></span>
+                <span>ALT: <span className="text-amber-300">{(Math.hypot(...hoveredData.satellite.position_km) - EARTH_RADIUS_KM).toFixed(1)} km</span></span>
                 <span>VEL: <span className="text-amber-300">7.68 km/s</span></span>
               </div>
             </div>
@@ -265,45 +311,65 @@ function ConjunctionDeepDive({ conj, onClose }: { conj: ConjunctionWithDetails; 
   const p1 = useMemo(() => pos.clone().add(new THREE.Vector3(0.04, 0.04, 0.04)), [pos]);
   const p2 = useMemo(() => pos.clone().add(new THREE.Vector3(-0.04, -0.04, -0.04)), [pos]);
 
-  const t1Points = useMemo(() => [pos.clone().add(new THREE.Vector3(1.2, 1.2, -1.2)), p1, pos.clone().add(new THREE.Vector3(-1.2, -1.2, 1.2))], [pos]);
-  const t2Points = useMemo(() => [pos.clone().add(new THREE.Vector3(-1.2, 1.2, 1.2)), p2, pos.clone().add(new THREE.Vector3(1.2, -1.2, -1.2))], [pos]);
+  const t1Curve = useMemo(() => {
+    const pts = [
+      pos.clone().add(new THREE.Vector3(1.2, 1.2, -1.2)),
+      p1,
+      pos.clone().add(new THREE.Vector3(-1.2, -1.2, 1.2))
+    ];
+    return new THREE.CatmullRomCurve3(pts);
+  }, [pos, p1]);
+
+  const t2Curve = useMemo(() => {
+    const pts = [
+      pos.clone().add(new THREE.Vector3(-1.2, 1.2, 1.2)),
+      p2,
+      pos.clone().add(new THREE.Vector3(1.2, -1.2, -1.2))
+    ];
+    return new THREE.CatmullRomCurve3(pts);
+  }, [pos, p2]);
+
+  // Directive 3: Memoize the points array to prevent memory leaks during re-renders
+  const t1Points = useMemo(() => {
+    return t1Curve.getPoints(64).map((p) => [p.x, p.y, p.z] as [number, number, number]);
+  }, [t1Curve]);
+
+  const t2Points = useMemo(() => {
+    return t2Curve.getPoints(64).map((p) => [p.x, p.y, p.z] as [number, number, number]);
+  }, [t2Curve]);
+
+  const missPoints = useMemo<[number, number, number][]>(() => {
+    return [
+      [p1.x, p1.y, p1.z],
+      [p2.x, p2.y, p2.z],
+    ];
+  }, [p1, p2]);
+
+  const midPoint = useMemo(() => p1.clone().add(p2).multiplyScalar(0.5), [p1, p2]);
 
   const isCritical = conj.risk_tier === "critical";
   const threatColor = isCritical ? "#EF4444" : "#F97316";
 
-  const t1Curve = useMemo(() => new THREE.CatmullRomCurve3(t1Points), [t1Points]);
-  const t2Curve = useMemo(() => new THREE.CatmullRomCurve3(t2Points), [t2Points]);
-
-  const midPoint = useMemo(() => p1.clone().add(p2).multiplyScalar(0.5), [p1, p2]);
+  const markerGeometry = useMemo(() => new THREE.TetrahedronGeometry(0.032, 0), []);
+  const whiteMat = useMemo(() => new THREE.MeshStandardMaterial({ color: "#FFFFFF", roughness: 0.3 }), []);
+  const threatMat = useMemo(() => new THREE.MeshStandardMaterial({ color: threatColor, roughness: 0.3 }), [threatColor]);
 
   return (
     <group>
-      {/* Primary Object Trajectory: Crisp White */}
-      <mesh>
-        <tubeGeometry args={[t1Curve, 64, 0.0035, 8, false]} />
-        <meshBasicMaterial color="#FFFFFF" />
-      </mesh>
-      <mesh position={p1}>
-        <octahedronGeometry args={[0.028, 0]} />
-        <meshBasicMaterial color="#FFFFFF" />
-      </mesh>
+      {/* Primary Object Trajectory: Crisp White using drei Line (Directive 3) */}
+      <Line points={t1Points} color="#FFFFFF" lineWidth={2} />
+      <mesh position={p1} geometry={markerGeometry} material={whiteMat} />
 
-      {/* Secondary Object Trajectory: Incident Red / Tactical Orange */}
-      <mesh>
-        <tubeGeometry args={[t2Curve, 64, 0.0035, 8, false]} />
-        <meshBasicMaterial color={threatColor} />
-      </mesh>
-      <mesh position={p2}>
-        <octahedronGeometry args={[0.028, 0]} />
-        <meshBasicMaterial color={threatColor} />
-      </mesh>
+      {/* Secondary Object Trajectory: Incident Red / Tactical Orange using drei Line (Directive 3) */}
+      <Line points={t2Points} color={threatColor} lineWidth={2} />
+      <mesh position={p2} geometry={markerGeometry} material={threatMat} />
 
       {/* Pulsing Dashed Miss Distance Vector Line */}
-      <Line points={[p1, p2]} color="#F59E0B" lineWidth={2} dashed dashSize={0.015} gapSize={0.01} />
+      <Line points={missPoints} color="#F59E0B" lineWidth={2} dashed dashSize={0.015} gapSize={0.01} />
 
       {/* Pulsing Distance Callout Badge */}
       <Html position={midPoint} center zIndexRange={[100, 0]}>
-        <div className="bg-[#000000]/95 border border-amber-400 px-2 py-0.5 rounded shadow-2xl text-[8.5px] font-mono text-amber-300 font-bold whitespace-nowrap animate-pulse">
+        <div className="bg-[#000000]/95 border border-amber-400 px-2 py-0.5 rounded shadow-2xl text-[8.5px] font-mono text-amber-300 font-bold whitespace-nowrap animate-pulse pointer-events-none select-none">
           MISS: {conj.miss_distance_km.toFixed(3)} km
         </div>
       </Html>
@@ -318,13 +384,28 @@ function ConjunctionDeepDive({ conj, onClose }: { conj: ConjunctionWithDetails; 
 
       {/* Floating Conjunction HUD Card */}
       <Html position={pos} center zIndexRange={[100, 0]}>
-        <div className="hud-panel bg-[#050505]/95 backdrop-blur-md border border-white/20 p-3 rounded shadow-2xl text-[10px] font-mono text-white relative min-w-[210px] animate-in zoom-in-95 duration-200 mt-16">
+        <div 
+          className="hud-panel bg-[#050505]/95 backdrop-blur-md border border-white/20 p-3 rounded shadow-2xl text-[10px] font-mono text-white relative min-w-[210px] animate-in zoom-in-95 duration-200 mt-16 pointer-events-auto select-none"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className={`text-[9px] tracking-widest font-bold mb-2 pb-1.5 border-b ${isCritical ? 'text-red-400 border-red-500/30' : 'text-amber-400 border-amber-500/30'} flex justify-between items-center gap-3`}>
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping"></span>
               INTERCEPT VECTOR
             </span>
-            <button onClick={(e) => { e.stopPropagation(); onClose(); }} className="text-zinc-400 hover:text-white transition-colors pointer-events-auto p-0.5">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                onClose();
+              }}
+              onPointerDown={(e) => {
+                e.stopPropagation();
+              }}
+              className="text-zinc-400 hover:text-white transition-colors pointer-events-auto p-1 cursor-pointer bg-white/5 hover:bg-white/10 rounded-xs"
+              title="Exit Encounter View"
+            >
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -371,15 +452,33 @@ function CameraManager({ selectedConjunction }: { selectedConjunction: Conjuncti
     }
   }, [selectedConjunction]);
 
-  return <CameraControls ref={controlsRef} makeDefault minDistance={1.2} maxDistance={25} />;
+  return (
+    <CameraControls
+      ref={controlsRef}
+      makeDefault
+      smoothTime={0.8}
+      minDistance={1.2}
+      maxDistance={25}
+    />
+  );
 }
 
 export default function Globe({ positions, selectedConjunction, onCloseConjunction }: GlobeProps) {
   return (
     <div className="w-full h-full bg-[#000000] relative overflow-hidden">
-      <Canvas camera={{ position: [-0.25, 0.1, 5.2], fov: 45 }}>
+      <Canvas
+        dpr={[1, 1.5]}
+        gl={{
+          powerPreference: "high-performance",
+          antialias: true,
+          alpha: false,
+          stencil: false,
+          depth: true,
+        }}
+        camera={{ position: [-0.25, 0.1, 5.2], fov: 45 }}
+      >
         <color attach="background" args={["#000000"]} />
-        <ambientLight intensity={0.5} />
+        <ambientLight intensity={0.6} />
 
         <Stars radius={120} depth={60} count={3500} factor={3.5} saturation={0} fade speed={0.4} />
 
