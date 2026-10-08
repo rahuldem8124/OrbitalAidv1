@@ -10,9 +10,11 @@ import HUDContainer from "../ui/HUDContainer";
 
 interface Props {
   conjunctions: ConjunctionWithDetails[];
+  onSelect?: (conj: ConjunctionWithDetails) => void;
+  selectedId?: string;
 }
 
-export default function LiveConjunctionWatch({ conjunctions }: Props) {
+export default function LiveConjunctionWatch({ conjunctions, onSelect, selectedId }: Props) {
   if (!conjunctions || conjunctions.length === 0) {
     return (
       <HUDContainer title="TARGET ANALYSIS">
@@ -49,13 +51,15 @@ export default function LiveConjunctionWatch({ conjunctions }: Props) {
           const objB = conj.object_b_name || conj.object_b?.object_name || "OBJ-B";
           
           const isCritical = conj.risk_tier === 'critical';
+          const isSelected = selectedId === conj.id;
 
           return (
-            <Link
-              href={`/conjunctions?event=${conj.id}`}
+            <button
               key={conj.id}
-              className={`block p-3 border hover:bg-[var(--space-card-hover)]/40 transition-colors relative group
+              onClick={() => onSelect?.(conj)}
+              className={`block w-full text-left p-3 border hover:bg-[var(--space-card-hover)]/40 transition-colors relative group
                 ${isCritical ? 'border-[var(--tier-critical)]/50 bg-[var(--tier-critical)]/5' : 'border-[var(--space-border)]'}
+                ${isSelected ? 'bg-[var(--space-card-hover)] ring-1 ring-[var(--accent-amber)]' : ''}
               `}
             >
               {/* Corner brackets inside the card */}
@@ -66,7 +70,7 @@ export default function LiveConjunctionWatch({ conjunctions }: Props) {
               <div className="flex justify-between items-start mb-3 border-b border-[var(--space-border)]/50 pb-2">
                 <div className="flex items-center gap-2">
                   <div className="relative flex items-center justify-center">
-                    <Target className={`w-4 h-4 ${isCritical ? 'text-[var(--tier-critical)]' : 'text-[var(--accent-amber)]'}`} />
+                    <Target className={`w-4 h-4 ${isCritical ? 'text-[var(--tier-critical)]' : isSelected ? 'text-[var(--accent-amber)] animate-spin-slow' : 'text-[var(--accent-amber)]'}`} />
                     {isCritical && <span className="absolute w-4 h-4 rounded-full bg-[var(--tier-critical)]/30 animate-ping"></span>}
                   </div>
                   <div className="font-mono text-[10px] text-[var(--text-primary)] font-bold tracking-widest">
@@ -111,11 +115,10 @@ export default function LiveConjunctionWatch({ conjunctions }: Props) {
               
               {/* Geometric Data Labels */}
               <div className="mt-2 flex justify-between text-[8px] font-mono text-[var(--text-dim)] uppercase tracking-widest">
-                <span>LAT: {(Math.random() * 180 - 90).toFixed(4)}°</span>
-                <span>LON: {(Math.random() * 360 - 180).toFixed(4)}°</span>
-                <span>AZ: {(Math.random() * 360).toFixed(1)}°</span>
+                <span>VIEW TRAJECTORY</span>
+                {isSelected && <span className="text-[var(--accent-amber)] animate-pulse">LOCKED</span>}
               </div>
-            </Link>
+            </button>
           );
         })}
       </div>
