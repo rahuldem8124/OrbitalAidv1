@@ -112,13 +112,13 @@ function SidebarInner() {
     >
       <div className="h-14 flex items-center justify-between px-4 border-b border-[var(--space-border)] shrink-0 bg-[var(--space-panel)]">
         {!collapsed && (
-          <span className="text-sm font-mono font-bold text-[var(--text-primary)] tracking-widest uppercase flex items-center gap-2">
-            <Activity className="text-[var(--accent-amber)] w-4 h-4" />
+          <span className="text-sm font-mono font-bold text-white tracking-widest uppercase flex items-center gap-2">
+            <Activity className="text-cyan-400 w-4 h-4" />
             OrbitAid
           </span>
         )}
         {collapsed && (
-          <Activity className="text-[var(--accent-amber)] w-5 h-5 mx-auto" />
+          <Activity className="text-cyan-400 w-5 h-5 mx-auto" />
         )}
         <button
           onClick={toggleCollapse}

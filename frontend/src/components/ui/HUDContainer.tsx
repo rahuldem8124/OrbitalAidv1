@@ -11,22 +11,19 @@ interface HUDContainerProps {
 
 export default function HUDContainer({ children, className = "", title, cornerCut = true }: HUDContainerProps) {
   return (
-    <div className={`relative bg-[#000000]/80 backdrop-blur-md border border-[var(--space-border-bright)]/30 ${cornerCut ? 'hud-panel' : ''} ${className}`}>
-      {/* Corner Brackets */}
-      <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[var(--text-muted)] opacity-70"></div>
-      <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[var(--text-muted)] opacity-70"></div>
-      <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[var(--text-muted)] opacity-70"></div>
-      <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[var(--text-muted)] opacity-70"></div>
+    <div className={`relative bg-[#05070A]/60 backdrop-blur-md border border-white/10 shadow-2xl ${cornerCut ? 'hud-panel' : 'rounded-md'} ${className}`}>
+      {/* Subtle 1px Corner Brackets */}
+      <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t border-l border-white/20 pointer-events-none"></div>
+      <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-white/20 pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l border-white/20 pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r border-white/20 pointer-events-none"></div>
       
-      {/* Crosshairs */}
-      <div className="absolute top-1/2 -left-1 w-2 h-[1px] bg-[var(--text-muted)] opacity-30"></div>
-      <div className="absolute top-1/2 -right-1 w-2 h-[1px] bg-[var(--text-muted)] opacity-30"></div>
-      
-      {/* Scanline Overlay */}
-      <div className="absolute inset-0 pointer-events-none scanline opacity-30"></div>
+      {/* Subtle Scanline Overlay */}
+      <div className="absolute inset-0 pointer-events-none scanline opacity-15"></div>
 
       {title && (
-        <div className="absolute -top-2.5 left-4 bg-[#000000] px-2 text-[9px] font-mono font-bold text-[var(--accent-cyan)] tracking-widest uppercase z-10 border-x border-[var(--space-border-bright)]/30">
+        <div className="absolute -top-2.5 left-4 bg-[#05070A]/90 px-2 py-0.5 text-[9px] font-mono font-medium text-cyan-400 tracking-widest uppercase z-10 border border-white/10 rounded-sm shadow-sm flex items-center gap-1.5">
+          <span className="w-1 h-1 rounded-full bg-cyan-400/80"></span>
           {title}
         </div>
       )}

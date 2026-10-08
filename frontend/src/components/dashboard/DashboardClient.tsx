@@ -6,76 +6,141 @@ import ActivityFeed from "@/components/dashboard/ActivityFeed";
 import LiveConjunctionWatch from "@/components/dashboard/LiveConjunctionWatch";
 import QuickStats from "@/components/dashboard/QuickStats";
 import MetricCard from "@/components/shared/MetricCard";
-import HUDContainer from "@/components/ui/HUDContainer";
-import { Satellite, AlertTriangle, ShieldAlert, Bell, Activity } from "lucide-react";
+import { Satellite, AlertTriangle, ShieldAlert, Bell, Activity, Radio } from "lucide-react";
 import { ConjunctionWithDetails } from "@/lib/types";
 
-export default function DashboardClient({ 
-  stats, 
-  health, 
-  analytics, 
-  conjunctionsRes, 
-  alertsRes, 
-  maneuversRes, 
-  positionsRes, 
-  criticalRisks 
-}: any) {
+interface DashboardClientProps {
+  stats: {
+    total_objects: number;
+    active_conjunctions: number;
+    unacknowledged_alerts: number;
+    pending_maneuvers: number;
+  };
+  health: {
+    status: string;
+  };
+  analytics: any;
+  conjunctionsRes: {
+    items: ConjunctionWithDetails[];
+  };
+  alertsRes: {
+    alerts: any[];
+  };
+  maneuversRes: {
+    maneuvers: any[];
+  };
+  positionsRes: {
+    positions: any[];
+  };
+  criticalRisks: number;
+}
+
+export default function DashboardClient({
+  stats,
+  health,
+  analytics,
+  conjunctionsRes,
+  alertsRes,
+  maneuversRes,
+  positionsRes,
+  criticalRisks,
+}: DashboardClientProps) {
   const [selectedConjunction, setSelectedConjunction] = useState<ConjunctionWithDetails | null>(null);
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#000000] grid-overlay p-4 gap-4">
-      {/* Top Telemetry Strip */}
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-3 flex-shrink-0">
-        <MetricCard label="TRACKED TARGETS" value={stats.total_objects} icon={<Satellite className="w-3.5 h-3.5" />} />
-        <MetricCard label="ACTIVE VECTORS" value={stats.active_conjunctions} icon={<Activity className="w-3.5 h-3.5" />} />
-        <MetricCard label="CRITICAL THREATS" value={criticalRisks} variant={criticalRisks > 0 ? "critical" : "default"} icon={<AlertTriangle className="w-3.5 h-3.5" />} />
-        <MetricCard label="ACTIVE ALERTS" value={stats.unacknowledged_alerts} variant={stats.unacknowledged_alerts > 0 ? "warning" : "default"} icon={<Bell className="w-3.5 h-3.5" />} />
-        <MetricCard label="EVASION PENDING" value={stats.pending_maneuvers} icon={<ShieldAlert className="w-3.5 h-3.5" />} />
-        <MetricCard label="SYSTEM CORE" value={health.status.toUpperCase()} variant={health.status === 'healthy' ? 'success' : health.status === 'degraded' ? 'warning' : 'critical'} />
+    <div className="relative h-full w-full overflow-hidden bg-[#030508] select-none">
+      
+      {/* ============================================================== */}
+      {/* LAYER 0: FULL-SCREEN IMMERSIVE 3D WEBGL CANVAS (Z-0)           */}
+      {/* ============================================================== */}
+      <div className="absolute inset-0 w-full h-full z-0">
+        <Globe
+          positions={positionsRes.positions}
+          selectedConjunction={selectedConjunction}
+          onCloseConjunction={() => setSelectedConjunction(null)}
+        />
       </div>
 
-      {/* Main Split Deck */}
-      <div className="flex-1 flex gap-4 min-h-0 overflow-hidden">
-        {/* Left / Center Zone: 3D Globe + Terminal Stream */}
-        <HUDContainer title="GLOBAL TACTICAL PROJECTION" cornerCut={true} className="flex-1 flex flex-col relative overflow-hidden">
-          <div className="flex-1 relative">
-            <Globe 
-              positions={positionsRes.positions} 
-              selectedConjunction={selectedConjunction} 
-              onCloseConjunction={() => setSelectedConjunction(null)}
+      {/* ============================================================== */}
+      {/* LAYER 1: FLOATING HUD OVERLAYS (Z-10, POINTER-EVENTS-NONE ROOT)*/}
+      {/* ============================================================== */}
+      <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+        
+        {/* TOP METRIC STRIP (Floating Glass HUD) */}
+        <div className="absolute top-3 left-4 right-4 z-20 pointer-events-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
+            <MetricCard
+              label="Tracked Targets"
+              value={stats.total_objects?.toLocaleString() ?? "0"}
+              icon={<Satellite className="w-3.5 h-3.5" />}
             />
-            
-            {/* Radar overlay graphics on top of globe */}
-            {!selectedConjunction && (
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-96 h-96 rounded-full border border-[var(--space-border-bright)]/20 flex items-center justify-center">
-                <div className="w-64 h-64 rounded-full border border-[var(--space-border-bright)]/30 flex items-center justify-center">
-                    <div className="w-32 h-32 rounded-full border border-[var(--accent-cyan)]/20 animate-pulse"></div>
-                </div>
-                <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-[var(--space-border-bright)]/20"></div>
-                <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-[var(--space-border-bright)]/20"></div>
-              </div>
-            )}
+            <MetricCard
+              label="Active Vectors"
+              value={stats.active_conjunctions ?? 0}
+              icon={<Activity className="w-3.5 h-3.5" />}
+            />
+            <MetricCard
+              label="Critical Threats"
+              value={criticalRisks}
+              variant={criticalRisks > 0 ? "critical" : "default"}
+              icon={<AlertTriangle className="w-3.5 h-3.5" />}
+            />
+            <MetricCard
+              label="Active Alerts"
+              value={stats.unacknowledged_alerts ?? 0}
+              variant={stats.unacknowledged_alerts > 0 ? "warning" : "default"}
+              icon={<Bell className="w-3.5 h-3.5" />}
+            />
+            <MetricCard
+              label="Evasion Pending"
+              value={stats.pending_maneuvers ?? 0}
+              variant={stats.pending_maneuvers > 0 ? "warning" : "default"}
+              icon={<ShieldAlert className="w-3.5 h-3.5" />}
+            />
+            <MetricCard
+              label="System Core"
+              value={health.status ? health.status.toUpperCase() : "ONLINE"}
+              variant={health.status === "healthy" || health.status === "operational" ? "success" : "warning"}
+            />
+          </div>
+        </div>
+
+        {/* BOTTOM LEFT: FLOATING TERMINAL STREAM */}
+        <div className="absolute left-4 bottom-4 w-[520px] max-w-[calc(100vw-28rem)] h-56 z-20 pointer-events-auto shadow-2xl">
+          <ActivityFeed alerts={alertsRes.alerts} maneuvers={maneuversRes.maneuvers} />
+        </div>
+
+        {/* BOTTOM CENTER: SUBTLE HUD SENSOR BAR */}
+        <div className="hidden xl:flex absolute bottom-4 left-1/2 -translate-x-1/2 z-10 items-center gap-3 bg-[#05070A]/60 backdrop-blur-md border border-white/10 px-4 py-1.5 rounded-sm shadow-xl text-[9px] font-mono text-zinc-400">
+          <div className="flex items-center gap-1.5 text-cyan-400">
+            <Radio className="w-3 h-3 animate-pulse" />
+            <span className="font-bold">ORBITAL SURVEILLANCE RADAR</span>
+          </div>
+          <span className="text-zinc-600">|</span>
+          <span>SGP4 BATCH PROPAGATOR ACTIVE</span>
+          <span className="text-zinc-600">|</span>
+          <span className="text-zinc-500">CLICK & DRAG TO ROTATE SCENE</span>
+        </div>
+
+        {/* RIGHT SIDEBAR: FLOATING CONJUNCTION WATCH & STATS */}
+        <div className="absolute right-4 top-20 bottom-4 w-96 z-20 pointer-events-auto flex flex-col gap-3 overflow-hidden">
+          {/* Conjunction list cards */}
+          <div className="flex-1 min-h-0 overflow-hidden shadow-2xl">
+            <LiveConjunctionWatch
+              conjunctions={conjunctionsRes.items}
+              onSelect={setSelectedConjunction}
+              selectedId={selectedConjunction?.id}
+            />
           </div>
 
-          <div className="w-full shrink-0 relative z-20">
-            <ActivityFeed alerts={alertsRes.alerts} maneuvers={maneuversRes.maneuvers} />
-          </div>
-        </HUDContainer>
-
-        {/* Right Zone: Target Analysis Deck */}
-        <div className="w-[30%] min-w-[340px] max-w-[400px] flex flex-col gap-4 overflow-y-auto pr-1">
-          <div className="flex-shrink-0">
-            <LiveConjunctionWatch 
-              conjunctions={conjunctionsRes.items} 
-              onSelect={setSelectedConjunction} 
-              selectedId={selectedConjunction?.id} 
-            />
-          </div>
-          <div className="flex-shrink-0">
+          {/* Quick Analytics Card at bottom of sidebar */}
+          <div className="shrink-0 h-44 shadow-2xl">
             <QuickStats analytics={analytics} />
           </div>
         </div>
+
       </div>
+
     </div>
   );
 }

@@ -79,64 +79,64 @@ export default function TopBar() {
 
   return (
     <>
-      <div className="flex flex-col shrink-0 z-40 bg-[var(--space-canvas)] relative border-b border-[var(--space-border)]">
+      <div className="flex flex-col shrink-0 z-40 bg-[#05070A]/90 backdrop-blur-md relative border-b border-white/10 shadow-lg">
         {/* Top Dense Timezone Strip */}
-        <div className="h-6 flex items-center justify-between px-4 border-b border-[var(--space-border-bright)]/30 bg-[#000000]">
-          <div className="flex items-center gap-4 text-[9px] font-mono text-[var(--text-dim)] tracking-widest">
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+        <div className="h-6 flex items-center justify-between px-4 border-b border-white/5 bg-black/40">
+          <div className="flex items-center gap-4 text-[9px] font-mono text-zinc-500 tracking-widest">
+            <span className="flex items-center gap-1.5 text-zinc-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
               DEFCON 5
             </span>
-            <span>//</span>
-            <span>ORBITAL SURVEILLANCE NET</span>
+            <span className="text-zinc-700">//</span>
+            <span className="text-zinc-400">ORBITAL SURVEILLANCE NET</span>
           </div>
           
           {times.UTC && (
             <div className="flex items-center gap-3 text-[10px] font-mono tracking-wider font-semibold">
-              <span className="text-[var(--text-muted)]">WDC: <span className="text-[var(--text-primary)]">{times.WDC}</span></span>
-              <span className="text-[var(--space-border-bright)]">|</span>
-              <span className="text-[var(--text-muted)]">BER: <span className="text-[var(--text-primary)]">{times.BER}</span></span>
-              <span className="text-[var(--space-border-bright)]">|</span>
-              <span className="text-[var(--text-muted)]">MOS: <span className="text-[var(--text-primary)]">{times.MOS}</span></span>
-              <span className="text-[var(--space-border-bright)]">|</span>
-              <span className="text-[var(--accent-cyan)]">UTC: {times.UTC}</span>
+              <span className="text-zinc-500">WDC: <span className="text-zinc-200">{times.WDC}</span></span>
+              <span className="text-zinc-700">|</span>
+              <span className="text-zinc-500">BER: <span className="text-zinc-200">{times.BER}</span></span>
+              <span className="text-zinc-700">|</span>
+              <span className="text-zinc-500">MOS: <span className="text-zinc-200">{times.MOS}</span></span>
+              <span className="text-zinc-700">|</span>
+              <span className="text-cyan-400 font-bold">UTC: {times.UTC}</span>
             </div>
           )}
         </div>
 
         {/* Main Nav Bar */}
-        <div className="h-12 bg-[var(--space-panel)] flex items-center justify-between px-6 relative overflow-hidden">
-          <div className="absolute inset-0 scanline opacity-30 pointer-events-none"></div>
+        <div className="h-12 bg-transparent flex items-center justify-between px-6 relative overflow-hidden">
+          <div className="absolute inset-0 scanline opacity-15 pointer-events-none"></div>
           
-          <div className="flex items-center gap-4 relative z-10">
-            <div className="w-2 h-2 border-t-2 border-l-2 border-[var(--accent-cyan)]"></div>
-            <h1 className="text-[var(--text-primary)] font-mono font-bold tracking-widest text-sm">{getPageTitle()}</h1>
+          <div className="flex items-center gap-3 relative z-10">
+            <div className="w-2 h-2 border-t border-l border-cyan-400"></div>
+            <h1 className="text-white font-mono font-bold tracking-widest text-sm">{getPageTitle()}</h1>
           </div>
 
           <div className="flex-1 flex justify-center max-w-xl mx-8 relative z-10">
             <SearchBar onSearch={handleSearch} />
           </div>
 
-          <div className="flex items-center gap-6 relative z-10">
+          <div className="flex items-center gap-5 relative z-10">
             <button
               onClick={() => setIsBriefingOpen(true)}
-              className="px-3 py-1 bg-[var(--accent-cyan)]/10 border border-[var(--accent-cyan)]/30 text-[var(--accent-cyan)] text-[9px] font-mono font-bold tracking-widest uppercase hover:bg-[var(--accent-cyan)]/20 transition-colors"
+              className="px-3 py-1 bg-cyan-950/40 border border-cyan-500/40 text-cyan-300 text-[9px] font-mono font-bold tracking-widest uppercase hover:bg-cyan-900/50 hover:border-cyan-400 transition-all rounded-xs shadow-sm"
             >
               MISSION BRIEFING
             </button>
 
             {/* Tracking Progress Bar */}
-            <div className="hidden md:flex flex-col gap-1 w-32">
-              <div className="flex justify-between text-[8px] font-mono tracking-widest text-[var(--text-muted)]">
+            <div className="hidden md:flex flex-col gap-1 w-28">
+              <div className="flex justify-between text-[8px] font-mono tracking-widest text-zinc-400">
                 <span>TRACKING</span>
-                <span className="text-[var(--accent-amber)]">ACTV</span>
+                <span className="text-cyan-400 font-bold">ACTV</span>
               </div>
-              <div className="h-1 w-full bg-[#000000] border border-[var(--space-border-bright)] relative">
-                <div className="absolute top-0 left-0 h-full bg-[var(--accent-amber)] w-[85%]"></div>
+              <div className="h-1 w-full bg-black/60 border border-white/10 relative rounded-xs overflow-hidden">
+                <div className="absolute top-0 left-0 h-full bg-cyan-400 w-[85%]"></div>
               </div>
             </div>
 
-            <div className="h-4 w-px bg-[var(--space-border-bright)]" />
+            <div className="h-4 w-px bg-white/10" />
 
             <div className="flex items-center gap-3">
               <SystemHealthIndicator status={systemStatus} label={systemLabel} />

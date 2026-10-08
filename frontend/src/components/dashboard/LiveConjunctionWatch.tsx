@@ -57,66 +57,68 @@ export default function LiveConjunctionWatch({ conjunctions, onSelect, selectedI
             <button
               key={conj.id}
               onClick={() => onSelect?.(conj)}
-              className={`block w-full text-left p-3 border hover:bg-[var(--space-card-hover)]/40 transition-colors relative group
-                ${isCritical ? 'border-[var(--tier-critical)]/50 bg-[var(--tier-critical)]/5' : 'border-[var(--space-border)]'}
-                ${isSelected ? 'bg-[var(--space-card-hover)] ring-1 ring-[var(--accent-amber)]' : ''}
-              `}
+              className={`block w-full text-left p-2.5 border transition-all relative group rounded ${
+                isCritical 
+                  ? 'border-red-500/40 bg-red-950/20 hover:border-red-500/60' 
+                  : isSelected 
+                    ? 'border-cyan-400/80 bg-cyan-950/30 shadow-[0_0_15px_rgba(6,182,212,0.15)] ring-1 ring-cyan-400/40' 
+                    : 'border-white/10 bg-white/[0.02] hover:bg-white/[0.06] hover:border-white/20'
+              }`}
             >
-              {/* Corner brackets inside the card */}
-              <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[var(--text-muted)]/50"></div>
-              <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[var(--text-muted)]/50"></div>
+              {/* Subtle Corner brackets inside the card */}
+              <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white/20"></div>
+              <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white/20"></div>
 
               {/* Header with Target Reticle */}
-              <div className="flex justify-between items-start mb-3 border-b border-[var(--space-border)]/50 pb-2">
+              <div className="flex justify-between items-start mb-2 border-b border-white/5 pb-1.5">
                 <div className="flex items-center gap-2">
                   <div className="relative flex items-center justify-center">
-                    <Target className={`w-4 h-4 ${isCritical ? 'text-[var(--tier-critical)]' : isSelected ? 'text-[var(--accent-amber)] animate-spin-slow' : 'text-[var(--accent-amber)]'}`} />
-                    {isCritical && <span className="absolute w-4 h-4 rounded-full bg-[var(--tier-critical)]/30 animate-ping"></span>}
+                    <Target className={`w-3.5 h-3.5 ${isCritical ? 'text-red-400' : isSelected ? 'text-cyan-400 animate-spin-slow' : 'text-zinc-400 group-hover:text-cyan-400 transition-colors'}`} />
+                    {isCritical && <span className="absolute w-3.5 h-3.5 rounded-full bg-red-500/30 animate-ping"></span>}
                   </div>
-                  <div className="font-mono text-[10px] text-[var(--text-primary)] font-bold tracking-widest">
-                    <span className="truncate max-w-[100px] inline-block align-bottom">{objA}</span>
-                    <span className="text-[var(--text-dim)] mx-1">X</span>
-                    <span className="truncate max-w-[100px] inline-block align-bottom">{objB}</span>
+                  <div className="font-mono text-[10px] text-zinc-100 font-semibold tracking-wider">
+                    <span className="truncate max-w-[90px] inline-block align-bottom">{objA}</span>
+                    <span className="text-zinc-600 mx-1">×</span>
+                    <span className="truncate max-w-[90px] inline-block align-bottom">{objB}</span>
                   </div>
                 </div>
                 <RiskBadge tier={conj.risk_tier} size="sm" />
               </div>
 
-              {/* Data Grid with Cell Inversion on critical */}
-              <div className="grid grid-cols-3 gap-2">
-                <div className={`p-1.5 flex flex-col items-center justify-center text-center border border-[var(--space-border)]/50 ${isCritical ? 'bg-[var(--tier-critical)] text-[#000000]' : 'bg-[#000000]/40'}`}>
-                  <span className={`text-[8px] uppercase tracking-widest mb-1 ${isCritical ? 'text-[#000000]/70 font-bold' : 'text-[var(--text-dim)]'}`}>MISS DIST</span>
-                  <span className={`font-mono text-[11px] font-bold ${isCritical ? 'text-[#000000]' : 'text-[var(--text-primary)]'}`}>
+              {/* Data Grid */}
+              <div className="grid grid-cols-3 gap-1.5">
+                <div className={`p-1 flex flex-col items-center justify-center text-center rounded-sm border ${isCritical ? 'border-red-500/30 bg-red-950/40 text-red-300' : 'border-white/5 bg-black/40 text-zinc-200'}`}>
+                  <span className={`text-[7.5px] uppercase tracking-wider mb-0.5 ${isCritical ? 'text-red-400/80 font-bold' : 'text-zinc-500'}`}>MISS DIST</span>
+                  <span className="font-mono text-[10px] font-bold">
                     {formatDistance(conj.miss_distance_km)}
                   </span>
                 </div>
                 
-                <div className="p-1.5 flex flex-col items-center justify-center text-center border border-[var(--space-border)]/50 bg-[#000000]/40">
-                  <span className="text-[8px] text-[var(--text-dim)] uppercase tracking-widest mb-1">TCA (UTC)</span>
-                  <span className="font-mono text-[10px] text-[var(--text-secondary)]">{formatUTCCompact(conj.tca)}</span>
+                <div className="p-1 flex flex-col items-center justify-center text-center rounded-sm border border-white/5 bg-black/40">
+                  <span className="text-[7.5px] text-zinc-500 uppercase tracking-wider mb-0.5">TCA (UTC)</span>
+                  <span className="font-mono text-[9px] text-zinc-300">{formatUTCCompact(conj.tca)}</span>
                 </div>
                 
-                <div className="p-1.5 flex flex-col items-center justify-center text-center border border-[var(--space-border)]/50 bg-[#000000]/40 relative overflow-hidden">
-                  <div className="absolute inset-0 scanline opacity-20"></div>
-                  <span className="text-[8px] text-[var(--text-dim)] uppercase tracking-widest mb-1 relative z-10">COUNTDOWN</span>
-                  <span className="relative z-10">
+                <div className="p-1 flex flex-col items-center justify-center text-center rounded-sm border border-white/5 bg-black/40 relative overflow-hidden">
+                  <span className="text-[7.5px] text-zinc-500 uppercase tracking-wider mb-0.5">COUNTDOWN</span>
+                  <span>
                     {status.type === 'passed' ? (
-                      <span className="font-mono text-[10px] text-[var(--text-dim)] font-bold">PASSED</span>
+                      <span className="font-mono text-[9px] text-zinc-500 font-bold">PASSED</span>
                     ) : status.type === 'upcoming' ? (
-                      <span className={`font-mono text-[11px] font-bold ${status.isUrgent ? 'text-[var(--tier-critical)]' : 'text-[var(--accent-amber)]'}`}>
+                      <span className={`font-mono text-[10px] font-bold ${status.isUrgent ? 'text-red-400' : 'text-cyan-400'}`}>
                         {status.label}
                       </span>
                     ) : (
-                      <span className="text-[var(--text-dim)]">—</span>
+                      <span className="text-zinc-600">—</span>
                     )}
                   </span>
                 </div>
               </div>
               
-              {/* Geometric Data Labels */}
-              <div className="mt-2 flex justify-between text-[8px] font-mono text-[var(--text-dim)] uppercase tracking-widest">
-                <span>VIEW TRAJECTORY</span>
-                {isSelected && <span className="text-[var(--accent-amber)] animate-pulse">LOCKED</span>}
+              {/* Footer action label */}
+              <div className="mt-1.5 flex justify-between items-center text-[7.5px] font-mono text-zinc-500 uppercase tracking-wider">
+                <span className="group-hover:text-cyan-400 transition-colors">CLICK TO LOCK TARGET</span>
+                {isSelected && <span className="text-cyan-400 font-bold animate-pulse">LOCKED IN 3D</span>}
               </div>
             </button>
           );

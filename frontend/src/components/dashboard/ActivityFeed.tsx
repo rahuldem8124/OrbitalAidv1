@@ -50,31 +50,32 @@ export default function ActivityFeed({ alerts, maneuvers }: ActivityFeedProps) {
   };
 
   return (
-    <HUDContainer className="flex flex-col h-full" cornerCut={false}>
+    <HUDContainer className="flex flex-col h-full bg-[#05070A]/70 backdrop-blur-md border border-white/10 rounded-md shadow-2xl overflow-hidden" cornerCut={false}>
       {/* Header bar with toggle */}
       <div
-        className="flex items-center justify-between px-4 py-1.5 cursor-pointer select-none bg-[#000000] border-b border-[var(--space-border)]"
+        className="flex items-center justify-between px-3 py-1.5 cursor-pointer select-none bg-white/[0.02] border-b border-white/10"
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center gap-2">
-          <Terminal className="w-3.5 h-3.5 text-[var(--accent-cyan)]" />
-          <span className="text-[10px] font-mono font-bold text-[var(--accent-cyan)] uppercase tracking-widest">
-            TERMINAL STREAM // TELEMETRY LOG
+          <Terminal className="w-3.5 h-3.5 text-cyan-400" />
+          <span className="text-[9px] font-mono font-bold text-cyan-400 uppercase tracking-widest flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            LIVE TELEMETRY STREAM
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono text-[var(--text-dim)]">
-            [ {alerts.length + maneuvers.length} EVENTS LOGGED ]
+          <span className="text-[9px] font-mono text-zinc-500">
+            [ {alerts.length + maneuvers.length} EVENTS ]
           </span>
           {expanded
-            ? <ChevronDown className="w-3 h-3 text-[var(--text-muted)]" />
-            : <ChevronUp className="w-3 h-3 text-[var(--text-muted)]" />
+            ? <ChevronDown className="w-3 h-3 text-zinc-400" />
+            : <ChevronUp className="w-3 h-3 text-zinc-400" />
           }
         </div>
       </div>
 
       {/* Console-style log entries */}
-      <div className={`overflow-y-auto p-3 space-y-1 ${expanded ? 'max-h-[280px]' : 'max-h-[140px]'} transition-all duration-300 font-mono text-[10px]`}>
+      <div className="flex-1 overflow-y-auto p-2 space-y-1 font-mono text-[9.5px]">
         {activities.slice(0, visibleItems).map((item, idx) => {
           const timestamp = item.type === "alert" ? item.data.created_at : item.data.proposed_at;
           const severity = item.type === "alert" ? item.data.severity : item.data.status;
@@ -85,23 +86,23 @@ export default function ActivityFeed({ alerts, maneuvers }: ActivityFeedProps) {
           const colorClasses = getLogColors(severity);
 
           return (
-            <div key={idx} className={`flex items-start gap-3 py-1 px-2 group border-l-2 border-transparent hover:border-[var(--text-muted)] hover:bg-[var(--space-card-hover)]/30 transition-all ${colorClasses}`}>
-              <span className="whitespace-nowrap shrink-0 opacity-70">
-                [{timeAgo(timestamp).padStart(12, ' ')}]
+            <div key={idx} className={`flex items-start gap-2.5 py-1 px-1.5 group border-l border-white/10 hover:border-cyan-400 hover:bg-white/[0.04] transition-all rounded-xs ${colorClasses}`}>
+              <span className="whitespace-nowrap shrink-0 text-zinc-500 text-[8.5px]">
+                {timeAgo(timestamp)}
               </span>
-              <span className="font-bold shrink-0 w-[80px]">
-                {severity.toUpperCase()}
+              <span className="font-bold shrink-0 text-[8.5px] uppercase">
+                [{severity}]
               </span>
-              <span className="truncate flex-1 tracking-wide opacity-90 group-hover:opacity-100">
+              <span className="truncate flex-1 tracking-wide opacity-90 group-hover:opacity-100 text-zinc-200">
                 {message}
               </span>
             </div>
           );
         })}
         {visibleItems === activities.length && (
-          <div className="flex items-center gap-2 py-1 px-2 text-[var(--accent-cyan)] animate-pulse">
-            <span className="w-1.5 h-3 bg-[var(--accent-cyan)]"></span>
-            <span>AWAITING SIGNAL...</span>
+          <div className="flex items-center gap-2 py-1 px-1.5 text-cyan-400 text-[9px] font-mono opacity-80">
+            <span className="w-1.5 h-2.5 bg-cyan-400 animate-pulse"></span>
+            <span>UPLINK SYNCED // AWAITING SENSOR BURST</span>
           </div>
         )}
       </div>

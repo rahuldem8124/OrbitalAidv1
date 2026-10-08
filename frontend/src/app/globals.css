@@ -12,12 +12,12 @@
   --foreground: #E2E8F0;
 
   /* Aerospace C2 Palette */
-  --space-canvas: #000000;
-  --space-panel: #000000;
-  --space-card: #0A0A0A;
-  --space-card-hover: #141414;
-  --space-border: #1F1F1F;
-  --space-border-bright: #333333;
+  --space-canvas: #030508;
+  --space-panel: rgba(7, 10, 16, 0.7);
+  --space-card: rgba(10, 14, 23, 0.6);
+  --space-card-hover: rgba(18, 24, 38, 0.8);
+  --space-border: rgba(255, 255, 255, 0.08);
+  --space-border-bright: rgba(255, 255, 255, 0.16);
 
   /* Status & Risk Tiers */
   --tier-critical: #EF4444;
@@ -25,15 +25,15 @@
   --tier-watch: #EAB308;
   --tier-nominal: #22C55E;
   
-  /* Bumblebee Yellow Accent */
-  --accent-amber: #FDE047; /* Bumblebee */
-  --accent-cyan: #FDE047;  /* Bumblebee */
+  /* Tactical Accents */
+  --accent-cyan: #06B6D4;
+  --accent-amber: #F59E0B;
 
   /* Text hierarchy */
   --text-primary: #FFFFFF;
-  --text-secondary: #A3A3A3;
-  --text-muted: #737373;
-  --text-dim: #525252;
+  --text-secondary: #D4D4D8;
+  --text-muted: #71717A;
+  --text-dim: #52525B;
 }
 
 body {
@@ -53,8 +53,8 @@ body {
 /* Aerospace grid overlay */
 .grid-overlay {
   background-image:
-    linear-gradient(rgba(245, 158, 11, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(245, 158, 11, 0.02) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
