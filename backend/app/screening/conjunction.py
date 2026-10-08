@@ -184,6 +184,21 @@ def circular_diff_deg(a: float, b: float) -> float:
     return min(diff, 360.0 - diff)
 
 
+def reference_epoch(objects) -> datetime:
+    """
+    Start of the screening window: the latest orbital-element epoch in the
+    catalog. Objects are then propagated at most about a month from their
+    own epoch, instead of months beyond it.
+    """
+    epochs = []
+    for obj in objects:
+        el = latest_element(obj)
+        if el is not None:
+            e = el.epoch
+            epochs.append(e.replace(tzinfo=timezone.utc) if e.tzinfo is None else e)
+    return max(epochs)
+
+
 # ---------------------------------------------------------------------------
 # Docked station handling
 # ---------------------------------------------------------------------------
@@ -888,7 +903,8 @@ def screen_all(
     # Screening start time
     # ------------------------------------------------------------------
 
-    now = datetime.now(timezone.utc)
+    now = reference_epoch(objects)
+    logger.info("Screening window start (reference epoch): %s", now)
 
     try:
 

@@ -76,3 +76,32 @@ body {
 * {
   --tw-ring-offset-color: var(--space-canvas);
 }
+
+/* HUD Framing & Scanning */
+.hud-panel {
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+
+.scanline {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.03) 2px,
+    rgba(255, 255, 255, 0.03) 4px
+  );
+  pointer-events: none;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+.typewriter-effect {
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: bottom;
+  animation: typing 0.5s steps(40, end);
+}
