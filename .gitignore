@@ -17,6 +17,9 @@ env/
 
 # Logs
 *.log
+logs/
+backend/logs/
+out*.txt
 
 # IDE
 .vscode/
