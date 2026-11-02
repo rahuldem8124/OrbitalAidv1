@@ -37,10 +37,6 @@ dist/
 build/
 .next/
 
-# Project data and stray files
-data/
-from skyfield.py
-ablation_full_catalog.json
 # Raw input data (re-downloadable from CelesTrak)
 data/
 
