@@ -1,25 +1,25 @@
 {
   "scope": "full_catalog",
-  "objects_total": 17724,
+  "objects_total": 18882,
   "objects_without_elements": 0,
-  "objects_used": 17724,
+  "objects_used": 18882,
   "parameters": {
     "altitude_tolerance_km": 50,
     "inclination_tolerance_deg": 5.0,
     "raan_tolerance_deg": 3.0
   },
   "candidate_pairs": {
-    "A_altitude_only": 41723374,
-    "B_plus_inclination": 15003695,
-    "C_plus_raan_production": 364779
+    "A_altitude_only": 64253878,
+    "B_plus_inclination": 21173633,
+    "C_plus_raan_production": 472608
   },
   "reduction_vs_A_percent": {
-    "B": 64.04,
-    "C": 99.13
+    "B": 67.05,
+    "C": 99.26
   },
   "timing_seconds": {
-    "load": 3.66,
-    "count": 1.94
+    "load": 3.25,
+    "count": 0.97
   },
-  "run_at_utc": "2026-10-08T03:39:06.207991+00:00"
+  "run_at_utc": "2026-11-02T14:13:21.195392+00:00"
 }

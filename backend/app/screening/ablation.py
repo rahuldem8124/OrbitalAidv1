@@ -167,7 +167,9 @@ def main():
         ok = (a, b, c) == (594972, 360116, 19367)
         print(f"  Subset expected A=594972 B=360116 C=19367: {'OK' if ok else 'MISMATCH'}")
     if limit is None:
-        print(f"  Full-catalog expected C=364779 (production run): {'OK' if c == 364779 else 'MISMATCH'}")
+        EXPECTED_OCT2026_C = 472608 
+        print(f"  Full-catalog expected C={EXPECTED_OCT2026_C} (Oct 2026 production run): "
+              f"{'OK' if c == EXPECTED_OCT2026_C else 'MISMATCH'}")
 
 
 if __name__ == "__main__":

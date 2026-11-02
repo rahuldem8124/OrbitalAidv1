@@ -1,7 +1,8 @@
 # ref_screen.py
-# Brute-force reference: every pair within DANGER km at any time in the window.
+# Brute-force reference: every pair within THR km at any time in the window.
 # Uses a KD-tree per sample instead of element gates, so it has no prefilter losses.
 import time
+from collections import Counter
 from datetime import datetime, timezone
 
 import numpy as np
@@ -20,21 +21,26 @@ DT = 10.0          # coarse sampling, seconds
 THR = 5.0          # miss-distance threshold, km
 VMAX = 15.0        # maximum plausible relative speed, km/s
 MARGIN = 1.5       # safety factor on the sampling bound
+REFINE_HALF = 2    # refinement window: +/- this many coarse steps
 OUT = "reference_events.csv"
 
 jd0, fr0 = jday(START.year, START.month, START.day,
                 START.hour, START.minute,
                 START.second + START.microsecond / 1e6)
 
-session = SessionLocal()
+# ---- Load population, reporting every skip ----
+skipped = Counter()
 sats, ids, names, station = [], [], [], []
+session = SessionLocal()
 for o in session.query(SpaceObject).all():
     el = latest_element(o)
     if el is None:
+        skipped["no_elements"] += 1
         continue
     try:
         s = build_satrec(el)
-    except Exception:
+    except Exception as ex:
+        skipped[type(ex).__name__] += 1
         continue
     sats.append(s)
     ids.append(int(o.norad_cat_id))
@@ -42,13 +48,15 @@ for o in session.query(SpaceObject).all():
     station.append(is_docked_complex_member(o))
 session.close()
 station = np.array(station)
+print(f"objects in database: {len(sats) + sum(skipped.values())}")
 print(f"objects with usable elements: {len(sats)}")
+print(f"skipped: {dict(skipped)}")
 
 arr = SatrecArray(sats)
 n_steps = int(HOURS * 3600 // DT) + 1
 
 # ---- Pass 1: find sample steps where a pair is plausibly within THR ----
-cand = []  # (i, j, k) indices into sats, k = sample step
+cand = []  # (i, j, k): indices into sats, and coarse step k
 t0 = time.perf_counter()
 for k in range(n_steps):
     e, r, v = arr.sgp4(np.array([jd0]), np.array([fr0 + k * DT / 86400.0]))
@@ -68,15 +76,15 @@ for k in range(n_steps):
     for x, y in zip(ok[a[keep]], ok[b[keep]]):
         i, j = (int(x), int(y)) if x < y else (int(y), int(x))
         if station[i] and station[j]:
-            continue
+            fine = np.arange(-2 * DT, 2 * DT + 1.0, 1.0)
         cand.append((i, j, k))
     if k % 500 == 0:
         print(f"step {k}/{n_steps}  candidates so far {len(cand)}  "
               f"elapsed {time.perf_counter() - t0:.0f}s")
 print(f"pass 1 done in {time.perf_counter() - t0:.0f}s, candidate samples: {len(cand)}")
 
-# ---- Pass 2: 1-second refinement around each candidate sample ----
-fine = np.arange(-DT, DT + 1.0, 1.0)
+# ---- Pass 2: 1-second refinement, +/- REFINE_HALF coarse steps ----
+fine = np.arange(-REFINE_HALF * DT, REFINE_HALF * DT + 1.0, 1.0)
 rows = []
 for i, j, k in cand:
     sec = k * DT + fine
@@ -95,7 +103,10 @@ for i, j, k in cand:
 
 df = pd.DataFrame(rows, columns=["norad_a", "norad_b", "name_a", "name_b",
                                  "step", "tca_sec", "miss_km", "rel_vel_kmps"])
-# Merge consecutive refinements of the same encounter into one event
+
+# ---- Group candidate refinements into encounters ----
+# Consecutive refined samples of one pair (gap <= 2 steps) belong to one encounter.
+# Each encounter is represented by its smallest refined miss distance.
 df = df.sort_values(["norad_a", "norad_b", "step"]).reset_index(drop=True)
 df["gap"] = df.groupby(["norad_a", "norad_b"])["step"].diff().fillna(999) > 2
 df["encounter"] = df.groupby(["norad_a", "norad_b"])["gap"].cumsum()
