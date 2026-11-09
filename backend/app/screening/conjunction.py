@@ -98,6 +98,30 @@ def latest_element(space_object: SpaceObject):
     return max(space_object.elements, key=lambda e: e.epoch)
 
 
+def approx_altitude_km(space_object: SpaceObject) -> float:
+    """Approximate altitude (km) from the latest mean-motion element."""
+    el = latest_element(space_object)
+    if el is None:
+        raise ValueError("No orbital elements")
+    return semi_major_axis_km(el.mean_motion) - EARTH_RADIUS_KM
+
+
+def latest_inclination_deg(space_object: SpaceObject) -> float:
+    """Inclination (degrees) from the latest orbital element."""
+    el = latest_element(space_object)
+    if el is None:
+        raise ValueError("No orbital elements")
+    return float(el.inclination)
+
+
+def latest_raan_deg(space_object: SpaceObject) -> float:
+    """RAAN (degrees) from the latest orbital element."""
+    el = latest_element(space_object)
+    if el is None:
+        raise ValueError("No orbital elements")
+    return float(el.ra_of_asc_node)
+
+
 def circular_diff_deg(a: float, b: float) -> float:
     """Smallest angular difference between two degree values (handles 0/360 wrap)."""
     diff = abs(a - b) % 360.0
